@@ -1,0 +1,168 @@
+{
+  "object_type": "sideboard cabinet",
+  "manufacturing": "panel construction",
+  "grid": {
+    "columns": 3,
+    "rows": 2,
+    "row_types": [
+      "doors",
+      "drawers"
+    ]
+  },
+  "dims": {
+    "width": 1.2,
+    "depth": 0.45,
+    "height": 0.9,
+    "panel_t": 0.02,
+    "leg_h": 0.15,
+    "row_heights": [
+      0.5,
+      0.2
+    ]
+  },
+  "materials": {
+    "primary_color_rgb": [
+      0.85,
+      0.65,
+      0.4
+    ],
+    "primary_color_dark_rgb": [
+      0.6,
+      0.4,
+      0.2
+    ],
+    "primary_roughness": 0.7,
+    "hardware_color_rgb": [
+      0.8,
+      0.8,
+      0.8
+    ],
+    "hardware_roughness": 0.3
+  },
+  "hardware": {
+    "handle_length": 0.1,
+    "knob_diameter": 0.025,
+    "knob_x_ratio": 0.55,
+    "knob_z_ratio": 0.85,
+    "hinge_sides": [
+      "left",
+      "right",
+      "left"
+    ]
+  },
+  "behavior": {
+    "behaviors": [
+      {
+        "part": "drawer",
+        "count": 3,
+        "motion": "linear",
+        "axis": "Y",
+        "row": 1
+      },
+      {
+        "part": "door",
+        "count": 3,
+        "motion": "rotational",
+        "axis": "Z",
+        "row": 2
+      }
+    ],
+    "hidden_structure": {
+      "has_back_panel": true,
+      "has_bottom_panel": true,
+      "has_internal_dividers": true,
+      "body_is_enclosed": true,
+      "drawers_have_depth": true,
+      "drawer_sides": 5,
+      "notes": "Three drawers on top row each forming a 5-sided open-top box sliding on Y axis. Three cabinet doors below with internal vertical dividers separating compartments. Enclosed body with solid back, bottom, and side panels. Legs elevate the unit off the ground."
+    },
+    "hinge_sides": [
+      "left",
+      "right",
+      "left"
+    ]
+  },
+  "bodies": {
+    "bodies": [
+      {
+        "name": "Carcass",
+        "type": "joined",
+        "material": "wood",
+        "includes": "top, bottom, sides, back, dividers, legs, shelf"
+      },
+      {
+        "name": "Drawer_0",
+        "type": "separate",
+        "material": "wood",
+        "reason": "slides independently"
+      },
+      {
+        "name": "Handle_0",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Drawer_0"
+      },
+      {
+        "name": "Drawer_1",
+        "type": "separate",
+        "material": "wood",
+        "reason": "slides independently"
+      },
+      {
+        "name": "Handle_1",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Drawer_1"
+      },
+      {
+        "name": "Drawer_2",
+        "type": "separate",
+        "material": "wood",
+        "reason": "slides independently"
+      },
+      {
+        "name": "Handle_2",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Drawer_2"
+      },
+      {
+        "name": "Door_0",
+        "type": "separate",
+        "material": "wood",
+        "reason": "swings independently"
+      },
+      {
+        "name": "Knob_0",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Door_0"
+      },
+      {
+        "name": "Door_1",
+        "type": "separate",
+        "material": "wood",
+        "reason": "swings independently"
+      },
+      {
+        "name": "Knob_1",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Door_1"
+      },
+      {
+        "name": "Door_2",
+        "type": "separate",
+        "material": "wood",
+        "reason": "swings independently"
+      },
+      {
+        "name": "Knob_2",
+        "type": "separate",
+        "material": "metal",
+        "reason": "different material, on Door_2"
+      }
+    ],
+    "total_objects": 13
+  }
+}
