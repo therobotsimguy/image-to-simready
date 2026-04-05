@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""Template-Based Multi-Agent Asset Generator.
+"""Multi-Agent Asset Generator — general purpose.
 
 Architecture:
-  Phase 1 — 6 parallel AI agents (all top models, ~25s):
-    Gemini 1: Object type + grid layout
-    Gemini 2: Dimensions in mm
-    Gemini 3: Materials + finishes
-    Claude 1: Behavior analysis (what moves, hidden structure)
-    Claude 2: Body list (what's separate vs joined)
-    Claude 3: Hardware details (handle types, knob positions, hinge sides)
+  Phase 1 — Path A (6 AI agents) ‖ Path B (4 vision models) — all parallel
+    Path A: Gemini×3 + Claude×3 → semantic understanding
+    Path B: DINO + SAM3 + DepthPro + DepthAnything3 → measurements
 
-  Phase 2 — Deterministic (instant, no API):
-    Merge → JSON spec → geometry_math.py → Blender template → execute
+  Phase 2 — Path C: AI reconciliation + Blender script generation
+    Gemini + Claude reconcile A+B, then Claude writes the Blender script.
+
+  Phase 3 — Execute in Blender via MCP
+
+Works for ANY object: bolts, cabinets, glasses, ovens, etc.
+No hardcoded templates — C generates the script based on what the object is.
 
 Usage:
     python generate_asset.py --image cabinet.png
@@ -34,114 +35,153 @@ _TOOLS_DIR = os.path.dirname(_DIR)
 BEST_GEMINI = "gemini-3.1-pro-preview"
 BEST_CLAUDE = "claude-opus-4-6"
 
+# Path B: Vision Stack
+from vision_stack import run_vision_stack
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# AGENT PROMPTS — each agent has ONE focused job, returns structured data
+# AGENT PROMPTS — general purpose, works for any object
 # ═══════════════════════════════════════════════════════════════════════════════
 
 PROMPTS = {
-    "gemini_type": """Look at this image. Answer in EXACTLY this JSON format, nothing else:
+    "gemini_type": """Look at this image. Identify the object and its structure.
+Answer in EXACTLY this JSON format, nothing else:
 {
-  "object_type": "what is this object (e.g., sideboard cabinet, hex bolt, wine glass)",
-  "manufacturing": "how was it made (e.g., panel construction, machined, blown glass)",
-  "grid": {
-    "columns": <int>,
-    "rows": <int>,
-    "row_contents": ["what's in row 0 (bottom)", "what's in row 1", ...]
-  }
+  "object_type": "what is this (e.g., hex bolt, sideboard cabinet, wine glass, microwave oven)",
+  "category": "fastener | furniture | kitchenware | appliance | tool | other",
+  "manufacturing": "how was it made (e.g., machined, panel construction, blown glass, injection molded)",
+  "geometry_approach": "revolution (rotational symmetry) | panel_construction (boxes joined) | shell (thin walls) | solid (single block) | composite (mixed)",
+  "components": [
+    {"name": "part name", "shape": "cylinder | box | sphere | cone | hex_prism | custom_profile", "is_separate_object": false}
+  ]
 }
-Count HARDWARE to determine grid: 3 bar pulls on top = 3 columns of drawers.
-3 round knobs on bottom = 3 columns of doors. Hardware count is truth.
+Count distinct parts carefully. Describe each visible component.
 Return ONLY the JSON.""",
 
-    "gemini_dims": """Look at this image. Estimate dimensions. Answer in EXACTLY this JSON format:
+    "gemini_dims": """Look at this image. Estimate real-world dimensions of this object.
+Answer in EXACTLY this JSON format:
 {
   "overall_width_mm": <number>,
   "overall_depth_mm": <number>,
   "overall_height_mm": <number>,
-  "panel_thickness_mm": <number>,
-  "leg_height_mm": <number or 0>,
-  "row_heights_mm": [<height of row 0 (bottom)>, <height of row 1>, ...],
-  "handle_length_mm": <number or 0>,
-  "knob_diameter_mm": <number or 0>
+  "components": [
+    {"name": "part name", "width_mm": <num>, "depth_mm": <num>, "height_mm": <num>}
+  ]
 }
+For rotational objects: width=depth=diameter, height=length along axis.
 Return ONLY the JSON.""",
 
-    "gemini_materials": """Look at this image. Identify materials. Answer in EXACTLY this JSON format:
-{
-  "primary_material": "wood type or metal type",
-  "primary_color_rgb": [<r 0-1>, <g 0-1>, <b 0-1>],
-  "primary_color_dark_rgb": [<r>, <g>, <b>],
-  "primary_roughness": <0-1>,
-  "hardware_material": "steel, brass, etc",
-  "hardware_color_rgb": [<r>, <g>, <b>],
-  "hardware_metallic": <0 or 1>,
-  "hardware_roughness": <0-1>
-}
-Return ONLY the JSON.""",
-
-    "claude_behavior": """Look at this image. Analyze behavior and hidden structure.
+    "gemini_materials": """Look at this image. Identify ALL materials and their appearance.
 Answer in EXACTLY this JSON format:
 {
-  "behaviors": [
-    {"part": "drawer", "count": <int>, "motion": "linear", "axis": "Y", "row": <int>},
-    {"part": "door", "count": <int>, "motion": "rotational", "axis": "Z", "row": <int>}
-  ],
-  "hidden_structure": {
-    "has_back_panel": true,
-    "has_bottom_panel": true,
-    "has_internal_dividers": true,
-    "body_is_enclosed": true,
-    "drawers_have_depth": true,
-    "drawer_sides": 5,
-    "notes": "any additional structural requirements"
-  },
-  "hinge_sides": ["left", "right", "left"]
+  "materials": [
+    {
+      "name": "descriptive name (e.g., galvanized steel, walnut wood, clear glass)",
+      "type": "metal | wood | glass | plastic | ceramic | rubber | fabric",
+      "color_rgb": [<r 0-1>, <g 0-1>, <b 0-1>],
+      "metallic": <0 or 1>,
+      "roughness": <0-1>,
+      "applied_to": ["list of component names that use this material"]
+    }
+  ]
 }
-The key rule: if drawers exist, body MUST be enclosed (solid bottom, back, sides).
-Each drawer = 5-sided box (open top). Knob is on opposite side of hinge.
 Return ONLY the JSON.""",
 
-    "claude_bodies": """Look at this image. Define the body list for 3D simulation.
+    "claude_behavior": """Look at this image. Analyze the physical behavior of this object.
+Answer in EXACTLY this JSON format:
+{
+  "object_type": "what is this object",
+  "behaviors": [
+    {"part": "part name", "motion": "none | linear | rotational | free", "axis": "X | Y | Z | none", "description": "brief description"}
+  ],
+  "structural_notes": "how parts connect, what's hidden, what constraints exist",
+  "simulation_notes": "what matters for physics simulation (mass, friction, joints)"
+}
+If the object has no moving parts (e.g., a bolt), behaviors should have motion=none.
+Return ONLY the JSON.""",
+
+    "claude_bodies": """Look at this image. Define the body list for 3D modeling.
+Each body = one Blender object. Parts that are fixed together = joined into one body.
+Parts that move independently or have different materials = separate bodies.
 Answer in EXACTLY this JSON format:
 {
   "bodies": [
-    {"name": "Carcass", "type": "joined", "material": "wood", "includes": "top, bottom, sides, back, dividers, legs"},
-    {"name": "Drawer_0", "type": "separate", "material": "wood", "reason": "slides independently"},
-    {"name": "Handle_0", "type": "separate", "material": "metal", "reason": "different material, on drawer"},
-    {"name": "Door_0", "type": "separate", "material": "wood", "reason": "swings independently"},
-    {"name": "Knob_0", "type": "separate", "material": "metal", "reason": "different material, on door"}
+    {"name": "Body_Name", "material": "material name", "geometry": "description of shape and how to build it in Blender", "separate": true_or_false, "reason": "why separate or joined"}
   ],
-  "total_objects": <int>
+  "total_objects": <int>,
+  "origin_hint": "where the object origin should be (e.g., bottom center, geometric center)"
 }
-Rules: moving parts = separate. Fixed parts = joined into carcass. Every drawer gets a handle. Every door gets a knob.
 Return ONLY the JSON.""",
 
-    "claude_hardware": """Look at this image. Describe hardware placement in detail.
+    "claude_geometry": """Look at this image. Describe the EXACT geometry needed to build this in Blender 4.3.
+Think about manufacturing: how was this object made? That determines the modeling approach.
 Answer in EXACTLY this JSON format:
 {
-  "drawer_hardware": {
-    "type": "bar_pull or knob or recessed",
-    "position_on_face": "center or offset_top or offset_bottom",
-    "z_ratio": 0.5
-  },
-  "door_hardware": {
-    "type": "round_knob or bar_pull or ring",
-    "knob_x_ratio": 0.35,
-    "knob_z_ratio": 0.55
-  },
-  "door_hinge_sides": ["left", "right", "left"],
-  "legs": {
-    "count": 4,
-    "shape": "square or round or tapered",
-    "inset_from_corner_mm": 50
-  }
+  "approach": "revolution | extrude | primitive_assembly | boolean | sculpt",
+  "blender_operations": [
+    {"step": 1, "operation": "what to do", "details": "specific Blender API calls or approach"}
+  ],
+  "critical_details": ["list of details that must be correct for realism"],
+  "common_mistakes": ["what to avoid when modeling this object"]
 }
-knob_x_ratio: 0.0=left edge, 0.5=center, 1.0=right edge of the door.
-knob_z_ratio: 0.0=bottom, 0.5=center, 1.0=top.
-hinge side is OPPOSITE of where the knob is.
+For revolution objects (bolts, glasses): describe the 2D profile to revolve.
+For panel objects (furniture): describe each panel's position.
+For complex objects: describe step by step.
 Return ONLY the JSON.""",
 }
+
+# Path C: Blender script generation prompt
+SCRIPT_GEN_PROMPT = """You are an expert Blender 4.3 Python scripter. You must write a complete Blender script to create the 3D object described below.
+
+## Object Analysis (from 6 AI agents + 4 vision models):
+{spec_data}
+
+## Rules:
+1. Clear the scene first (remove all objects, meshes, materials).
+2. Use Blender 4.3 API ONLY — no deprecated functions.
+3. All dimensions in METERS (convert from mm).
+4. Create proper materials using Principled BSDF nodes.
+5. Each body listed as separate = a separate Blender object.
+6. Apply transforms (scale, rotation) after creating each object.
+7. Use smooth shading on all objects.
+8. Set object origins correctly for physics articulation:
+   - DOORS: origin MUST be at the HINGE EDGE (left or right edge), NOT center.
+   - DRAWERS: origin at center is fine (prismatic joint slides along axis).
+   - To move the origin WITHOUT moving the visible geometry, use this pattern:
+     ```
+     def set_origin_keep_visual(obj, new_origin_x, new_origin_y, new_origin_z):
+         from mathutils import Vector
+         new_origin = Vector((new_origin_x, new_origin_y, new_origin_z))
+         offset = new_origin - obj.location
+         obj.location = new_origin
+         for v in obj.data.vertices:
+             v.co -= offset
+     ```
+     Call this AFTER creating each door, passing the hinge edge position as the new origin.
+     The door stays visually in the same place but its origin moves to the hinge edge.
+9. Export to USD and save .blend file at the end.
+
+## Blender 4.3 API reminders:
+- NO `use_auto_smooth` (removed in 4.x)
+- NO `Specular` input on Principled BSDF (removed)
+- Use `bpy.ops.mesh.primitive_*_add()` for primitives
+- For revolution/lathe objects: use `from_pydata()` with computed vertices
+- For threaded bolts: modulate vertex radius along helix
+- Apply scale: `bpy.ops.object.transform_apply(scale=True)`
+- Materials: create node tree with ShaderNodeOutputMaterial + ShaderNodeBsdfPrincipled
+- USD export: `bpy.ops.wm.usd_export(filepath='...', export_materials=True)`
+- Save: `bpy.ops.wm.save_as_mainfile(filepath='...')`
+
+## Output paths:
+- USD: {output_usd}
+- Blend: {output_blend}
+
+## IMPORTANT:
+- Write the COMPLETE script. No placeholders, no "TODO", no imports that aren't available in Blender.
+- The script runs via exec() inside Blender — no `if __name__` guards.
+- Print object count, vertex count, and dimensions at the end for verification.
+
+Write ONLY the Python script, no markdown fences, no explanations."""
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -170,7 +210,7 @@ def call_gemini(api_key, model, prompt, image_path=None):
     contents.append(prompt)
     resp = client.models.generate_content(
         model=model, contents=contents,
-        config=types.GenerateContentConfig(max_output_tokens=2048, temperature=0.1),
+        config=types.GenerateContentConfig(max_output_tokens=8192, temperature=0.1),
     )
     return resp.text
 
@@ -184,7 +224,7 @@ def call_claude(api_key, model, prompt, image_path=None):
         mime = mimetypes.guess_type(image_path)[0] or "image/png"
         content.append({"type": "image", "source": {"type": "base64", "media_type": mime, "data": b64}})
     content.append({"type": "text", "text": prompt})
-    resp = client.messages.create(model=model, max_tokens=2048,
+    resp = client.messages.create(model=model, max_tokens=16384,
                                    messages=[{"role": "user", "content": content}])
     return resp.content[0].text
 
@@ -195,12 +235,20 @@ def parse_json_response(text):
         text = text.split("```json")[1].split("```")[0].strip()
     elif "```" in text:
         text = text.split("```")[1].split("```")[0].strip()
-    # Find first { and last }
     start = text.find("{")
     end = text.rfind("}") + 1
     if start >= 0 and end > start:
         return json.loads(text[start:end])
     return json.loads(text)
+
+def extract_script(text):
+    """Extract Python script from AI response, stripping markdown fences."""
+    text = text.strip()
+    if "```python" in text:
+        text = text.split("```python")[1].split("```")[0].strip()
+    elif "```" in text:
+        text = text.split("```")[1].split("```")[0].strip()
+    return text
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -247,315 +295,101 @@ def blender_screenshot(filepath, port=9876):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# BLENDER TEMPLATE — pre-tested, no AI code generation
+# BEHAVIOR → GEOMETRIC CONSTRAINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def generate_cabinet_script(spec, output_usd, output_blend):
-    """Generate Blender script from a merged spec using geometry_math.py positions."""
-    from geometry_math import CabinetGrid
+def derive_constraints(behavior_data, bodies_data):
+    """Convert behavior analysis into DO/DON'T rules for script generation.
 
-    # Extract from spec
-    W = spec["dims"]["width"]
-    D = spec["dims"]["depth"]
-    H = spec["dims"]["height"]
-    T = spec["dims"]["panel_t"]
-    leg_h = spec["dims"]["leg_h"]
-    row_heights = spec["dims"]["row_heights"]
-    n_cols = spec["grid"]["columns"]
-    n_rows = spec["grid"]["rows"]
+    These rules prevent the script from creating geometry that would
+    block moving parts or violate physical behavior requirements.
+    """
+    rules = []
+    behaviors = behavior_data.get("behaviors", [])
+    bodies = bodies_data.get("bodies", [])
 
-    # Materials
-    wood_rgb = spec["materials"]["primary_color_rgb"]
-    wood_dark = spec["materials"]["primary_color_dark_rgb"]
-    wood_rough = spec["materials"]["primary_roughness"]
-    hw_rgb = spec["materials"]["hardware_color_rgb"]
-    hw_rough = spec["materials"]["hardware_roughness"]
+    for b in behaviors:
+        part = b.get("part", "").lower()
+        motion = b.get("motion", "none").lower()
+        axis = b.get("axis", "").upper()
 
-    # Hardware
-    handle_len = spec["hardware"]["handle_length"]
-    knob_d = spec["hardware"]["knob_diameter"]
-    knob_x_ratio = spec["hardware"]["knob_x_ratio"]
-    knob_z_ratio = spec["hardware"]["knob_z_ratio"]
-    hinge_sides = spec["hardware"].get("hinge_sides", ["left"] * n_cols)
+        if motion == "linear":
+            # Sliding parts (drawers, sliding doors)
+            rules.append(
+                f"CONSTRAINT ({part}, linear on {axis}): "
+                f"DO NOT place any structural geometry (rails, dividers, trim) in front of "
+                f"the {part} face that would visually block or intersect its slide path. "
+                f"The {part} front face must be flush with or slightly recessed from the carcass front. "
+                f"Any horizontal rail between rows must be BEHIND the {part} front face, not in front of it."
+            )
+            rules.append(
+                f"CONSTRAINT ({part}, clearance): "
+                f"Leave at least 3-5mm gap around all sides of the {part} so it can slide freely. "
+                f"The {part} must NOT touch the carcass sides, top, or bottom panels."
+            )
+            if "drawer" in part:
+                rules.append(
+                    f"CONSTRAINT ({part}, geometry): "
+                    f"Each drawer MUST be a 5-sided open-top box, NOT just a front panel. "
+                    f"It needs: front panel (visible face), bottom panel, left side wall, right side wall, "
+                    f"and back wall. The top is OPEN. The box extends back into the carcass ~80% of the "
+                    f"carcass depth. Wall thickness ~12mm. Join all 5 panels into ONE drawer object. "
+                    f"The front panel is the decorative face; the other 4 panels form the box behind it."
+                )
 
-    # Row types
-    row_types = spec["grid"]["row_types"]
+        elif motion == "rotational":
+            # Swinging parts (doors, lids)
+            rules.append(
+                f"CONSTRAINT ({part}, rotational on {axis}): "
+                f"DO NOT place any geometry in the {part}'s swing arc. "
+                f"The {part} must be able to swing open 90+ degrees without collision. "
+                f"Adjacent {part}s should not collide when opened simultaneously."
+            )
+            rules.append(
+                f"CONSTRAINT ({part}, hinge): "
+                f"The {part}'s origin/pivot MUST be at the hinge edge using set_origin_keep_visual(). "
+                f"Knobs/handles go on the OPPOSITE side of the hinge."
+            )
+            count = b.get("count", 0)
+            if "door" in part and count > 1:
+                rules.append(
+                    f"CONSTRAINT ({part}, dividers): "
+                    f"There are {count} {part}s side by side. The carcass frame MUST include "
+                    f"{count - 1} vertical divider stiles between them. Each stile is a vertical panel "
+                    f"(panel_thickness wide, full depth, full row height) that the {part}s close against. "
+                    f"Without these stiles, there would be visible gaps between adjacent {part}s."
+                )
 
-    # Compute grid
-    grid = CabinetGrid(
-        width=W, depth=D, height=H - leg_h,
-        columns=n_cols, rows=n_rows, panel_t=T,
-        row_heights=row_heights, leg_height=leg_h,
+    # Global structural rules from bodies
+    separate_parts = [b["name"] for b in bodies if b.get("separate", True)]
+    joined_parts = [b["name"] for b in bodies if not b.get("separate", True)]
+
+    if separate_parts:
+        rules.append(
+            f"CONSTRAINT (separation): These MUST be separate Blender objects: {separate_parts}. "
+            f"Do NOT join them into the carcass/frame."
+        )
+
+    if joined_parts:
+        rules.append(
+            f"CONSTRAINT (joining): These should be joined into ONE frame object: {joined_parts}. "
+            f"Use bpy.ops.object.join() after creating all frame panels."
+        )
+
+    # Visual rules
+    rules.append(
+        "CONSTRAINT (visual): Drawer fronts and door fronts must be the OUTERMOST geometry "
+        "on the front face. No rail, divider, or frame element should protrude past them. "
+        "Rails between rows should be recessed or flush with the inner edge of the front panels."
     )
 
-    # Build the Blender script from template
-    lines = []
-    lines.append("import bpy")
-    lines.append("import math")
-    lines.append("")
-    lines.append("# Clear scene")
-    lines.append("for obj in list(bpy.data.objects): bpy.data.objects.remove(obj, do_unlink=True)")
-    lines.append("for m in list(bpy.data.meshes): bpy.data.meshes.remove(m)")
-    lines.append("for m in list(bpy.data.materials): bpy.data.materials.remove(m)")
-    lines.append("")
+    rules.append(
+        "CONSTRAINT (proportions): Moving parts (doors, drawers) should fill their grid cell "
+        "with only a small gap (3-5mm) around edges. They should NOT be significantly smaller "
+        "than their cell opening."
+    )
 
-    # Materials
-    lines.append("# Wood material")
-    lines.append("wood = bpy.data.materials.new('Wood')")
-    lines.append("wood.use_nodes = True")
-    lines.append("_n = wood.node_tree.nodes; _l = wood.node_tree.links; _n.clear()")
-    lines.append("_out = _n.new('ShaderNodeOutputMaterial')")
-    lines.append("_bsdf = _n.new('ShaderNodeBsdfPrincipled')")
-    lines.append(f"_bsdf.inputs['Roughness'].default_value = {wood_rough}")
-    lines.append("_tc = _n.new('ShaderNodeTexCoord')")
-    lines.append("_mp = _n.new('ShaderNodeMapping')")
-    lines.append("_mp.inputs['Scale'].default_value = (3, 3, 25)")
-    lines.append("_ns = _n.new('ShaderNodeTexNoise')")
-    lines.append("_ns.inputs['Scale'].default_value = 5")
-    lines.append("_ns.inputs['Detail'].default_value = 14")
-    lines.append("_ns.inputs['Roughness'].default_value = 0.8")
-    lines.append("_ramp = _n.new('ShaderNodeValToRGB')")
-    lines.append("_ramp.color_ramp.elements[0].position = 0.3")
-    lines.append(f"_ramp.color_ramp.elements[0].color = ({wood_dark[0]}, {wood_dark[1]}, {wood_dark[2]}, 1)")
-    lines.append("_ramp.color_ramp.elements[1].position = 0.7")
-    lines.append(f"_ramp.color_ramp.elements[1].color = ({wood_rgb[0]}, {wood_rgb[1]}, {wood_rgb[2]}, 1)")
-    lines.append("_l.new(_tc.outputs['Object'], _mp.inputs['Vector'])")
-    lines.append("_l.new(_mp.outputs['Vector'], _ns.inputs['Vector'])")
-    lines.append("_l.new(_ns.outputs['Fac'], _ramp.inputs['Fac'])")
-    lines.append("_l.new(_ramp.outputs['Color'], _bsdf.inputs['Base Color'])")
-    lines.append("_l.new(_bsdf.outputs['BSDF'], _out.inputs['Surface'])")
-    lines.append("")
-    lines.append("# Metal material")
-    lines.append("metal = bpy.data.materials.new('Metal')")
-    lines.append("metal.use_nodes = True")
-    lines.append("_n = metal.node_tree.nodes; _l = metal.node_tree.links; _n.clear()")
-    lines.append("_out = _n.new('ShaderNodeOutputMaterial')")
-    lines.append("_bsdf = _n.new('ShaderNodeBsdfPrincipled')")
-    lines.append(f"_bsdf.inputs['Base Color'].default_value = ({hw_rgb[0]}, {hw_rgb[1]}, {hw_rgb[2]}, 1)")
-    lines.append("_bsdf.inputs['Metallic'].default_value = 1.0")
-    lines.append(f"_bsdf.inputs['Roughness'].default_value = {hw_rough}")
-    lines.append("_l.new(_bsdf.outputs['BSDF'], _out.inputs['Surface'])")
-    lines.append("")
-
-    # Helper
-    lines.append("def box(x, y, z, w, d, h):")
-    lines.append("    bpy.ops.mesh.primitive_cube_add(size=1, location=(x, y, z), scale=(w, d, h))")
-    lines.append("    o = bpy.context.active_object")
-    lines.append("    bpy.ops.object.transform_apply(scale=True)")
-    lines.append("    return o")
-    lines.append("")
-
-    # Carcass panels
-    lines.append("# Carcass panels")
-    lines.append("parts = []")
-    for p in grid.carcass_panels():
-        lines.append(f"parts.append(box({p['cx']:.6f}, {p['cy']:.6f}, {p['cz']:.6f}, {p['w']:.6f}, {p['d']:.6f}, {p['h']:.6f}))")
-
-    # Legs
-    lines.append("# Legs")
-    for i, (lx, ly, lz) in enumerate(grid.leg_positions()):
-        lines.append(f"parts.append(box({lx:.6f}, {ly:.6f}, {lz:.6f}, {grid.leg_width}, {grid.leg_width}, {grid.leg_height}))")
-
-    # Join carcass
-    lines.append("")
-    lines.append("bpy.ops.object.select_all(action='DESELECT')")
-    lines.append("for p in parts: p.select_set(True)")
-    lines.append("bpy.context.view_layer.objects.active = parts[0]")
-    lines.append("bpy.ops.object.join()")
-    lines.append("carcass = bpy.context.active_object")
-    lines.append("carcass.name = 'Carcass'")
-    lines.append("carcass.data.materials.append(wood)")
-    lines.append("bpy.ops.object.shade_smooth()")
-    lines.append("")
-
-    # Generate objects for each row
-    for row in range(n_rows):
-        rt = row_types[row] if row < len(row_types) else "unknown"
-
-        if rt == "drawers":
-            lines.append(f"# Row {row}: Drawers")
-            DW_T = 0.012  # drawer wall thickness
-            drawer_depth = (D - T) * 0.85
-
-            for col in range(n_cols):
-                cx = grid.col_center(col)
-                cz = grid.row_center(row)
-                rh = grid.row_height(row)
-                rb = grid.row_bottom(row)
-                cw = grid.col_w
-                fw = cw - grid.gap * 2
-                fh = rh - grid.gap * 2
-                fy = grid.front_panel_y()
-
-                lines.append(f"# Drawer {col}")
-                lines.append(f"_dp = []")
-                # Front
-                lines.append(f"_dp.append(box({cx:.6f}, {fy:.6f}, {cz:.6f}, {fw:.6f}, {T:.6f}, {fh:.6f}))")
-                # Bottom
-                by = fy - T/2 - (drawer_depth - T)/2
-                lines.append(f"_dp.append(box({cx:.6f}, {by:.6f}, {rb + grid.gap + DW_T/2:.6f}, {fw - 2*DW_T:.6f}, {drawer_depth - T:.6f}, {DW_T:.6f}))")
-                # Left side
-                lines.append(f"_dp.append(box({cx - fw/2 + DW_T/2:.6f}, {by:.6f}, {cz:.6f}, {DW_T:.6f}, {drawer_depth - T:.6f}, {fh - DW_T:.6f}))")
-                # Right side
-                lines.append(f"_dp.append(box({cx + fw/2 - DW_T/2:.6f}, {by:.6f}, {cz:.6f}, {DW_T:.6f}, {drawer_depth - T:.6f}, {fh - DW_T:.6f}))")
-                # Back
-                lines.append(f"_dp.append(box({cx:.6f}, {fy - drawer_depth + DW_T/2:.6f}, {cz:.6f}, {fw - 2*DW_T:.6f}, {DW_T:.6f}, {fh - DW_T:.6f}))")
-                # Join
-                lines.append("bpy.ops.object.select_all(action='DESELECT')")
-                lines.append("for p in _dp: p.select_set(True)")
-                lines.append("bpy.context.view_layer.objects.active = _dp[0]")
-                lines.append("bpy.ops.object.join()")
-                lines.append(f"bpy.context.active_object.name = 'Drawer_{col}'")
-                lines.append("bpy.context.active_object.data.materials.append(wood)")
-                lines.append("bpy.ops.object.shade_smooth()")
-                lines.append("")
-
-                # Handle
-                px, py, pz = grid.pull_position(col, row)
-                lines.append(f"box({px:.6f}, {py:.6f}, {pz:.6f}, {handle_len:.6f}, 0.012, 0.015)")
-                lines.append(f"bpy.context.active_object.name = 'Handle_{col}'")
-                lines.append("bpy.context.active_object.data.materials.append(metal)")
-                lines.append("bpy.ops.object.shade_smooth()")
-                lines.append("")
-
-        elif rt == "doors":
-            lines.append(f"# Row {row}: Doors")
-            for col in range(n_cols):
-                cx = grid.col_center(col)
-                cz = grid.row_center(row)
-                dw, dt, dh = grid.door_dims(col, row)
-                fy = grid.front_panel_y()
-
-                lines.append(f"box({cx:.6f}, {fy:.6f}, {cz:.6f}, {dw:.6f}, {dt:.6f}, {dh:.6f})")
-                lines.append(f"bpy.context.active_object.name = 'Door_{col}'")
-                lines.append("bpy.context.active_object.data.materials.append(wood)")
-                lines.append("bpy.ops.object.shade_smooth()")
-                lines.append("")
-
-                # Knob
-                hs = hinge_sides[col] if col < len(hinge_sides) else "left"
-                # Knob on opposite side of hinge
-                if hs == "left":
-                    kx_ratio = knob_x_ratio  # toward right
-                else:
-                    kx_ratio = 1.0 - knob_x_ratio  # toward left
-
-                kx, ky, kz = grid.knob_position(col, row,
-                                                  x_offset_ratio=kx_ratio,
-                                                  z_offset_ratio=knob_z_ratio)
-                lines.append(f"bpy.ops.mesh.primitive_uv_sphere_add(radius={knob_d/2:.6f}, segments=16, ring_count=8, location=({kx:.6f}, {ky:.6f}, {kz:.6f}))")
-                lines.append(f"bpy.context.active_object.name = 'Knob_{col}'")
-                lines.append("bpy.context.active_object.data.materials.append(metal)")
-                lines.append("bpy.ops.object.shade_smooth()")
-                lines.append("")
-
-    # Stats + export
-    lines.append("# Stats")
-    lines.append("all_objs = [o for o in bpy.data.objects]")
-    lines.append("tv = sum(len(o.data.vertices) for o in all_objs if hasattr(o.data, 'vertices'))")
-    lines.append("from mathutils import Vector")
-    lines.append("bmin = Vector((1e9,1e9,1e9)); bmax = Vector((-1e9,-1e9,-1e9))")
-    lines.append("for o in all_objs:")
-    lines.append("    if not hasattr(o.data, 'vertices'): continue")
-    lines.append("    for v in o.data.vertices:")
-    lines.append("        w = o.matrix_world @ v.co")
-    lines.append("        bmin = Vector((min(bmin.x,w.x), min(bmin.y,w.y), min(bmin.z,w.z)))")
-    lines.append("        bmax = Vector((max(bmax.x,w.x), max(bmax.y,w.y), max(bmax.z,w.z)))")
-    lines.append("d = bmax - bmin")
-    lines.append("print(f'Objects: {len(all_objs)}')")
-    lines.append("print(f'Vertices: {tv}')")
-    lines.append("print(f'Dims: {d.x:.3f} x {d.y:.3f} x {d.z:.3f} m')")
-    lines.append("for o in all_objs: print(f'  {o.name}: {[m.name for m in o.data.materials]}')")
-    lines.append(f"bpy.ops.wm.usd_export(filepath='{output_usd}', export_materials=True)")
-    lines.append(f"bpy.ops.wm.save_as_mainfile(filepath='{output_blend}')")
-    lines.append("print('Saved')")
-
-    return "\n".join(lines)
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# SPEC MERGER — combines 6 agent outputs into one spec
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def merge_spec(results):
-    """Merge 6 agent JSON outputs into a unified spec."""
-    gt = results["gemini_type"]
-    gd = results["gemini_dims"]
-    gm = results["gemini_materials"]
-    cb = results["claude_behavior"]
-    cbo = results["claude_bodies"]
-    ch = results["claude_hardware"]
-
-    n_cols = gt["grid"]["columns"]
-    n_rows = gt["grid"]["rows"]
-
-    # Parse row types from row_contents
-    row_types = []
-    for rc in gt["grid"].get("row_contents", []):
-        rc_lower = rc.lower()
-        if "drawer" in rc_lower:
-            row_types.append("drawers")
-        elif "door" in rc_lower:
-            row_types.append("doors")
-        else:
-            row_types.append("unknown")
-
-    # Dimensions in meters
-    W = gd["overall_width_mm"] / 1000
-    D = gd["overall_depth_mm"] / 1000
-    H = gd["overall_height_mm"] / 1000
-    T = gd["panel_thickness_mm"] / 1000
-    leg_h = gd.get("leg_height_mm", 0) / 1000
-
-    # Row heights in meters
-    row_heights_mm = gd.get("row_heights_mm", [])
-    if not row_heights_mm or len(row_heights_mm) != n_rows:
-        # Fallback: distribute evenly
-        inner_h = H - leg_h - (n_rows + 1) * T
-        row_heights_mm = [inner_h / n_rows * 1000] * n_rows
-    row_heights = [rh / 1000 for rh in row_heights_mm]
-
-    # Hardware
-    handle_len = gd.get("handle_length_mm", 120) / 1000
-    knob_d = gd.get("knob_diameter_mm", 25) / 1000
-
-    hinge_sides = ch.get("door_hinge_sides", ["left", "right", "left"][:n_cols])
-    knob_x_ratio = ch.get("door_hardware", {}).get("knob_x_ratio", 0.35)
-    knob_z_ratio = ch.get("door_hardware", {}).get("knob_z_ratio", 0.55)
-
-    return {
-        "object_type": gt["object_type"],
-        "manufacturing": gt["manufacturing"],
-        "grid": {
-            "columns": n_cols,
-            "rows": n_rows,
-            "row_types": row_types,
-        },
-        "dims": {
-            "width": W,
-            "depth": D,
-            "height": H,
-            "panel_t": T,
-            "leg_h": leg_h,
-            "row_heights": row_heights,
-        },
-        "materials": {
-            "primary_color_rgb": gm.get("primary_color_rgb", [0.55, 0.35, 0.18]),
-            "primary_color_dark_rgb": gm.get("primary_color_dark_rgb", [0.30, 0.18, 0.08]),
-            "primary_roughness": gm.get("primary_roughness", 0.4),
-            "hardware_color_rgb": gm.get("hardware_color_rgb", [0.7, 0.7, 0.72]),
-            "hardware_roughness": gm.get("hardware_roughness", 0.25),
-        },
-        "hardware": {
-            "handle_length": handle_len,
-            "knob_diameter": knob_d,
-            "knob_x_ratio": knob_x_ratio,
-            "knob_z_ratio": knob_z_ratio,
-            "hinge_sides": hinge_sides,
-        },
-        "behavior": cb,
-        "bodies": cbo,
-    }
+    return rules
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -571,15 +405,85 @@ def run_agent(func, key, model, prompt, image_path, result_dict, agent_name):
         result_dict[agent_name] = {"raw": "", "parsed": None, "error": str(e)}
 
 
+def build_spec_summary(results, vdata):
+    """Build a complete text summary of all agent + vision results for Path C."""
+    lines = ["# COMPLETE OBJECT ANALYSIS", ""]
+
+    # Path A results
+    for name in ["gemini_type", "gemini_dims", "gemini_materials",
+                 "claude_behavior", "claude_bodies", "claude_geometry"]:
+        r = results.get(name, {})
+        parsed = r.get("parsed", {})
+        if parsed:
+            lines.append(f"## {name}:")
+            lines.append(json.dumps(parsed, indent=2))
+            lines.append("")
+
+    # Derive behavioral constraints
+    behavior = results.get("claude_behavior", {}).get("parsed", {})
+    bodies = results.get("claude_bodies", {}).get("parsed", {})
+    if behavior or bodies:
+        constraints = derive_constraints(behavior or {}, bodies or {})
+        if constraints:
+            lines.append("## GEOMETRIC CONSTRAINTS (derived from behavior analysis):")
+            lines.append("These are MANDATORY rules. Violating them will break physics simulation.")
+            lines.append("")
+            for i, rule in enumerate(constraints, 1):
+                lines.append(f"  {i}. {rule}")
+            lines.append("")
+
+    # Path B results
+    if vdata:
+        lines.append("## Vision Stack (measured data):")
+        lines.append(f"  Confirmed counts: {vdata.get('counts', {})}")
+        lines.append(f"  Overall measured dims: {vdata.get('overall_dims', {})}")
+        lines.append(f"  Row ratios: {vdata.get('row_ratios', {})}")
+        lines.append(f"  Depth consistency: {vdata.get('depth_consistency', 'N/A')}")
+
+        spatial = vdata.get("spatial_layout", {})
+        if spatial:
+            lines.append(f"  Spatial layout: {spatial}")
+
+        measured = vdata.get("measured_by_type", {})
+        if measured:
+            lines.append(f"  Per-component measured dimensions:")
+            for label, mdata in measured.items():
+                lines.append(f"    {label}: {mdata['avg_width_mm']:.0f}×{mdata['avg_height_mm']:.0f}mm (n={mdata['count']})")
+
+        sampled = vdata.get("sampled_colors", {})
+        if sampled:
+            lines.append(f"  Pixel-sampled colors (from image):")
+            for label, cdata in sampled.items():
+                metal = "metallic" if cdata.get("is_metallic") else "textured"
+                lines.append(f"    {label}: RGB={cdata['avg_rgb']} ({metal})")
+
+        lines.append("")
+
+    return "\n".join(lines)
+
+
 def run_pipeline(image_path, api_keys, output_usd, output_blend):
     gkey = api_keys["gemini"]["api_key"]
     ckey = api_keys["anthropic"]["api_key"]
 
-    # ══ PHASE 1: 6 parallel agents ══════════════════════════════════════
+    # ══ PHASE 1: Path A (6 AI agents) ‖ Path B (4 vision models) ═══════
     print("\n" + "=" * 70)
-    print("  PHASE 1: 6 parallel agents (3 Gemini + 3 Claude)")
+    print("  PHASE 1: Path A (6 AI agents) ‖ Path B (4 vision models)")
+    print("           All 10 workers running in parallel")
     print("=" * 70)
 
+    t0 = time.time()
+
+    # ── Path B: Vision Stack (background thread) ────────────────────────
+    vision_result = {}
+
+    def _run_vision():
+        vision_result["data"] = run_vision_stack(image_path)
+
+    vision_thread = threading.Thread(target=_run_vision)
+    vision_thread.start()
+
+    # ── Path A: 6 AI agents ─────────────────────────────────────────────
     results = {}
     agents = [
         ("gemini_type",     call_gemini, gkey, BEST_GEMINI, PROMPTS["gemini_type"]),
@@ -587,66 +491,100 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend):
         ("gemini_materials", call_gemini, gkey, BEST_GEMINI, PROMPTS["gemini_materials"]),
         ("claude_behavior", call_claude, ckey, BEST_CLAUDE, PROMPTS["claude_behavior"]),
         ("claude_bodies",   call_claude, ckey, BEST_CLAUDE, PROMPTS["claude_bodies"]),
-        ("claude_hardware", call_claude, ckey, BEST_CLAUDE, PROMPTS["claude_hardware"]),
+        ("claude_geometry", call_claude, ckey, BEST_CLAUDE, PROMPTS["claude_geometry"]),
     ]
 
-    t0 = time.time()
-    threads = []
+    ai_threads = []
     for name, func, key, model, prompt in agents:
         t = threading.Thread(target=run_agent, args=(func, key, model, prompt, image_path, results, name))
         t.start()
-        threads.append((name, t))
+        ai_threads.append((name, t))
 
-    for name, t in threads:
+    # Wait for all
+    for name, t in ai_threads:
         t.join(timeout=120)
+    vision_thread.join(timeout=180)
 
     phase1_time = time.time() - t0
 
-    # Check results
+    # ── Path A status ───────────────────────────────────────────────────
+    print(f"\n  ── Path A: AI Agents ──")
     all_ok = True
-    for name, _ in threads:
+    for name, _ in ai_threads:
         r = results.get(name, {})
         if r.get("error"):
-            print(f"  {name}: ERROR — {r['error']}")
+            print(f"    {name}: ERROR — {r['error']}")
             all_ok = False
         elif r.get("parsed"):
-            print(f"  {name}: OK ({len(r['raw'])} chars)")
+            print(f"    {name}: OK ({len(r['raw'])} chars)")
         else:
-            print(f"  {name}: PARSE FAILED")
-            print(f"    Raw: {r.get('raw', '')[:200]}")
+            print(f"    {name}: PARSE FAILED")
+            print(f"      Raw: {r.get('raw', '')[:200]}")
             all_ok = False
 
-    print(f"\n  Phase 1: {phase1_time:.1f}s (parallel)")
+    # ── Path B status ───────────────────────────────────────────────────
+    vdata = vision_result.get("data", {})
+    print(f"\n  ── Path B: Vision Stack ──")
+    for m, s in vdata.get("model_status", {}).items():
+        print(f"    {m}: {s}")
+    print(f"    Counts: {vdata.get('counts', {})}")
+
+    print(f"\n  Phase 1: {phase1_time:.1f}s (all parallel)")
 
     if not all_ok:
-        print("  Some agents failed. Aborting.")
+        print("  Path A agents failed. Aborting.")
         return None, results
 
-    # ══ PHASE 2: Merge + Template (no API call) ═════════════════════════
+    # ══ PHASE 2: Path C — AI generates Blender script ══════════════════
     print("\n" + "=" * 70)
-    print("  PHASE 2: Merge spec + generate script (deterministic)")
+    print("  PHASE 2: Path C — reconcile + generate Blender script")
     print("=" * 70)
 
     t1 = time.time()
 
-    parsed = {name: results[name]["parsed"] for name in results}
-    spec = merge_spec(parsed)
+    # Build complete spec summary from A + B
+    spec_summary = build_spec_summary(results, vdata)
 
-    # Print spec summary
-    print(f"  Type: {spec['object_type']}")
-    print(f"  Grid: {spec['grid']['columns']}×{spec['grid']['rows']} ({spec['grid']['row_types']})")
-    print(f"  Dims: {spec['dims']['width']*1000:.0f}×{spec['dims']['depth']*1000:.0f}×{spec['dims']['height']*1000:.0f}mm")
-    print(f"  Materials: wood={spec['materials']['primary_color_rgb']}, metal={spec['materials']['hardware_color_rgb']}")
+    # Print what object we're building
+    obj_type = results.get("gemini_type", {}).get("parsed", {}).get("object_type", "unknown")
+    approach = results.get("gemini_type", {}).get("parsed", {}).get("geometry_approach", "unknown")
+    print(f"  Object: {obj_type}")
+    print(f"  Geometry approach: {approach}")
 
-    # Generate script from template
-    script = generate_cabinet_script(spec, output_usd, output_blend)
+    # Claude writes the Blender script (sees image + all analysis)
+    script_prompt = SCRIPT_GEN_PROMPT.format(
+        spec_data=spec_summary,
+        output_usd=output_usd,
+        output_blend=output_blend,
+    )
+
+    print(f"  Generating Blender script with {BEST_CLAUDE}...")
+
+    try:
+        raw_script = call_claude(ckey, BEST_CLAUDE, script_prompt, image_path=image_path)
+        script = extract_script(raw_script)
+        print(f"  Script: {len(script.splitlines())} lines, {len(script)} chars")
+    except Exception as e:
+        print(f"  Claude script generation FAILED: {e}")
+        print(f"  Falling back to Gemini...")
+        try:
+            raw_script = call_gemini(gkey, BEST_GEMINI, script_prompt, image_path=image_path)
+            script = extract_script(raw_script)
+            print(f"  Gemini script: {len(script.splitlines())} lines")
+        except Exception as e2:
+            print(f"  Gemini also failed: {e2}")
+            return None, results
 
     phase2_time = time.time() - t1
-    print(f"\n  Phase 2: {phase2_time:.3f}s (no API call)")
-    print(f"  Script: {len(script.splitlines())} lines")
+    print(f"  Phase 2: {phase2_time:.1f}s")
     print(f"  Total: {phase1_time + phase2_time:.1f}s")
 
-    return script, {"spec": spec, "agents": {k: {"raw": v["raw"]} for k, v in results.items()}}
+    return script, {
+        "object_type": obj_type,
+        "approach": approach,
+        "vision": {k: v for k, v in vdata.items() if k != "components"},
+        "agents": {k: {"raw": v["raw"]} for k, v in results.items()},
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -654,7 +592,7 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def main():
-    parser = argparse.ArgumentParser(description="Template-Based Multi-Agent Asset Generator")
+    parser = argparse.ArgumentParser(description="Multi-Agent Asset Generator")
     parser.add_argument("--image", required=True, help="Path to reference image")
     parser.add_argument("--output", default=None, help="Output USD path")
     parser.add_argument("--blender-port", type=int, default=9876, help="Blender MCP port")
@@ -676,11 +614,13 @@ def main():
 
     print()
     print("=" * 70)
-    print("  TEMPLATE-BASED MULTI-AGENT ASSET GENERATOR")
-    print(f"  Image:   {image_path}")
-    print(f"  Output:  {output_usd}")
-    print(f"  Gemini:  {BEST_GEMINI} (×3 parallel)")
-    print(f"  Claude:  {BEST_CLAUDE} (×3 parallel)")
+    print("  MULTI-AGENT ASSET GENERATOR")
+    print(f"  Image:    {image_path}")
+    print(f"  Output:   {output_usd}")
+    print(f"  Path A:   {BEST_GEMINI} (×3) + {BEST_CLAUDE} (×3)")
+    print(f"  Path B:   DINO + SAM3 + DepthPro + DepthAnything3")
+    print(f"  Path C:   {BEST_CLAUDE} (Blender script generation)")
+    print(f"  Workers:  10 parallel (6 AI + 4 vision) + 1 script gen")
     print("=" * 70)
 
     api_keys = load_api_keys()
@@ -692,8 +632,21 @@ def main():
         return
 
     # Save
+    def _json_default(o):
+        """Handle numpy types for JSON serialization."""
+        import numpy as np
+        if isinstance(o, (np.bool_,)):
+            return bool(o)
+        if isinstance(o, (np.integer,)):
+            return int(o)
+        if isinstance(o, (np.floating,)):
+            return float(o)
+        if isinstance(o, (np.ndarray,)):
+            return o.tolist()
+        raise TypeError(f"Object of type {type(o)} is not JSON serializable")
+
     with open(os.path.join(output_dir, "spec.json"), "w") as f:
-        json.dump(log.get("spec", {}), f, indent=2)
+        json.dump({k: v for k, v in log.items() if k != "agents"}, f, indent=2, default=_json_default)
     script_path = os.path.join(output_dir, "final_blender_script.py")
     with open(script_path, "w") as f:
         f.write(script)
