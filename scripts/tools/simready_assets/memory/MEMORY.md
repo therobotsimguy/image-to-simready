@@ -1,0 +1,11 @@
+- [Project Setup](project_setup.md) — Fresh install of Isaac Sim + Isaac Lab as of 2026-03-25
+- [Blender MCP Setup](blender_mcp_setup.md) — Blender MCP addon on localhost:9876, direct socket connection
+- [Pipeline & Lessons](lessons_pointer.md) — ALL lessons and pipeline knowledge is in scripts/tools/LESSONS.md — read that first
+- [Next Session](next_session_pointer.md) — Start here: scripts/tools/next_session.md has what to do next + known issues + architecture decisions
+- [V3 Orchestrator](v3_orchestrator_implementation.md) — V3 pipeline v1.27: physics reasoning (Gemini+Claude), math engine, damping fix, hinge geometry, all lessons
+- [Flag Errors Immediately](feedback_flag_errors_immediately.md) — Always flag failing models to user immediately, don't silently continue
+- [No V1 in V3](feedback_no_v1_in_v3.md) — NEVER import V1 code into V3. Build from scratch using V3 measured data
+- [V3 April 4 Status](v3_session_april4.md) — Full V3 pipeline status: what works, what's broken, next steps
+- [Do Not Implement Without Permission](feedback_no_implement_without_permission.md) — Discuss before coding. Don't create lookup tables or implement options without user approval
+- [Blender Asset Generator](blender_asset_generator.md) — AI debate pipeline, Blender 4.x lessons, geometry per object type, materials, debate fixes
+- [GitHub Credentials](github_credentials.md) — therobotsimguy account, token, repo info
