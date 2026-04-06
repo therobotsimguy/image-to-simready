@@ -180,6 +180,10 @@ SCRIPT_GEN_PROMPT = """You are an expert Blender 4.3 Python scripter. Write a CO
 ## IMPORTANT:
 - Write the COMPLETE script. No placeholders, no "TODO".
 - Print object count, vertex count, and dimensions at the end.
+- CRITICAL: If PRE-COMPUTED COORDINATES are provided above, you MUST use those exact
+  xyz positions and sizes. Do NOT recalculate positions yourself. The math engine has
+  already computed correct, consistent coordinates. Copy them directly as constants.
+  Inventing your own coordinates will produce misaligned, inconsistent geometry.
 
 Write ONLY the Python script."""
 
@@ -393,6 +397,142 @@ def derive_constraints(behavior_data, bodies_data):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# MATH ENGINE — pre-compute exact coordinates from A+B spec
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def compute_coordinates(results, vdata):
+    """Pre-compute exact xyz positions from A+B data.
+
+    Returns a coordinate table that C MUST use — no guessing allowed.
+    """
+    gt = results.get("gemini_type", {}).get("parsed", {})
+    gd = results.get("gemini_dims", {}).get("parsed", {})
+    row_ratios = vdata.get("row_ratios", {})
+
+    category = gt.get("category", "other")
+    geo_approach = gt.get("geometry_approach", "")
+
+    # Overall dims in meters
+    W = gd.get("overall_width_mm", 1000) / 1000
+    D = gd.get("overall_depth_mm", 400) / 1000
+    H = gd.get("overall_height_mm", 800) / 1000
+
+    coords = {
+        "overall": {"width_m": round(W, 4), "depth_m": round(D, 4), "height_m": round(H, 4)},
+        "objects": [],
+    }
+
+    if geo_approach == "panel_construction" or category == "furniture":
+        # Use geometry_math.py for furniture
+        T = gd.get("panel_thickness_mm", 20) / 1000
+        leg_h = gd.get("leg_height_mm", 0) / 1000
+
+        # Determine grid from A
+        components = gt.get("components", [])
+        n_cols = gt.get("grid", {}).get("columns", 3) if "grid" in gt else 3
+        n_rows = gt.get("grid", {}).get("rows", 2) if "grid" in gt else 2
+
+        # Row heights from vision ratios or dims
+        row_heights_mm = gd.get("row_heights_mm", [])
+        carcass_h = H - leg_h
+        inner_h = carcass_h - (n_rows + 1) * T
+
+        if row_ratios and n_rows == 2:
+            door_ratio = row_ratios.get("door_ratio", 0.67)
+            drawer_ratio = row_ratios.get("drawer_ratio", 0.33)
+            row_heights = [inner_h * door_ratio, inner_h * drawer_ratio]
+        elif row_heights_mm and len(row_heights_mm) == n_rows:
+            row_heights = [rh / 1000 for rh in row_heights_mm]
+            # Rescale to fit
+            total = sum(row_heights)
+            if total > 0:
+                row_heights = [rh * inner_h / total for rh in row_heights]
+        else:
+            row_heights = [inner_h / n_rows] * n_rows
+
+        try:
+            from geometry_math import CabinetGrid
+            grid = CabinetGrid(
+                width=W, depth=D, height=carcass_h,
+                columns=n_cols, rows=n_rows, panel_t=T,
+                row_heights=row_heights, leg_height=leg_h,
+            )
+
+            coords["grid"] = {
+                "columns": n_cols, "rows": n_rows,
+                "panel_t_m": round(T, 4),
+                "leg_h_m": round(leg_h, 4),
+                "carcass_h_m": round(carcass_h, 4),
+                "row_heights_m": [round(h, 4) for h in row_heights],
+                "col_width_m": round(grid.col_w, 4),
+                "front_y_m": round(grid.front_panel_y(), 4),
+                "gap_m": round(grid.gap, 4),
+            }
+
+            # Carcass panels
+            coords["carcass_panels"] = []
+            for p in grid.carcass_panels():
+                coords["carcass_panels"].append({
+                    "name": p["name"],
+                    "center": [round(p["cx"], 4), round(p["cy"], 4), round(p["cz"], 4)],
+                    "size": [round(p["w"], 4), round(p["d"], 4), round(p["h"], 4)],
+                })
+
+            # Legs
+            coords["legs"] = []
+            for i, (lx, ly, lz) in enumerate(grid.leg_positions()):
+                coords["legs"].append({
+                    "name": f"Leg_{i}",
+                    "center": [round(lx, 4), round(ly, 4), round(lz, 4)],
+                    "size": [round(grid.leg_width, 4), round(grid.leg_width, 4), round(grid.leg_height, 4)],
+                })
+
+            # Per-cell objects (doors, drawers, hardware)
+            for row in range(n_rows):
+                for col in range(n_cols):
+                    cx = grid.col_center(col)
+                    cz = grid.row_center(row)
+                    dw, dt, dh = grid.door_dims(col, row)
+                    fy = grid.front_panel_y()
+
+                    coords["objects"].append({
+                        "name": f"Cell_r{row}_c{col}",
+                        "col": col, "row": row,
+                        "center": [round(cx, 4), round(fy, 4), round(cz, 4)],
+                        "size": [round(dw, 4), round(dt, 4), round(dh, 4)],
+                        "col_center_x": round(cx, 4),
+                        "row_center_z": round(cz, 4),
+                        "row_bottom_z": round(grid.row_bottom(row), 4),
+                        "row_top_z": round(grid.row_top(row), 4),
+                        "col_left_x": round(grid.col_left_edge(col), 4),
+                        "col_right_x": round(grid.col_right_edge(col), 4),
+                    })
+
+                    # Knob/pull positions
+                    kx, ky, kz = grid.knob_position(col, row)
+                    coords["objects"][-1]["knob_pos"] = [round(kx, 4), round(ky, 4), round(kz, 4)]
+                    px, py, pz = grid.pull_position(col, row)
+                    coords["objects"][-1]["pull_pos"] = [round(px, 4), round(py, 4), round(pz, 4)]
+
+        except Exception as e:
+            coords["error"] = f"CabinetGrid failed: {e}"
+
+    elif geo_approach == "revolution":
+        # For bolts, glasses — just pass dims, C handles profile
+        coords["approach"] = "revolution"
+        comp_dims = gd.get("components", [])
+        for cd in comp_dims:
+            coords["objects"].append({
+                "name": cd.get("name", "part"),
+                "width_m": round(cd.get("width_mm", 0) / 1000, 4),
+                "depth_m": round(cd.get("depth_mm", 0) / 1000, 4),
+                "height_m": round(cd.get("height_mm", 0) / 1000, 4),
+            })
+
+    return coords
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # PIPELINE
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -418,6 +558,17 @@ def build_spec_summary(results, vdata):
             lines.append(f"## {name}:")
             lines.append(json.dumps(parsed, indent=2))
             lines.append("")
+
+    # Pre-computed coordinates from math engine
+    coords = compute_coordinates(results, vdata)
+    if coords:
+        lines.append("## PRE-COMPUTED COORDINATES (from math engine)")
+        lines.append("MANDATORY: Use these EXACT coordinates. Do NOT compute your own positions.")
+        lines.append("Every panel, door, drawer, knob, and handle position is pre-calculated.")
+        lines.append("Copy these numbers directly into your script as constants.")
+        lines.append("")
+        lines.append(json.dumps(coords, indent=2))
+        lines.append("")
 
     # Derive behavioral constraints
     behavior = results.get("claude_behavior", {}).get("parsed", {})

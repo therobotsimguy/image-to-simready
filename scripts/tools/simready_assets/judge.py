@@ -257,6 +257,38 @@ def audit_structure(scene_data, behavior_data, bodies_data):
         if not obj.get("materials"):
             issues.append(f"NO MATERIAL: '{obj['name']}' has no material assigned")
 
+    # ── Check doors are same size (consistency) ──
+    door_objs = [o for o in objects if "door" in o["name"].lower() and "knob" not in o["name"].lower()]
+    if len(door_objs) >= 2:
+        widths = [o["dims"][0] for o in door_objs]
+        heights = [o["dims"][2] for o in door_objs]
+        avg_w = sum(widths) / len(widths)
+        avg_h = sum(heights) / len(heights)
+        for d in door_objs:
+            if avg_w > 0.05 and abs(d["dims"][0] - avg_w) / avg_w > 0.15:
+                issues.append(
+                    f"INCONSISTENT DOOR: '{d['name']}' width={d['dims'][0]*1000:.0f}mm "
+                    f"differs >15% from average={avg_w*1000:.0f}mm. All doors should be same size."
+                )
+            if avg_h > 0.05 and abs(d["dims"][2] - avg_h) / avg_h > 0.15:
+                issues.append(
+                    f"INCONSISTENT DOOR: '{d['name']}' height={d['dims'][2]*1000:.0f}mm "
+                    f"differs >15% from average={avg_h*1000:.0f}mm. All doors should be same size."
+                )
+
+    # ── Check drawers are same size ──
+    drawer_objs_check = [o for o in objects if "drawer" in o["name"].lower()
+                         and "handle" not in o["name"].lower() and "pull" not in o["name"].lower()]
+    if len(drawer_objs_check) >= 2:
+        widths = [o["dims"][0] for o in drawer_objs_check]
+        avg_w = sum(widths) / len(widths)
+        for d in drawer_objs_check:
+            if avg_w > 0.05 and abs(d["dims"][0] - avg_w) / avg_w > 0.15:
+                issues.append(
+                    f"INCONSISTENT DRAWER: '{d['name']}' width={d['dims'][0]*1000:.0f}mm "
+                    f"differs >15% from average={avg_w*1000:.0f}mm. All drawers should be same size."
+                )
+
     passed = len(issues) == 0
     return passed, issues
 
