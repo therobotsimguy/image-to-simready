@@ -38,20 +38,50 @@ from v5.layer3_semantic import run_layer3
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def run_blender_prep(contract: BehaviorContract, port=9876):
-    """Fix Blender GEOMETRY ONLY per Behavior Contract.
+    """Fix Blender geometry per Behavior Contract.
 
-    Blender prep owns: geometry (faces, materials, normals)
-    Blender prep does NOT own: positioning (origins, locations)
+    Ownership:
+      Blender: shift vertices so they're LOCAL to the pivot point
+               (but does NOT set obj.location — keeps at 0,0,0)
+      PhysX:   places the pivot in world space via localPos0
 
-    PhysX stage is the ONLY authority on articulated body positions.
-    All parts stay at origin (0,0,0) in Blender. PhysX uses localPos0.
+    This way:
+      - USD has NO xformOp:translate (obj.location stays 0,0,0)
+      - Mesh vertices are relative to the pivot
+      - PhysX localPos0 positions the pivot in world space
+      - No double offset
     """
     print("\n" + "=" * 60)
-    print("  BLENDER PREP: Fix geometry only (no positioning)")
+    print("  BLENDER PREP: Shift vertices to pivot-local + fix geometry")
     print("=" * 60)
 
-    # DO NOT set origins or locations — PhysX handles positioning via localPos0
-    # All parts stay at Blender origin (0,0,0)
+    for part in contract.parts:
+        if not part.primary_behavior:
+            continue
+        if part.is_static:
+            continue
+
+        behavior = part.primary_behavior
+        name = part.name
+
+        # Shift mesh vertices so they're relative to the pivot point
+        # obj.location stays at (0,0,0) — NO xformOp:translate in USD
+        if behavior.pivot_position:
+            px, py, pz = behavior.pivot_position
+            script = (
+                f'import bpy\n'
+                f'from mathutils import Vector\n'
+                f'obj = bpy.data.objects["{name}"]\n'
+                f'pivot = Vector(({px}, {py}, {pz}))\n'
+                f'for v in obj.data.vertices:\n'
+                f'    v.co -= pivot\n'
+                f'obj.data.update()\n'
+                f'print(f"{name}: vertices shifted by pivot ({px*1000:.0f},{py*1000:.0f},{pz*1000:.0f})mm — obj.location stays (0,0,0)")\n'
+            )
+            result = send_to_blender(script, port)
+            out = result.get("result", {}).get("result", "")
+            if out:
+                print(f"    {out.strip()}")
 
     # Remove cavity-blocking front faces (from contract blender_actions)
     for part in contract.parts:
