@@ -149,7 +149,7 @@ print(json.dumps(scene_data))
 # LAYER 1 MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def run_layer1(source_file, contract=None, port=9876):
+def run_layer1(source_file, contract=None, port=9876, skip_load=False):
     """Run Layer 1: Mechanical Extraction.
 
     Args:
@@ -174,17 +174,20 @@ def run_layer1(source_file, contract=None, port=9876):
             source_file=source_file,
         )
 
-    # Load file in Blender
-    ext = os.path.splitext(source_file)[1].lower()
-    if ext == ".obj":
-        print(f"  Loading OBJ: {source_file}")
-        load_obj_in_blender(source_file, port)
-    elif ext in (".blend",):
-        print(f"  Loading blend: {source_file}")
-        script = f'import bpy; bpy.ops.wm.open_mainfile(filepath="{source_file}")'
-        send_to_blender(script, port)
+    # Load file in Blender (unless scene already loaded from image path)
+    if skip_load:
+        print(f"  Scene already in Blender (from image → geometry stage)")
     else:
-        raise ValueError(f"Unsupported file type: {ext}")
+        ext = os.path.splitext(source_file)[1].lower()
+        if ext == ".obj":
+            print(f"  Loading OBJ: {source_file}")
+            load_obj_in_blender(source_file, port)
+        elif ext in (".blend",):
+            print(f"  Loading blend: {source_file}")
+            script = f'import bpy; bpy.ops.wm.open_mainfile(filepath="{source_file}")'
+            send_to_blender(script, port)
+        else:
+            raise ValueError(f"Unsupported file type: {ext}")
 
     # Extract scene data
     print("  Extracting scene data...")

@@ -31,6 +31,7 @@ from v5.behavior_contract import BehaviorContract
 from v5.layer1_mechanical import run_layer1, send_to_blender
 from v5.layer2_plausible import run_layer2
 from v5.layer3_semantic import run_layer3
+from v5.image_to_geometry import run_image_to_geometry
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -313,14 +314,34 @@ def main():
     print()
     print("=" * 60)
     print("  V5 SEMANTIC BEHAVIOR PIPELINE")
-    print(f"  Input:  {input_path}")
+    ext = os.path.splitext(input_path)[1].lower()
+    input_type = "IMAGE" if ext in {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".webp"} else "3D FILE"
+    print(f"  Input:  {input_path} ({input_type})")
     print(f"  Output: {output_usd}")
     print("=" * 60)
 
     t0 = time.time()
 
-    # Layer 1: Mechanical Extraction
-    contract = run_layer1(input_path, port=args.port)
+    # Detect input type: image or 3D file
+    ext = os.path.splitext(input_path)[1].lower()
+    IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".webp"}
+    MESH_EXTS = {".obj", ".blend", ".fbx", ".stl"}
+
+    if ext in IMAGE_EXTS:
+        # IMAGE PATH: generate geometry in Blender first, then Layer 1 reads scene
+        success = run_image_to_geometry(input_path, port=args.port)
+        if not success:
+            print("\n  Image → Geometry failed.")
+            return
+        # Layer 1 reads from Blender scene (already loaded by image_to_geometry)
+        contract = run_layer1(input_path, port=args.port, skip_load=True)
+    elif ext in MESH_EXTS:
+        # MESH PATH: Layer 1 loads the file directly
+        contract = run_layer1(input_path, port=args.port)
+    else:
+        print(f"\n  Unsupported file type: {ext}")
+        print(f"  Supported: {IMAGE_EXTS | MESH_EXTS}")
+        return
 
     # Layer 2: Plausible Behaviors
     contract = run_layer2(contract)
