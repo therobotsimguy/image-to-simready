@@ -30,6 +30,10 @@ from geometry_math import (
     compute_pivot_position, compute_local_offset,
     is_point_inside_bbox, validate_joint_limits,
     validate_mass, validate_part_fits_parent,
+    arm_length_from_bbox, torque_from_gravity,
+    damping_for_revolute, damping_for_prismatic,
+    required_force_revolute, required_force_prismatic,
+    inertia_box,
 )
 
 
@@ -231,14 +235,22 @@ def run_layer3(contract: BehaviorContract):
         if ai.get("mass_kg"):
             part.mass_kg = ai["mass_kg"]
 
-        # Compute localPos0 (pivot relative to root)
+        # Compute localPos0 (pivot relative to root) using geometry_math
         root = contract.get_part(contract.root_part)
         if root:
-            part.joint_local_pos0 = (
-                round(pivot_pos[0], 4),
-                round(pivot_pos[1], 4),
-                round(pivot_pos[2], 4),
-            )
+            part.joint_local_pos0 = compute_local_offset(pivot_pos, root.origin)
+
+        # ── PHYSICS EQUATIONS: compute exact parameters from geometry + mass ──
+        # AI decides WHAT (behavior type, pivot type, axis)
+        # Equations compute HOW MUCH (damping, torque, force)
+        arm = arm_length_from_bbox(part.bbox_min, part.bbox_max, pivot_type, spec.joint_axis or "Z")
+
+        if spec.joint_type == "revolute":
+            spec.force_nm = torque_from_gravity(part.mass_kg, arm)
+            spec.damping = damping_for_revolute(part.mass_kg, arm)
+        elif spec.joint_type == "prismatic":
+            spec.force_nm = required_force_prismatic(part.mass_kg)
+            spec.damping = damping_for_prismatic(part.mass_kg)
 
         # Blender actions
         part.blender_actions.append(
@@ -252,6 +264,7 @@ def run_layer3(contract: BehaviorContract):
         reasoning = ai.get("reasoning", "")[:60]
         print(f"    {part.name}: {spec.joint_type} {spec.joint_axis} limits={limits} "
               f"pivot={pivot_type} ({pivot_pos[0]*1000:.0f},{pivot_pos[1]*1000:.0f},{pivot_pos[2]*1000:.0f})mm "
+              f"arm={arm*1000:.0f}mm damping={spec.damping} force={spec.force_nm}Nm "
               f"— {reasoning}")
 
     # Check for cavity-blocking faces on static parts

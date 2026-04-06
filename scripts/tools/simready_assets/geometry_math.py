@@ -621,6 +621,98 @@ def vertex_shift_for_pivot(
 
 
 # ═══════════════════════════════════════════════════════════════════
+# PHYSICS EQUATIONS — compute exact parameters from geometry + mass
+# ═══════════════════════════════════════════════════════════════════
+
+GRAVITY = 9.81  # m/s²
+
+
+def torque_from_gravity(mass_kg: float, arm_length_m: float) -> float:
+    """Torque required to hold a part against gravity.
+    τ = m × g × L (worst case: arm horizontal)
+    """
+    return round(mass_kg * GRAVITY * arm_length_m, 2)
+
+
+def damping_for_revolute(mass_kg: float, arm_length_m: float, settling_time_s: float = 2.0) -> float:
+    """Compute damping for a revolute joint so it settles in ~N seconds.
+
+    Critical damping: c = 2 × sqrt(I × k)
+    For gravity-driven: c ≈ 2 × m × g × L / ω_target
+    Simplified: damping ≈ mass × arm_length × gravity × settling_time / π
+    """
+    return round(mass_kg * arm_length_m * GRAVITY * settling_time_s / math.pi, 2)
+
+
+def damping_for_prismatic(mass_kg: float, settling_time_s: float = 1.5) -> float:
+    """Compute damping for a prismatic joint (drawer/rack sliding).
+
+    c ≈ 2 × mass × displacement_rate
+    Simplified: damping ≈ mass × gravity × settling_time / 2
+    """
+    return round(mass_kg * GRAVITY * settling_time_s / 2, 2)
+
+
+def inertia_box(mass_kg: float, width_m: float, height_m: float) -> float:
+    """Moment of inertia for a rectangular panel rotating about one edge.
+    I = (1/3) × m × L² (for rotation about edge, not center)
+    L = the dimension along the rotation direction
+    """
+    return round(mass_kg * max(width_m, height_m) ** 2 / 3, 4)
+
+
+def arm_length_from_bbox(
+    bbox_min: Tuple[float, float, float],
+    bbox_max: Tuple[float, float, float],
+    pivot_type: str,
+    joint_axis: str,
+) -> float:
+    """Compute the effective arm length (distance from pivot to center of mass).
+
+    For a door hinged at bottom_edge rotating on X:
+      arm = half the height (Z span)
+    For a door hinged at left_edge rotating on Z:
+      arm = half the width (X span)
+    For a knob rotating at center:
+      arm = radius = half the diameter
+    """
+    spans = {
+        "X": bbox_max[0] - bbox_min[0],
+        "Y": bbox_max[1] - bbox_min[1],
+        "Z": bbox_max[2] - bbox_min[2],
+    }
+
+    if pivot_type in ("bottom_edge", "top_edge"):
+        # Rotating about horizontal axis → arm is along Z (height)
+        return spans["Z"] / 2
+    elif pivot_type in ("left_edge", "right_edge", "hinge_edge"):
+        # Rotating about vertical axis → arm is along X (width)
+        return spans["X"] / 2
+    elif pivot_type == "center":
+        # Knob: arm = radius of the knob
+        return max(spans["X"], spans["Z"]) / 2
+    elif pivot_type in ("back_center", "front_center"):
+        # Sliding: arm = half the depth
+        return spans["Y"] / 2
+    else:
+        return max(spans.values()) / 2
+
+
+def required_force_revolute(mass_kg: float, arm_length_m: float) -> float:
+    """Force needed to open/close a revolute part (at the handle).
+    F = τ / arm_length = m × g (when arm is horizontal)
+    """
+    return round(mass_kg * GRAVITY, 2)
+
+
+def required_force_prismatic(mass_kg: float, friction_coeff: float = 0.1) -> float:
+    """Force needed to slide a prismatic part (drawer/rack).
+    F = μ × m × g
+    """
+    return round(friction_coeff * mass_kg * GRAVITY, 2)
+
+
+# ═══════════════════════════════════════════════════════════════════
 # SELF-TEST
 # ═══════════════════════════════════════════════════════════════════
 

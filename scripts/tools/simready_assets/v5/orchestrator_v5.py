@@ -65,6 +65,7 @@ def run_blender_prep(contract: BehaviorContract, port=9876):
         name = part.name
 
         # Shift mesh vertices so they're relative to the pivot point
+        # Implements vertex_shift_for_pivot(v, pivot) = v - pivot
         # obj.location stays at (0,0,0) — NO xformOp:translate in USD
         if behavior.pivot_position:
             px, py, pz = behavior.pivot_position
@@ -76,7 +77,7 @@ def run_blender_prep(contract: BehaviorContract, port=9876):
                 f'for v in obj.data.vertices:\n'
                 f'    v.co -= pivot\n'
                 f'obj.data.update()\n'
-                f'print(f"{name}: vertices shifted by pivot ({px*1000:.0f},{py*1000:.0f},{pz*1000:.0f})mm — obj.location stays (0,0,0)")\n'
+                f'print(f"{name}: vertices shifted by pivot ({px*1000:.0f},{py*1000:.0f},{pz*1000:.0f})mm")\n'
             )
             result = send_to_blender(script, port)
             out = result.get("result", {}).get("result", "")
