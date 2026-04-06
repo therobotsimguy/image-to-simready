@@ -38,63 +38,22 @@ from v5.layer3_semantic import run_layer3
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def run_blender_prep(contract: BehaviorContract, port=9876):
-    """Fix Blender geometry according to the Behavior Contract."""
+    """Fix Blender GEOMETRY ONLY per Behavior Contract.
+
+    Blender prep owns: geometry (faces, materials, normals)
+    Blender prep does NOT own: positioning (origins, locations)
+
+    PhysX stage is the ONLY authority on articulated body positions.
+    All parts stay at origin (0,0,0) in Blender. PhysX uses localPos0.
+    """
     print("\n" + "=" * 60)
-    print("  BLENDER PREP: Fix geometry per Behavior Contract")
+    print("  BLENDER PREP: Fix geometry only (no positioning)")
     print("=" * 60)
 
-    for part in contract.parts:
-        if not part.primary_behavior:
-            continue
+    # DO NOT set origins or locations — PhysX handles positioning via localPos0
+    # All parts stay at Blender origin (0,0,0)
 
-        behavior = part.primary_behavior
-        name = part.name
-
-        # 1. Set origin to pivot point
-        # IMPORTANT: shift vertices so pivot is at world origin of the object,
-        # but keep obj.location at the pivot position.
-        # Then we DON'T apply location — USD exporter needs the translate.
-        # Actually NO — the USD exporter writes obj.location as xformOp:translate
-        # which double-offsets the mesh. Instead: shift vertices, keep location.
-        # The USD will have translate=pivot and mesh relative to that. Correct.
-        #
-        # Wait — the REAL issue: Blender shows it right because it combines
-        # location + mesh. But USD also combines translate + mesh. So it should
-        # be the same. Unless the mesh vertices are in WORLD space after transform_apply...
-        #
-        # The ACTUAL fix: our set_origin shifts vertices by -offset and sets location.
-        # This is correct for Blender. For USD, the exporter writes:
-        #   xformOp:translate = obj.location (the pivot)
-        #   mesh points = vertices relative to origin (shifted by -offset)
-        # Isaac Sim applies translate to the mesh → mesh appears at translate + vertex positions
-        # Since vertex positions are already world-relative minus the offset, this IS correct.
-        #
-        # BUT: if the vertices were already at world positions (because transform_apply
-        # was called with all objects at origin=0,0,0), then after set_origin:
-        #   vertex at world (0, -0.083, 0.118) → shifted by -(0,-0.083,0.118) = vertex at (0, 0, 0)
-        #   obj.location = (0, -0.083, 0.118)
-        #   USD: translate=(0,-0.083,0.118) + vertex(0,0,0) = world (0,-0.083,0.118) ✓
-        #
-        # That should be correct. Let me NOT change the logic but verify the actual issue.
-        if behavior.pivot_position:
-            px, py, pz = behavior.pivot_position
-            script = (
-                f'import bpy\n'
-                f'from mathutils import Vector\n'
-                f'obj = bpy.data.objects["{name}"]\n'
-                f'new_origin = Vector(({px}, {py}, {pz}))\n'
-                f'offset = new_origin - obj.location\n'
-                f'obj.location = new_origin\n'
-                f'for v in obj.data.vertices:\n'
-                f'    v.co -= offset\n'
-                f'print(f"{name}: origin set to ({px*1000:.0f},{py*1000:.0f},{pz*1000:.0f})mm")\n'
-            )
-            result = send_to_blender(script, port)
-            out = result.get("result", {}).get("result", "")
-            if out:
-                print(f"    {out.strip()}")
-
-    # 2. Remove cavity-blocking front faces (from contract blender_actions)
+    # Remove cavity-blocking front faces (from contract blender_actions)
     for part in contract.parts:
         if part.is_static:
             for action in part.blender_actions:
@@ -181,9 +140,15 @@ def export_usd(output_usd, output_blend=None, port=9876):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def run_physx(contract: BehaviorContract, usd_path: str):
-    """Add PhysX properties to USD, reading from Behavior Contract."""
+    """Add PhysX properties to USD, reading from Behavior Contract.
+
+    PhysX is the SOLE AUTHORITY on articulated body positioning.
+    - localPos0 = pivot world position (from contract)
+    - xformOp:translate = zeroed (PhysX overrides it anyway)
+    - body0/body1 = parent-child hierarchy (from contract)
+    """
     print("\n" + "=" * 60)
-    print("  PHYSX: Add physics per Behavior Contract")
+    print("  PHYSX: Add physics per Behavior Contract (sole positioning authority)")
     print("=" * 60)
 
     from pxr import Usd, UsdPhysics, Sdf, Gf
