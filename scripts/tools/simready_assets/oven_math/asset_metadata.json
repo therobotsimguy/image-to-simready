@@ -1,0 +1,62 @@
+{
+  "object_type": "oven",
+  "behavior_types": [
+    "rotational",
+    "grasping",
+    "contact"
+  ],
+  "expected_behaviors": [
+    "Upper oven door opens downwards on a hinge mechanism.",
+    "Lower oven door opens downwards on a hinge mechanism.",
+    "Upper oven door handle is graspable for opening and closing the door.",
+    "Lower oven door handle is graspable for opening and closing the door.",
+    "Control knobs are rotatable to adjust settings like temperature and cooking mode.",
+    "Digital display buttons are pressable for setting time and other functions."
+  ],
+  "constraints": {
+    "opening_angle_max": 95,
+    "handle_height_min": 0.2875,
+    "handle_height_max": 0.6625,
+    "friction_coefficient_min": 0.15,
+    "slide_distance_max": 0.0
+  },
+  "n_components": 9,
+  "n_joints": 8,
+  "topology_confidence": 0.95,
+  "intent_decision": "YES",
+  "intent_confidence": "HIGH",
+  "constraint_satisfaction": "15/15",
+  "preflight_status": "PASS",
+  "ready_for_simulation": true,
+  "grasp_test_label": null,
+  "grasp_features": {
+    "handle_diameter": 25.0,
+    "friction_coefficient": 0.15,
+    "topology_feasibility": 0.95,
+    "handle_reachability": 0.673,
+    "clearance_adequacy": 0.9,
+    "mass": 0,
+    "contact_force_variance": 2.0,
+    "joint_jitter": 0.001,
+    "collision_count": 0,
+    "handle_grip_stability": 0.9
+  },
+  "stage_times": {
+    "stage_0": 16.363569259643555,
+    "stage_1": 33.02403974533081,
+    "stage_2": 0.0004229545593261719,
+    "stage_4": 0.0003304481506347656,
+    "stage_3": 0.000225067138671875,
+    "stage_4.5": 6.493123531341553,
+    "stage_5": 0.14628076553344727,
+    "stage_6": 0.09573054313659668,
+    "stage_7": 0.13378667831420898,
+    "stage_8": 0.001432657241821289,
+    "stage_10": 0.000993490219116211
+  },
+  "version": "v1.27",
+  "version_key": "oven_v1.27",
+  "timestamp": "2026-04-04T20:54:05Z",
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/oven_math/built_in_double_electric_oven_simready.usd",
+  "archived_usd": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/oven_v1.27/built_in_double_electric_oven_simready.usd"
+}

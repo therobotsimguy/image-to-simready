@@ -1,0 +1,283 @@
+{
+  "root_prim": "/body",
+  "links": {
+    "upper_oven_door": {
+      "parent": "body",
+      "role": "door"
+    },
+    "upper_oven_door_handle": {
+      "parent": "upper_oven_door",
+      "role": "handle"
+    },
+    "lower_oven_door_handle": {
+      "parent": "upper_oven_door",
+      "role": "handle"
+    },
+    "lower_oven_door": {
+      "parent": "body",
+      "role": "door"
+    },
+    "upper_left_knob": {
+      "parent": "body",
+      "role": "knob"
+    },
+    "upper_middle_left_knob": {
+      "parent": "body",
+      "role": "knob"
+    },
+    "upper_middle_right_knob": {
+      "parent": "body",
+      "role": "knob"
+    },
+    "upper_right_knob": {
+      "parent": "body",
+      "role": "knob"
+    },
+    "control_panel": {
+      "parent": "body",
+      "role": "panel"
+    },
+    "middle_divider_panel": {
+      "parent": "body",
+      "role": "panel"
+    },
+    "bottom_trim_panel": {
+      "parent": "body",
+      "role": "panel"
+    },
+    "upper_oven_racks": {
+      "parent": "body",
+      "role": "part"
+    },
+    "lower_oven_racks": {
+      "parent": "body",
+      "role": "part"
+    },
+    "upper_oven_cavity_interior": {
+      "parent": "body",
+      "role": "part"
+    },
+    "lower_oven_cavity_interior": {
+      "parent": "body",
+      "role": "part"
+    }
+  },
+  "joints": {
+    "body_to_upper_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_oven_door_to_upper_oven_door_handle": {
+      "type": "fixed",
+      "parent": "upper_oven_door",
+      "child": "upper_oven_door_handle",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "upper_oven_door_to_lower_oven_door_handle": {
+      "type": "fixed",
+      "parent": "upper_oven_door",
+      "child": "lower_oven_door_handle",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_lower_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "body_to_upper_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "body_to_upper_middle_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_middle_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "body_to_upper_middle_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_middle_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "body_to_upper_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "body_to_control_panel": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "control_panel",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_middle_divider_panel": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "middle_divider_panel",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_bottom_trim_panel": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "bottom_trim_panel",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_upper_oven_racks": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "upper_oven_racks",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_lower_oven_racks": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "lower_oven_racks",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_upper_oven_cavity_interior": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "upper_oven_cavity_interior",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    },
+    "body_to_lower_oven_cavity_interior": {
+      "type": "fixed",
+      "parent": "body",
+      "child": "lower_oven_cavity_interior",
+      "axis": [
+        0,
+        0,
+        0
+      ],
+      "limits": [
+        0,
+        0
+      ],
+      "damping": 0,
+      "friction": 0
+    }
+  }
+}

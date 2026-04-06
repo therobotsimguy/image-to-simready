@@ -1,0 +1,61 @@
+{
+  "object_type": "dresser",
+  "behavior_types": [
+    "linear",
+    "grasping"
+  ],
+  "expected_behaviors": [
+    "top-left drawer slides out for storage access",
+    "top-right drawer slides out for storage access",
+    "middle-left drawer slides out for storage access",
+    "middle-right drawer slides out for storage access",
+    "bottom-left drawer slides out for storage access",
+    "bottom-right drawer slides out for storage access",
+    "handles can be grasped to pull open drawers"
+  ],
+  "constraints": {
+    "opening_angle_max": null,
+    "slide_distance_m": 0.36,
+    "handle_height_min": 0.2585,
+    "handle_height_max": 0.6925,
+    "friction_coefficient_min": 0.35
+  },
+  "n_components": 16,
+  "n_joints": 9,
+  "topology_confidence": 0,
+  "intent_decision": "YES",
+  "intent_confidence": "MEDIUM",
+  "constraint_satisfaction": "14/15",
+  "preflight_status": "PASS",
+  "ready_for_simulation": true,
+  "grasp_test_label": null,
+  "grasp_features": {
+    "handle_diameter": 18.0,
+    "friction_coefficient": 0.37,
+    "topology_feasibility": 0,
+    "handle_reachability": 0.0,
+    "clearance_adequacy": 0,
+    "mass": 0,
+    "contact_force_variance": 2.0,
+    "joint_jitter": 0.001,
+    "collision_count": 0,
+    "handle_grip_stability": 0.9
+  },
+  "stage_times": {
+    "stage_0": 19.74096155166626,
+    "stage_1": 60.85390758514404,
+    "stage_2": 0.0003941059112548828,
+    "stage_4": 0.0002636909484863281,
+    "stage_3": 0.00024628639221191406,
+    "stage_4.5": 23.104705333709717,
+    "stage_5": 0.15598106384277344,
+    "stage_6": 0.021330833435058594,
+    "stage_7": 0.09871244430541992,
+    "stage_8": 0.002241373062133789
+  },
+  "version": "v1.17",
+  "version_key": "dresser_v1.17",
+  "timestamp": "2026-04-04T23:30:03Z",
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/dresser_yolo/dresser_simready.usd",
+  "archived_usd": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/dresser_v1.17/dresser_simready.usd"
+}

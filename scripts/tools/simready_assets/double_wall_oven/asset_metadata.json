@@ -1,0 +1,66 @@
+{
+  "object_type": "double_wall_oven",
+  "behavior_types": [
+    "rotational",
+    "grasping"
+  ],
+  "expected_behaviors": [
+    "top oven door rotates open downwards on its hinges",
+    "bottom oven door rotates open downwards on its hinges",
+    "top oven handle is graspable for opening the door",
+    "bottom oven handle is graspable for opening the door",
+    "control knobs are rotatable to adjust oven settings"
+  ],
+  "constraints": {
+    "opening_angle_max": 95,
+    "handle_height_min": 0.8,
+    "handle_height_max": 1.8,
+    "friction_coefficient_min": 0.15,
+    "slide_distance_max": null
+  },
+  "n_components": 11,
+  "n_joints": 10,
+  "topology_confidence": 0,
+  "intent_decision": "YES",
+  "intent_confidence": "MEDIUM",
+  "constraint_satisfaction": "14/15",
+  "preflight_status": "PASS",
+  "ready_for_simulation": true,
+  "grasp_test_label": null,
+  "grasp_features": {
+    "handle_diameter": 18.0,
+    "friction_coefficient": 0.15,
+    "topology_feasibility": 0,
+    "handle_reachability": 0.966,
+    "clearance_adequacy": 0,
+    "mass": 0,
+    "contact_force_variance": 2.0,
+    "joint_jitter": 0.001,
+    "collision_count": 0,
+    "handle_grip_stability": 0.9
+  },
+  "flywheel_p_success": 0.6,
+  "flywheel_confidence": "HEURISTIC",
+  "flywheel_recommendations": [
+    "Increase friction_coefficient from 0.150 to at least 0.250",
+    "Increase topology_feasibility from 0.000 to at least 0.850"
+  ],
+  "stage_times": {
+    "stage_0": 19.6464102268219,
+    "stage_1": 36.99560308456421,
+    "stage_2": 0.0003161430358886719,
+    "stage_3": 0.0002257823944091797,
+    "stage_4": 0.0001780986785888672,
+    "stage_4.5": 11.12629771232605,
+    "stage_5": 0.14184165000915527,
+    "stage_6": 0.019428014755249023,
+    "stage_7": 0.09146475791931152,
+    "stage_8": 0.0007436275482177734,
+    "stage_9": 0.00021386146545410156
+  },
+  "version": "v1.21",
+  "version_key": "double_wall_oven_v1.21",
+  "timestamp": "2026-04-04T11:18:56Z",
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/double_wall_oven/double_wall_oven_simready.usd",
+  "archived_usd": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/double_wall_oven_v1.21/double_wall_oven_simready.usd"
+}

@@ -1,0 +1,392 @@
+{
+  "asset_name": "dresser",
+  "description": "dresser",
+  "is_articulated": true,
+  "body_dims": [
+    1.3839000463485718,
+    0.30000001192092896,
+    0.7427499890327454
+  ],
+  "body_material": "wood",
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "wood",
+      "is_base": true
+    },
+    "dresser_frame": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        1.3839,
+        0.2228,
+        0.7427
+      ],
+      "dimension_source": "measured_low_conf",
+      "is_base": false
+    },
+    "leg_front_left": {
+      "mass_kg": 0.142,
+      "material": "wood",
+      "dimensions": [
+        0.0908,
+        0.0272,
+        0.0956
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "leg_front_right": {
+      "mass_kg": 0.131,
+      "material": "wood",
+      "dimensions": [
+        0.0884,
+        0.0265,
+        0.0931
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_top_left": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        2.2255,
+        0.144,
+        0.8511
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_top_right": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        2.2371,
+        0.1447,
+        0.8543
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_middle_left": {
+      "mass_kg": 11.249,
+      "material": "wood",
+      "dimensions": [
+        0.7532,
+        0.0864,
+        0.2881
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_middle_right": {
+      "mass_kg": 12.339,
+      "material": "wood",
+      "dimensions": [
+        0.7774,
+        0.0891,
+        0.2969
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_bottom_left": {
+      "mass_kg": 10.115,
+      "material": "wood",
+      "dimensions": [
+        0.7693,
+        0.0811,
+        0.2702
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_bottom_right": {
+      "mass_kg": 10.639,
+      "material": "wood",
+      "dimensions": [
+        0.7834,
+        0.0824,
+        0.2747
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "drawer_top_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_top_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_top_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_top_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_middle_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_middle_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_middle_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_middle_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_bottom_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_bottom_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_bottom_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_bottom_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  },
+  "_gemini_source": {
+    "object_type": "dresser",
+    "parts": [
+      {
+        "name": "dresser_frame",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "rounded_box",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "leg_front_left",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "leg_front_right",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_top_left",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "drawer_top_right",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "drawer_middle_left",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "drawer_middle_right",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "drawer_bottom_left",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "drawer_bottom_right",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "center"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "handle_bar",
+              "material": "metal",
+              "is_transparent": false
+            }
+          ]
+        }
+      }
+    ],
+    "visual_only_parts": [],
+    "front_face_layout": [
+      {
+        "name": "top_drawer_row",
+        "height_pct": 33.3,
+        "description": "Contains two drawers: drawer_top_left and drawer_top_right"
+      },
+      {
+        "name": "middle_drawer_row",
+        "height_pct": 33.3,
+        "description": "Contains two drawers: drawer_middle_left and drawer_middle_right"
+      },
+      {
+        "name": "bottom_drawer_row",
+        "height_pct": 33.3,
+        "description": "Contains two drawers: drawer_bottom_left and drawer_bottom_right"
+      }
+    ],
+    "count_summary": {
+      "doors": 0,
+      "knobs": 0,
+      "handles": 6,
+      "buttons": 0,
+      "digital_displays": 0
+    }
+  }
+}

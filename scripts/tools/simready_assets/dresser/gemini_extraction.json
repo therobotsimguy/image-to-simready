@@ -1,0 +1,174 @@
+{
+  "object_type": "dresser",
+  "parts": [
+    {
+      "name": "Drawer_top_left",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Drawer_middle_left",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Drawer_bottom_left",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Drawer_top_right",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Drawer_middle_right",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Drawer_bottom_right",
+      "type": "prismatic",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "upper_third"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "flat_panel"
+      }
+    },
+    {
+      "name": "Main_frame",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "none"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "rounded_box"
+      }
+    },
+    {
+      "name": "Leg_front_left",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "none"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "rounded_box"
+      }
+    },
+    {
+      "name": "Leg_front_right",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "none"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "rounded_box"
+      }
+    },
+    {
+      "name": "Leg_back_left",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "none"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "rounded_box"
+      }
+    },
+    {
+      "name": "Leg_back_right",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "none"
+      },
+      "material": "wood",
+      "shape": {
+        "base_form": "rounded_box"
+      }
+    }
+  ],
+  "visual_only_parts": [],
+  "front_face_layout": [
+    {
+      "name": "Top_drawer_row",
+      "height_pct": 33.33,
+      "description": "Contains two drawers: Drawer_top_left and Drawer_top_right."
+    },
+    {
+      "name": "Middle_drawer_row",
+      "height_pct": 33.33,
+      "description": "Contains two drawers: Drawer_middle_left and Drawer_middle_right."
+    },
+    {
+      "name": "Bottom_drawer_row",
+      "height_pct": 33.33,
+      "description": "Contains two drawers: Drawer_bottom_left and Drawer_bottom_right."
+    }
+  ],
+  "count_summary": {
+    "doors": 0,
+    "knobs": 0,
+    "handles": 6,
+    "buttons": 0,
+    "digital_displays": 0
+  }
+}

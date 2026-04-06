@@ -1,0 +1,163 @@
+{
+  "asset_body_col_0": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_1": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_2": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_3": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_4": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_5": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_6": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_col_7": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "asset_body_mesh": {
+    "collision_type": "convexDecomposition",
+    "has_protruding_features": false,
+    "is_concave": true,
+    "vertex_count": 48,
+    "reason": "Concave body (internal cavity). convexDecomposition needed."
+  },
+  "FIXED_glass_lower_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_glass_upper_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_handle_lower_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 24,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_handle_upper_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 24,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_hinge_lower_oven_door_0": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 14,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_hinge_lower_oven_door_1": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 14,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_hinge_upper_oven_door_0": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 14,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "FIXED_hinge_upper_oven_door_1": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 14,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_X_lower_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 40,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_X_upper_oven_door": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 40,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_Y_control_knob_1": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_Y_control_knob_2": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_Y_control_knob_3": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  },
+  "REV_Y_control_knob_4": {
+    "collision_type": "convexHull",
+    "has_protruding_features": false,
+    "is_concave": false,
+    "vertex_count": 8,
+    "reason": "Simple box shape. convexHull is sufficient."
+  }
+}

@@ -118,8 +118,14 @@ print(json.dumps(scene_data))
 # D2: STRUCTURAL AUDITOR — math-based scene validation
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def audit_structure(scene_data, behavior_data, bodies_data):
-    """Validate Blender scene against expected behavior spec using math.
+def audit_structure(scene_data, behavior_data, bodies_data, expected_coords=None):
+    """Validate Blender scene against expected behavior spec and pre-computed coordinates.
+
+    Args:
+        scene_data: Blender scene inspection data
+        behavior_data: from claude_behavior
+        bodies_data: from claude_bodies
+        expected_coords: pre-computed coordinates from math engine (optional)
 
     Returns: (passed, issues_list)
     """
@@ -287,6 +293,112 @@ def audit_structure(scene_data, behavior_data, bodies_data):
                 issues.append(
                     f"INCONSISTENT DRAWER: '{d['name']}' width={d['dims'][0]*1000:.0f}mm "
                     f"differs >15% from average={avg_w*1000:.0f}mm. All drawers should be same size."
+                )
+
+    # ── Validate against pre-computed coordinates (the key check) ──
+    if expected_coords:
+        # Overall dimensions check
+        expected_overall = expected_coords.get("overall", {})
+        if expected_overall and overall:
+            for i, key in enumerate(["width_m", "depth_m", "height_m"]):
+                expected_val = expected_overall.get(key, 0)
+                actual_val = overall[i]
+                if expected_val > 0 and actual_val > 0:
+                    error_pct = abs(actual_val - expected_val) / expected_val
+                    if error_pct > 0.25:  # >25% off
+                        label = key.replace("_m", "")
+                        issues.append(
+                            f"OVERALL {label.upper()} WRONG: actual={actual_val*1000:.0f}mm, "
+                            f"expected={expected_val*1000:.0f}mm (off by {error_pct*100:.0f}%). "
+                            f"Use the pre-computed coordinate: {expected_val*1000:.0f}mm."
+                        )
+
+        # Per-cell coordinate check (doors/drawers positions)
+        expected_cells = expected_coords.get("objects", [])
+        grid_info = expected_coords.get("grid", {})
+
+        for cell in expected_cells:
+            expected_center = cell.get("center", [])
+            expected_size = cell.get("size", [])
+            row = cell.get("row", -1)
+            col = cell.get("col", -1)
+
+            if not expected_center or not expected_size:
+                continue
+
+            # Find matching actual object by row/col naming patterns
+            patterns = [
+                f"r{row}", f"row{row}", f"_{row}",  # row patterns
+                f"c{col}", f"col{col}",  # col patterns
+                "left" if col == 0 else "", "center" if col == 1 else "", "right" if col == 2 else "",
+            ]
+
+            # Check doors and drawers for this cell
+            for obj in objects:
+                name_lower = obj["name"].lower()
+                if not any(k in name_lower for k in ["door", "drawer"]):
+                    continue
+                if "knob" in name_lower or "handle" in name_lower or "pull" in name_lower:
+                    continue
+
+                # Try to match by position (closest to expected center)
+                obj_center = [
+                    (obj["bbox_min"][i] + obj["bbox_max"][i]) / 2
+                    for i in range(3)
+                ]
+
+                # Check X position (column alignment)
+                expected_x = expected_center[0]
+                actual_x = obj_center[0]
+                x_error = abs(actual_x - expected_x)
+
+                # Check Z position (row alignment)
+                expected_z = expected_center[2]
+                actual_z = obj_center[2]
+                z_error = abs(actual_z - expected_z)
+
+                col_w = grid_info.get("col_width_m", 0.3)
+
+                # Only flag if this object is closest to this cell
+                if x_error < col_w * 0.6 and z_error < 0.3:
+                    # This object is in this cell — check its size
+                    for dim_i, dim_label in enumerate(["width", "depth", "height"]):
+                        exp = expected_size[dim_i]
+                        act = obj["dims"][dim_i]
+                        if exp > 0.01:
+                            dim_error = abs(act - exp) / exp
+                            if dim_error > 0.30:  # >30% off
+                                issues.append(
+                                    f"SIZE MISMATCH: '{obj['name']}' {dim_label}={act*1000:.0f}mm, "
+                                    f"expected={exp*1000:.0f}mm (off by {dim_error*100:.0f}%). "
+                                    f"Use pre-computed size: {exp*1000:.0f}mm."
+                                )
+                    break  # Only check once per cell
+
+        # Check Z ordering: drawers should be above doors if spatial_layout says so
+        door_centers_z = []
+        drawer_centers_z = []
+        for obj in objects:
+            name = obj["name"].lower()
+            if "door" in name and "knob" not in name:
+                door_centers_z.append((obj["bbox_min"][2] + obj["bbox_max"][2]) / 2)
+            elif "drawer" in name and "handle" not in name and "pull" not in name:
+                drawer_centers_z.append((obj["bbox_min"][2] + obj["bbox_max"][2]) / 2)
+
+        if door_centers_z and drawer_centers_z:
+            avg_door_z = sum(door_centers_z) / len(door_centers_z)
+            avg_drawer_z = sum(drawer_centers_z) / len(drawer_centers_z)
+            # For cabinets: drawers typically on top (higher Z), doors on bottom
+            grid_row_types = grid_info.get("row_types", [])
+            if not grid_row_types:
+                # Infer from expected_coords
+                pass
+            # Just check they're not at the same height (overlapping)
+            if abs(avg_door_z - avg_drawer_z) < 0.05:
+                issues.append(
+                    f"Z OVERLAP: doors (avg Z={avg_door_z*1000:.0f}mm) and drawers "
+                    f"(avg Z={avg_drawer_z*1000:.0f}mm) are at the same height. "
+                    f"They should be in separate rows."
                 )
 
     passed = len(issues) == 0

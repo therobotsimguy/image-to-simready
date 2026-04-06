@@ -1,0 +1,223 @@
+[
+  {
+    "component_id": "body",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6,
+      0.5,
+      0.8
+    ],
+    "material": "metal",
+    "position": [
+      0.3,
+      0.25,
+      0.4
+    ],
+    "role": "body",
+    "interaction": "fixed",
+    "confidence": 0.95,
+    "source": "inferred"
+  },
+  {
+    "component_id": "top_oven_door",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6303,
+      0.0944,
+      0.3147
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "door",
+    "interaction": "rotatable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      17.12637710571289,
+      73.47310638427734,
+      296.87042236328125,
+      213.1542205810547
+    ],
+    "sam_center_y": 143.31366348266602
+  },
+  {
+    "component_id": "bottom_oven_door",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6355,
+      0.1468,
+      0.4895
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "door",
+    "interaction": "rotatable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      16.88117790222168,
+      215.04165649414062,
+      296.2079162597656,
+      430.21356201171875
+    ],
+    "sam_center_y": 322.6276092529297
+  },
+  {
+    "component_id": "top_left_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.042,
+      0.0126,
+      0.0471
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.8,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      60.46656036376953,
+      37.87874221801758,
+      79.29314422607422,
+      59.00345230102539
+    ],
+    "sam_center_y": 48.441097259521484
+  },
+  {
+    "component_id": "top_right_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.0436,
+      0.0131,
+      0.0451
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      235.65609741210938,
+      37.9630012512207,
+      255.1472625732422,
+      58.13994598388672
+    ],
+    "sam_center_y": 48.05147361755371
+  },
+  {
+    "component_id": "bottom_left_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.042,
+      0.0126,
+      0.0471
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.8,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      60.46656036376953,
+      37.87874221801758,
+      79.29314422607422,
+      59.00345230102539
+    ],
+    "sam_center_y": 48.441097259521484
+  },
+  {
+    "component_id": "bottom_right_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.042,
+      0.0126,
+      0.0471
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.8,
+    "source": "measured",
+    "depth_consistency": 0.5,
+    "sam_bbox": [
+      60.46656036376953,
+      37.87874221801758,
+      79.29314422607422,
+      59.00345230102539
+    ],
+    "sam_center_y": 48.441097259521484
+  },
+  {
+    "component_id": "top_oven_door_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "parent": "top_oven_door"
+  },
+  {
+    "component_id": "bottom_oven_door_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "parent": "bottom_oven_door"
+  }
+]

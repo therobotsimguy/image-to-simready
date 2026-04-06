@@ -1,0 +1,173 @@
+{
+  "asset_name": "integrated_double_electric_oven",
+  "is_articulated": true,
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "metal",
+      "is_base": true
+    },
+    "upper_control_panel": {
+      "mass_kg": 20.774,
+      "material": "metal",
+      "dimensions": [
+        0.6331,
+        0.0355,
+        0.1185
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "control_knob_1": {
+      "mass_kg": 0.195,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0473
+      ],
+      "dimension_source": "measured_low_conf",
+      "is_base": false
+    },
+    "control_knob_2": {
+      "mass_kg": 0.195,
+      "material": "metal",
+      "dimensions": [
+        0.0419,
+        0.0126,
+        0.0473
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "control_knob_3": {
+      "mass_kg": 0.194,
+      "material": "metal",
+      "dimensions": [
+        0.0419,
+        0.0126,
+        0.0472
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "control_knob_4": {
+      "mass_kg": 0.195,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0473
+      ],
+      "dimension_source": "measured_low_conf",
+      "is_base": false
+    },
+    "upper_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6304,
+        0.0943,
+        0.3142
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "middle_dividing_panel": {
+      "mass_kg": 0.608,
+      "material": "metal",
+      "dimensions": [
+        0.6,
+        0.013,
+        0.01
+      ],
+      "dimension_source": "computed_from_sam_gap",
+      "is_base": false
+    },
+    "lower_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6354,
+        0.1468,
+        0.4894
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "control_knob_1": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "control_knob_1",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "control_knob_2": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "control_knob_2",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "control_knob_3": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "control_knob_3",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "control_knob_4": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "control_knob_4",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "lower_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  }
+}

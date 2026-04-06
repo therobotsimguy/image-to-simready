@@ -1,0 +1,203 @@
+{
+  "root": "body",
+  "children": [
+    {
+      "name": "Drawer_top_left",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Drawer_middle_left",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Drawer_bottom_left",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Drawer_top_right",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Drawer_middle_right",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Drawer_bottom_right",
+      "parent": "body",
+      "role": "drawer",
+      "joint_type": "prismatic",
+      "joint_axis": [
+        0,
+        1,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0.4
+      ],
+      "joint_damping": 5.0,
+      "joint_friction": 0.2,
+      "children": []
+    },
+    {
+      "name": "Main_frame",
+      "parent": "body",
+      "role": "part",
+      "joint_type": "fixed",
+      "joint_axis": [
+        0,
+        0,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0
+      ],
+      "joint_damping": 0,
+      "joint_friction": 0,
+      "children": []
+    },
+    {
+      "name": "Leg_front_left",
+      "parent": "body",
+      "role": "part",
+      "joint_type": "fixed",
+      "joint_axis": [
+        0,
+        0,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0
+      ],
+      "joint_damping": 0,
+      "joint_friction": 0,
+      "children": []
+    },
+    {
+      "name": "Leg_front_right",
+      "parent": "body",
+      "role": "part",
+      "joint_type": "fixed",
+      "joint_axis": [
+        0,
+        0,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0
+      ],
+      "joint_damping": 0,
+      "joint_friction": 0,
+      "children": []
+    },
+    {
+      "name": "Leg_back_left",
+      "parent": "body",
+      "role": "part",
+      "joint_type": "fixed",
+      "joint_axis": [
+        0,
+        0,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0
+      ],
+      "joint_damping": 0,
+      "joint_friction": 0,
+      "children": []
+    },
+    {
+      "name": "Leg_back_right",
+      "parent": "body",
+      "role": "part",
+      "joint_type": "fixed",
+      "joint_axis": [
+        0,
+        0,
+        0
+      ],
+      "joint_limits": [
+        0,
+        0
+      ],
+      "joint_damping": 0,
+      "joint_friction": 0,
+      "children": []
+    }
+  ]
+}

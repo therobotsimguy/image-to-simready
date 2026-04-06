@@ -1,0 +1,184 @@
+{
+  "asset_name": "dresser",
+  "is_articulated": true,
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "wood",
+      "is_base": true
+    },
+    "dresser_frame": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        1.3839,
+        0.2228,
+        0.7427
+      ],
+      "dimension_source": "measured_low_conf",
+      "is_base": false
+    },
+    "leg_front_left": {
+      "mass_kg": 0.142,
+      "material": "wood",
+      "dimensions": [
+        0.0908,
+        0.0272,
+        0.0956
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "leg_front_right": {
+      "mass_kg": 0.131,
+      "material": "wood",
+      "dimensions": [
+        0.0884,
+        0.0265,
+        0.0931
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_top_left": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        2.2255,
+        0.144,
+        0.8511
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_top_right": {
+      "mass_kg": 30.0,
+      "material": "wood",
+      "dimensions": [
+        2.2371,
+        0.1447,
+        0.8543
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_middle_left": {
+      "mass_kg": 11.249,
+      "material": "wood",
+      "dimensions": [
+        0.7532,
+        0.0864,
+        0.2881
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_middle_right": {
+      "mass_kg": 12.339,
+      "material": "wood",
+      "dimensions": [
+        0.7774,
+        0.0891,
+        0.2969
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_bottom_left": {
+      "mass_kg": 10.115,
+      "material": "wood",
+      "dimensions": [
+        0.7693,
+        0.0811,
+        0.2702
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "drawer_bottom_right": {
+      "mass_kg": 10.639,
+      "material": "wood",
+      "dimensions": [
+        0.7834,
+        0.0824,
+        0.2747
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "drawer_top_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_top_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_top_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_top_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_middle_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_middle_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_middle_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_middle_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_bottom_left": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_bottom_left",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "drawer_bottom_right": {
+      "type": "prismatic",
+      "parent": "body",
+      "child": "drawer_bottom_right",
+      "axis": "Y",
+      "limits": [
+        0,
+        0.18
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  }
+}

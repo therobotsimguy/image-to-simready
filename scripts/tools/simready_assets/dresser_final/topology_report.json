@@ -1,0 +1,118 @@
+{
+  "status": "VALID",
+  "checks": {
+    "size_hierarchy": "PASS",
+    "overlap_detection": "PASS",
+    "kinematic_feasibility": "PASS"
+  },
+  "issues": [
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'main_cabinet_frame' and 'front_left_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'main_cabinet_frame' and 'front_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'main_cabinet_frame' and 'back_left_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'main_cabinet_frame' and 'back_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'front_left_leg' and 'front_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'front_left_leg' and 'back_left_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'front_left_leg' and 'back_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'front_right_leg' and 'back_left_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'front_right_leg' and 'back_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'back_left_leg' and 'back_right_leg' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row1_col1' and 'drawer_row1_col2' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row1_col2' and 'drawer_row2_col1' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row1_col2' and 'drawer_row2_col2' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row1_col2' and 'drawer_row1_col1_handle' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row1_col2' and 'drawer_row2_col1_handle' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row2_col1' and 'drawer_row2_col2' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row2_col2' and 'drawer_row3_col1' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row3_col1' and 'drawer_row3_col2' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row3_col1' and 'drawer_row2_col2_handle' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row3_col1' and 'drawer_row3_col2_handle' may overlap at rest"
+    },
+    {
+      "check": "overlap_detection",
+      "severity": "WARNING",
+      "message": "Components 'drawer_row3_col2' and 'drawer_row3_col1_handle' may overlap at rest"
+    }
+  ],
+  "errors": 0,
+  "warnings": 21,
+  "confidence": 0.5800000000000001
+}

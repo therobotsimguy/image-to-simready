@@ -1,0 +1,438 @@
+[
+  {
+    "component_id": "body",
+    "type": "rectangular_panel",
+    "dimensions": [
+      1.6,
+      0.5,
+      0.8
+    ],
+    "material": "wood",
+    "position": [
+      0.8,
+      0.25,
+      0.4
+    ],
+    "role": "body",
+    "interaction": "fixed",
+    "confidence": 0.95,
+    "source": "inferred"
+  },
+  {
+    "component_id": "main_cabinet_frame",
+    "type": "rectangular_panel",
+    "dimensions": [
+      1.3509,
+      0.1807,
+      0.6025
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.8,
+    "source": "measured_low_conf",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      61.346920013427734,
+      114.0774917602539,
+      692.9647827148438,
+      395.7640075683594
+    ],
+    "sam_center_y": 254.92074966430664
+  },
+  {
+    "component_id": "front_left_leg",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.0682,
+      0.0205,
+      0.1357
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.8,
+    "source": "measured_low_conf",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      76.45661163330078,
+      394.33734130859375,
+      106.0907974243164,
+      453.278076171875
+    ],
+    "sam_center_y": 423.8077087402344
+  },
+  {
+    "component_id": "front_right_leg",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.1334,
+      0.0282,
+      0.094
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      641.5,
+      411.0,
+      699.0,
+      451.5
+    ],
+    "sam_center_y": 431.25
+  },
+  {
+    "component_id": "back_left_leg",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.1431,
+      0.0175,
+      0.0584
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      113.5,
+      421.0,
+      173.5,
+      445.5
+    ],
+    "sam_center_y": 433.25
+  },
+  {
+    "component_id": "back_right_leg",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.1199,
+      0.0155,
+      0.0517
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      611.0,
+      422.0,
+      662.0,
+      444.0
+    ],
+    "sam_center_y": 433.0
+  },
+  {
+    "component_id": "drawer_row1_col1",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6528,
+      0.0588,
+      0.1959
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.9,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      379.0597229003906,
+      293.50494384765625,
+      683.5261840820312,
+      384.876708984375
+    ],
+    "sam_center_y": 339.1908264160156
+  },
+  {
+    "component_id": "drawer_row1_col2",
+    "type": "rectangular_panel",
+    "dimensions": [
+      1.2137,
+      0.088,
+      0.4302
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      406.5,
+      88.5,
+      707.0,
+      195.0
+    ],
+    "sam_center_y": 141.75
+  },
+  {
+    "component_id": "drawer_row2_col1",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6422,
+      0.0682,
+      0.2272
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      103.5,
+      195.5,
+      404.5,
+      302.0
+    ],
+    "sam_center_y": 248.75
+  },
+  {
+    "component_id": "drawer_row2_col2",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6689,
+      0.0711,
+      0.237
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      406.5,
+      195.5,
+      707.0,
+      302.0
+    ],
+    "sam_center_y": 248.75
+  },
+  {
+    "component_id": "drawer_row3_col1",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6744,
+      0.0729,
+      0.2431
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      103.5,
+      302.5,
+      404.5,
+      411.0
+    ],
+    "sam_center_y": 356.75
+  },
+  {
+    "component_id": "drawer_row3_col2",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6861,
+      0.0743,
+      0.2477
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.708,
+    "sam_bbox": [
+      406.5,
+      302.5,
+      707.0,
+      411.0
+    ],
+    "sam_center_y": 356.75
+  },
+  {
+    "component_id": "drawer_row1_col1_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.9,
+    "source": "measured+validated",
+    "parent": "drawer_row1_col1"
+  },
+  {
+    "component_id": "drawer_row1_col2_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "drawer_row1_col2"
+  },
+  {
+    "component_id": "drawer_row2_col1_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "drawer_row2_col1"
+  },
+  {
+    "component_id": "drawer_row2_col2_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "drawer_row2_col2"
+  },
+  {
+    "component_id": "drawer_row3_col1_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "drawer_row3_col1"
+  },
+  {
+    "component_id": "drawer_row3_col2_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "drawer_row3_col2"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "asset_id": "oven_1775346274",
+  "object_type": "oven",
+  "features": [
+    25.0,
+    0.15,
+    0.95,
+    0.673,
+    0.9,
+    0,
+    41.337337493896484,
+    0.0037445498164743185,
+    23,
+    0.0
+  ],
+  "feature_names": [
+    "handle_diameter",
+    "friction_coefficient",
+    "topology_feasibility",
+    "handle_reachability",
+    "clearance_adequacy",
+    "mass",
+    "contact_force_variance",
+    "joint_jitter",
+    "collision_count",
+    "handle_grip_stability"
+  ],
+  "feature_dict": {
+    "handle_diameter": 25.0,
+    "friction_coefficient": 0.15,
+    "topology_feasibility": 0.95,
+    "handle_reachability": 0.673,
+    "clearance_adequacy": 0.9,
+    "mass": 0,
+    "contact_force_variance": 41.337337493896484,
+    "joint_jitter": 0.0037445498164743185,
+    "collision_count": 23,
+    "handle_grip_stability": 0.0
+  },
+  "label": null,
+  "timestamp": "2026-04-04T16:44:34Z",
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/oven_final/double_oven_simready.usd"
+}

@@ -1,0 +1,22 @@
+{
+  "gemini": {
+    "status": "success",
+    "n_parts": 11
+  },
+  "sam3": {
+    "status": "success",
+    "n_detections": 15
+  },
+  "depth_pro": {
+    "status": "success",
+    "depth_range": [
+      1.729217529296875,
+      1.9562485218048096
+    ],
+    "focal_length": 792.5931396484375
+  },
+  "depth_anything": {
+    "status": "success",
+    "consistency": 0.781
+  }
+}

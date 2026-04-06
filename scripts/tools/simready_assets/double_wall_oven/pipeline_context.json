@@ -1,0 +1,2001 @@
+{
+  "object_type": "double_wall_oven",
+  "object_type_slug": "double_wall_oven",
+  "image": "scripts/tools/Image_repo/oven.png",
+  "images": [
+    "scripts/tools/Image_repo/oven.png"
+  ],
+  "dims": null,
+  "description": "",
+  "output_dir": "/home/msi/IsaacLab/scripts/tools/simready_assets/double_wall_oven",
+  "tools_dir": "/home/msi/IsaacLab/scripts/tools",
+  "blender_port": 9876,
+  "behavioral_contract": {
+    "object_type": "double_wall_oven",
+    "expected_behaviors": [
+      "top oven door rotates open downwards on its hinges",
+      "bottom oven door rotates open downwards on its hinges",
+      "top oven handle is graspable for opening the door",
+      "bottom oven handle is graspable for opening the door",
+      "control knobs are rotatable to adjust oven settings"
+    ],
+    "behavior_types": [
+      "rotational",
+      "grasping"
+    ],
+    "components": [
+      {
+        "name": "main_body",
+        "type": "rectangular_panel",
+        "role": "body",
+        "interaction": "fixed"
+      },
+      {
+        "name": "top_oven_door",
+        "type": "rectangular_panel",
+        "role": "door",
+        "interaction": "rotatable"
+      },
+      {
+        "name": "top_oven_handle",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable"
+      },
+      {
+        "name": "bottom_oven_door",
+        "type": "rectangular_panel",
+        "role": "door",
+        "interaction": "rotatable"
+      },
+      {
+        "name": "bottom_oven_handle",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable"
+      },
+      {
+        "name": "control_knob_1",
+        "type": "cylindrical",
+        "role": "knob",
+        "interaction": "rotatable"
+      },
+      {
+        "name": "control_knob_2",
+        "type": "cylindrical",
+        "role": "knob",
+        "interaction": "rotatable"
+      },
+      {
+        "name": "control_knob_3",
+        "type": "cylindrical",
+        "role": "knob",
+        "interaction": "rotatable"
+      },
+      {
+        "name": "control_knob_4",
+        "type": "cylindrical",
+        "role": "knob",
+        "interaction": "rotatable"
+      }
+    ],
+    "constraints": {
+      "opening_angle_max": 95,
+      "handle_height_min": 0.8,
+      "handle_height_max": 1.8,
+      "friction_coefficient_min": 0.15,
+      "slide_distance_max": null
+    },
+    "required_domains": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      14
+    ],
+    "domain_details": {
+      "1": {
+        "name": "Directional Semantics",
+        "detail": "Direction of rotation must be specified (CW/CCW)",
+        "from_behavior": "rotational"
+      },
+      "2": {
+        "name": "Range Limits",
+        "detail": "Rotation range limits (e.g., 0-110 degrees)",
+        "from_behavior": "rotational"
+      },
+      "3": {
+        "name": "Pivot Placement",
+        "detail": "Pivot point must be at hinge/axis location",
+        "from_behavior": "rotational"
+      },
+      "4": {
+        "name": "Clearance",
+        "detail": "Rotating part must clear surrounding geometry",
+        "from_behavior": "rotational"
+      },
+      "6": {
+        "name": "Force/Torque",
+        "detail": "Grip force must be within gripper limits (Franka: 70N max)",
+        "from_behavior": "grasping"
+      },
+      "7": {
+        "name": "Contact/Friction",
+        "detail": "Contact surfaces must have sufficient friction for stable grip",
+        "from_behavior": "grasping"
+      },
+      "14": {
+        "name": "Safety Limits",
+        "detail": "Safety limits on grip force to prevent damage",
+        "from_behavior": "grasping"
+      }
+    }
+  },
+  "components": [
+    {
+      "component_id": "body",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6,
+        0.5,
+        0.8
+      ],
+      "material": "metal",
+      "position": [
+        0.3,
+        0.25,
+        0.4
+      ],
+      "role": "body",
+      "interaction": "fixed",
+      "confidence": 0.95,
+      "source": "inferred"
+    },
+    {
+      "component_id": "upper_oven_door",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6304,
+        0.0943,
+        0.3142
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "door",
+      "interaction": "rotatable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        17.152751922607422,
+        73.5411148071289,
+        296.9418029785156,
+        212.98858642578125
+      ],
+      "sam_center_y": 143.26485061645508
+    },
+    {
+      "component_id": "upper_oven_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.7,
+      "source": "gemini",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        39.56180953979492,
+        88.15631866455078,
+        275.0538024902344,
+        97.92744445800781
+      ],
+      "sam_center_y": 93.0418815612793
+    },
+    {
+      "component_id": "lower_oven_door",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6354,
+        0.1468,
+        0.4894
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "door",
+      "interaction": "rotatable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        16.897077560424805,
+        215.0514678955078,
+        296.207763671875,
+        430.16412353515625
+      ],
+      "sam_center_y": 322.60779571533203
+    },
+    {
+      "component_id": "lower_oven_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.7,
+      "source": "gemini",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        39.664852142333984,
+        232.5753936767578,
+        272.4891357421875,
+        242.47682189941406
+      ],
+      "sam_center_y": 237.52610778808594
+    },
+    {
+      "component_id": "left_outer_knob",
+      "type": "cylindrical",
+      "dimensions": [
+        0.0419,
+        0.0126,
+        0.0468
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "knob",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        60.45783996582031,
+        37.928016662597656,
+        79.2580795288086,
+        58.93423080444336
+      ],
+      "sam_center_y": 48.43112373352051
+    },
+    {
+      "component_id": "left_inner_knob",
+      "type": "cylindrical",
+      "dimensions": [
+        0.0418,
+        0.0125,
+        0.0467
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "knob",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        60.4290657043457,
+        37.92707824707031,
+        79.21292877197266,
+        58.91214370727539
+      ],
+      "sam_center_y": 48.41961097717285
+    },
+    {
+      "component_id": "right_inner_knob",
+      "type": "cylindrical",
+      "dimensions": [
+        0.0436,
+        0.0131,
+        0.0449
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "knob",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        235.6875,
+        38.00244903564453,
+        255.1962890625,
+        58.09224319458008
+      ],
+      "sam_center_y": 48.047346115112305
+    },
+    {
+      "component_id": "right_outer_knob",
+      "type": "cylindrical",
+      "dimensions": [
+        0.0436,
+        0.0131,
+        0.0451
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "knob",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "depth_consistency": 0.536,
+      "sam_bbox": [
+        235.64422607421875,
+        37.962928771972656,
+        255.15261840820312,
+        58.14285659790039
+      ],
+      "sam_center_y": 48.05289268493652
+    },
+    {
+      "component_id": "upper_oven_door_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "parent": "upper_oven_door"
+    },
+    {
+      "component_id": "lower_oven_door_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "metal",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured",
+      "parent": "lower_oven_door"
+    }
+  ],
+  "kinematic_tree": {
+    "root": "body",
+    "children": [
+      {
+        "name": "upper_oven_door",
+        "parent": "body",
+        "role": "door",
+        "joint_type": "revolute",
+        "joint_axis": "X",
+        "joint_limits": [
+          -1.57,
+          0
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": [
+          {
+            "name": "upper_oven_handle",
+            "parent": "body",
+            "role": "handle",
+            "joint_type": "fixed",
+            "joint_axis": [
+              0,
+              0,
+              0
+            ],
+            "joint_limits": [
+              0,
+              0
+            ],
+            "joint_damping": 0,
+            "joint_friction": 0,
+            "children": []
+          },
+          {
+            "name": "lower_oven_handle",
+            "parent": "body",
+            "role": "handle",
+            "joint_type": "fixed",
+            "joint_axis": [
+              0,
+              0,
+              0
+            ],
+            "joint_limits": [
+              0,
+              0
+            ],
+            "joint_damping": 0,
+            "joint_friction": 0,
+            "children": []
+          },
+          {
+            "name": "upper_oven_door_handle",
+            "parent": "upper_oven_door",
+            "role": "handle",
+            "joint_type": "fixed",
+            "joint_axis": [
+              0,
+              0,
+              0
+            ],
+            "joint_limits": [
+              0,
+              0
+            ],
+            "joint_damping": 0,
+            "joint_friction": 0,
+            "children": []
+          },
+          {
+            "name": "lower_oven_door_handle",
+            "parent": "lower_oven_door",
+            "role": "handle",
+            "joint_type": "fixed",
+            "joint_axis": [
+              0,
+              0,
+              0
+            ],
+            "joint_limits": [
+              0,
+              0
+            ],
+            "joint_damping": 0,
+            "joint_friction": 0,
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "lower_oven_door",
+        "parent": "body",
+        "role": "door",
+        "joint_type": "revolute",
+        "joint_axis": "X",
+        "joint_limits": [
+          -1.57,
+          0
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": []
+      },
+      {
+        "name": "left_outer_knob",
+        "parent": "body",
+        "role": "knob",
+        "joint_type": "revolute",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          4.71
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": []
+      },
+      {
+        "name": "left_inner_knob",
+        "parent": "body",
+        "role": "knob",
+        "joint_type": "revolute",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          4.71
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": []
+      },
+      {
+        "name": "right_inner_knob",
+        "parent": "body",
+        "role": "knob",
+        "joint_type": "revolute",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          4.71
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": []
+      },
+      {
+        "name": "right_outer_knob",
+        "parent": "body",
+        "role": "knob",
+        "joint_type": "revolute",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          4.71
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.1,
+        "children": []
+      }
+    ]
+  },
+  "topology_report": {
+    "status": "VALID",
+    "checks": {
+      "size_hierarchy": "PASS",
+      "overlap_detection": "PASS",
+      "kinematic_feasibility": "PASS"
+    },
+    "issues": [
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'upper_oven_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'lower_oven_door' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'lower_oven_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'left_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'left_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'lower_oven_door' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'lower_oven_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'left_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'left_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_handle' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'lower_oven_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'left_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'left_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_door' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'left_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'left_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'lower_oven_handle' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_outer_knob' and 'left_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_outer_knob' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_outer_knob' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_outer_knob' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_outer_knob' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_inner_knob' and 'right_inner_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_inner_knob' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_inner_knob' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'left_inner_knob' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'right_inner_knob' and 'right_outer_knob' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'right_inner_knob' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'right_inner_knob' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'right_outer_knob' and 'upper_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'right_outer_knob' and 'lower_oven_door_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'upper_oven_door_handle' and 'lower_oven_door_handle' may overlap at rest"
+      }
+    ],
+    "errors": 0,
+    "warnings": 43,
+    "confidence": 0
+  },
+  "layout": {
+    "body_dims": [
+      0.6,
+      0.5,
+      0.8
+    ],
+    "components": {
+      "body": {
+        "position": [
+          0.3,
+          0.25,
+          0.4
+        ],
+        "dimensions": [
+          0.6,
+          0.5,
+          0.8
+        ],
+        "reachability": 0.9538210460525702,
+        "friction_coefficient": 0.15,
+        "role": "body",
+        "material": "metal"
+      },
+      "upper_oven_door": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.6304,
+          0.0943,
+          0.3142
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.15,
+        "role": "door",
+        "material": "metal"
+      },
+      "upper_oven_handle": {
+        "position": [
+          0.3,
+          0,
+          0.48
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.962033763653095,
+        "friction_coefficient": 0.15,
+        "role": "handle",
+        "material": "metal"
+      },
+      "lower_oven_door": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.6354,
+          0.1468,
+          0.4894
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.15,
+        "role": "door",
+        "material": "metal"
+      },
+      "lower_oven_handle": {
+        "position": [
+          0.3,
+          0,
+          0.48
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.962033763653095,
+        "friction_coefficient": 0.15,
+        "role": "handle",
+        "material": "metal"
+      },
+      "left_outer_knob": {
+        "position": [
+          0.12,
+          0,
+          0.5599999999999999
+        ],
+        "diameter": 0.025,
+        "reachability": 0.9698395819076657,
+        "friction_coefficient": 0.15,
+        "role": "knob",
+        "material": "metal"
+      },
+      "left_inner_knob": {
+        "position": [
+          0.12,
+          0,
+          0.5599999999999999
+        ],
+        "diameter": 0.025,
+        "reachability": 0.9698395819076657,
+        "friction_coefficient": 0.15,
+        "role": "knob",
+        "material": "metal"
+      },
+      "right_inner_knob": {
+        "position": [
+          0.12,
+          0,
+          0.5599999999999999
+        ],
+        "diameter": 0.025,
+        "reachability": 0.9698395819076657,
+        "friction_coefficient": 0.15,
+        "role": "knob",
+        "material": "metal"
+      },
+      "right_outer_knob": {
+        "position": [
+          0.12,
+          0,
+          0.5599999999999999
+        ],
+        "diameter": 0.025,
+        "reachability": 0.9698395819076657,
+        "friction_coefficient": 0.15,
+        "role": "knob",
+        "material": "metal"
+      },
+      "upper_oven_door_handle": {
+        "position": [
+          0.3,
+          0,
+          0.48
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.962033763653095,
+        "friction_coefficient": 0.15,
+        "role": "handle",
+        "material": "metal"
+      },
+      "lower_oven_door_handle": {
+        "position": [
+          0.3,
+          0,
+          0.48
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.962033763653095,
+        "friction_coefficient": 0.15,
+        "role": "handle",
+        "material": "metal"
+      }
+    },
+    "constraints_satisfied": true,
+    "violations": [],
+    "handle_reachability": 0.9659366727803804,
+    "topology_feasibility": 0.9
+  },
+  "intent_validation": {
+    "decision": "YES",
+    "alignment_score": 0.915,
+    "threshold": 0.85,
+    "reasoning": "Layout-intent alignment exceeds threshold",
+    "gemini_alignment": 0.95,
+    "matrix_alignment": 0.909,
+    "xgboost_alignment": null,
+    "constraint_satisfaction": "14/15",
+    "violations": [],
+    "recommendations": [],
+    "confidence": "MEDIUM",
+    "domain_results": {
+      "1": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Motion directions consistent"
+      },
+      "2": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Joint ranges within bounds"
+      },
+      "3": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Pivot points from kinematic tree"
+      },
+      "4": {
+        "status": "WARNING",
+        "score": 0,
+        "detail": "43 clearance issue(s)"
+      },
+      "5": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "No multi-step sequences"
+      },
+      "6": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Forces within Franka capability (70N)"
+      },
+      "7": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Friction adequate"
+      },
+      "8": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Symmetry consistent"
+      },
+      "9": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Materials from reference data"
+      },
+      "10": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Internal volume accounted for"
+      },
+      "11": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "10 joints in chain"
+      },
+      "12": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Gravity + manual actuation"
+      },
+      "13": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Joint limits as feedback"
+      },
+      "14": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Hard stops via joint limits"
+      },
+      "15": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Geometry-only (no textures)"
+      }
+    },
+    "gemini_result": {
+      "overall_alignment": 0.95,
+      "behavior_analysis": [
+        {
+          "behavior": "top oven door rotates open downwards on its hinges",
+          "alignment": 1.0,
+          "achievable": true,
+          "reason": "The 'upper_oven_door' component is present and has the role 'door', fulfilling the structural requirement for this behavior."
+        },
+        {
+          "behavior": "bottom oven door rotates open downwards on its hinges",
+          "alignment": 1.0,
+          "achievable": true,
+          "reason": "The 'lower_oven_door' component is present and has the role 'door', fulfilling the structural requirement for this behavior."
+        },
+        {
+          "behavior": "top oven handle is graspable for opening the door",
+          "alignment": 0.9,
+          "achievable": true,
+          "reason": "Both 'upper_oven_handle' and 'upper_oven_door_handle' components are present with 'handle' roles and graspable properties, ensuring the behavior is achievable. However, the redundancy indicates a potential layout issue."
+        },
+        {
+          "behavior": "bottom oven handle is graspable for opening the door",
+          "alignment": 0.9,
+          "achievable": true,
+          "reason": "Both 'lower_oven_handle' and 'lower_oven_door_handle' components are present with 'handle' roles and graspable properties, ensuring the behavior is achievable. However, the redundancy indicates a potential layout issue."
+        },
+        {
+          "behavior": "control knobs are rotatable to adjust oven settings",
+          "alignment": 1.0,
+          "achievable": true,
+          "reason": "Multiple components ('left_outer_knob', 'left_inner_knob', 'right_inner_knob', 'right_outer_knob') are present with the role 'knob', suitable for adjusting settings."
+        }
+      ],
+      "issues": [
+        "Redundant handle components: 'upper_oven_handle' and 'upper_oven_door_handle' both refer to the top oven door handle. Similarly, 'lower_oven_handle' and 'lower_oven_door_handle' refer to the bottom oven door handle. This duplication can lead to confusion and unnecessary complexity in later stages."
+      ],
+      "recommendations": [
+        "Consolidate 'upper_oven_handle' and 'upper_oven_door_handle' into a single, uniquely named component for the top oven handle.",
+        "Consolidate 'lower_oven_handle' and 'lower_oven_door_handle' into a single, uniquely named component for the bottom oven handle."
+      ]
+    },
+    "xgboost_result": null,
+    "attempt": 1
+  },
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/double_wall_oven/raw_blueprint.usd",
+  "physics_usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/double_wall_oven/double_wall_oven_simready.usd",
+  "preflight_report": {
+    "status": "PASS",
+    "checks": {
+      "usd_structure": "PASS",
+      "physics_properties": "PASS",
+      "collision_detection": "PASS",
+      "simready_compliance": "PASS"
+    },
+    "issues": [],
+    "ready_for_simulation": true
+  },
+  "grasp_test_data": {
+    "asset_id": "double_wall_oven_1775326736",
+    "object_type": "double_wall_oven",
+    "features": [
+      18.0,
+      0.15,
+      0,
+      0.966,
+      0,
+      0,
+      2.0,
+      0.001,
+      0,
+      0.9
+    ],
+    "feature_names": [
+      "handle_diameter",
+      "friction_coefficient",
+      "topology_feasibility",
+      "handle_reachability",
+      "clearance_adequacy",
+      "mass",
+      "contact_force_variance",
+      "joint_jitter",
+      "collision_count",
+      "handle_grip_stability"
+    ],
+    "feature_dict": {
+      "handle_diameter": 18.0,
+      "friction_coefficient": 0.15,
+      "topology_feasibility": 0,
+      "handle_reachability": 0.966,
+      "clearance_adequacy": 0,
+      "mass": 0,
+      "contact_force_variance": 2.0,
+      "joint_jitter": 0.001,
+      "collision_count": 0,
+      "handle_grip_stability": 0.9
+    },
+    "label": null,
+    "timestamp": "2026-04-04T11:18:56Z",
+    "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/double_wall_oven/double_wall_oven_simready.usd"
+  },
+  "flywheel_prediction": {
+    "p_success": 0.6,
+    "confidence": "HEURISTIC",
+    "recommendations": [
+      "Increase friction_coefficient from 0.150 to at least 0.250",
+      "Increase topology_feasibility from 0.000 to at least 0.850"
+    ],
+    "model_version": null,
+    "feature_importance": null,
+    "n_training_examples": 8
+  },
+  "asset_version": {
+    "version": "v1.21",
+    "version_key": "double_wall_oven_v1.21",
+    "archive_dir": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/double_wall_oven_v1.21"
+  },
+  "stage_times": {
+    "stage_0": 19.6464102268219,
+    "stage_1": 36.99560308456421,
+    "stage_2": 0.0003161430358886719,
+    "stage_3": 0.0002257823944091797,
+    "stage_4": 0.0001780986785888672,
+    "stage_4.5": 11.12629771232605,
+    "stage_5": 0.14184165000915527,
+    "stage_6": 0.019428014755249023,
+    "stage_7": 0.09146475791931152,
+    "stage_8": 0.0007436275482177734,
+    "stage_9": 0.00021386146545410156,
+    "stage_10": 0.000759124755859375
+  },
+  "verbose": false,
+  "test": false,
+  "skip_gemini": false,
+  "max_intent_retries": 3,
+  "spec_data": {
+    "asset_name": "double_wall_oven",
+    "description": "double_wall_oven",
+    "is_articulated": true,
+    "body_dims": [
+      0.6,
+      0.5,
+      0.8
+    ],
+    "body_material": "metal",
+    "links": {
+      "body": {
+        "mass_kg": 40.0,
+        "material": "metal",
+        "is_base": true
+      },
+      "upper_oven_door": {
+        "mass_kg": 30.0,
+        "material": "metal",
+        "dimensions": [
+          0.6304,
+          0.0943,
+          0.3142
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      },
+      "lower_oven_door": {
+        "mass_kg": 30.0,
+        "material": "metal",
+        "dimensions": [
+          0.6354,
+          0.1468,
+          0.4894
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      },
+      "left_outer_knob": {
+        "mass_kg": 0.193,
+        "material": "metal",
+        "dimensions": [
+          0.0419,
+          0.0126,
+          0.0468
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      },
+      "left_inner_knob": {
+        "mass_kg": 0.19,
+        "material": "metal",
+        "dimensions": [
+          0.0418,
+          0.0125,
+          0.0467
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      },
+      "right_inner_knob": {
+        "mass_kg": 0.2,
+        "material": "metal",
+        "dimensions": [
+          0.0436,
+          0.0131,
+          0.0449
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      },
+      "right_outer_knob": {
+        "mass_kg": 0.201,
+        "material": "metal",
+        "dimensions": [
+          0.0436,
+          0.0131,
+          0.0451
+        ],
+        "dimension_source": "measured",
+        "is_base": false
+      }
+    },
+    "joints": {
+      "upper_oven_door": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "upper_oven_door",
+        "axis": "X",
+        "limits": [
+          -1.57,
+          0
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "lower_oven_door": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "lower_oven_door",
+        "axis": "X",
+        "limits": [
+          -1.57,
+          0
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "left_outer_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "left_outer_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "left_inner_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "left_inner_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "right_inner_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "right_inner_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "right_outer_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "right_outer_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      }
+    },
+    "_gemini_source": {
+      "object_type": "double_wall_oven",
+      "parts": [
+        {
+          "name": "upper_oven_door",
+          "type": "revolute",
+          "hinge_side": "bottom",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "flush"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": [
+              {
+                "name": "glass_window",
+                "coverage_pct": 60,
+                "material": "glass",
+                "is_transparent": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "upper_oven_handle",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "flush"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "lower_oven_door",
+          "type": "revolute",
+          "hinge_side": "bottom",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "flush"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": [
+              {
+                "name": "glass_window",
+                "coverage_pct": 60,
+                "material": "glass",
+                "is_transparent": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "lower_oven_handle",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "flush"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "left_outer_knob",
+          "type": "revolute",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "knob",
+            "orientation": "perpendicular",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "left_inner_knob",
+          "type": "revolute",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "knob",
+            "orientation": "perpendicular",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "right_inner_knob",
+          "type": "revolute",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "knob",
+            "orientation": "perpendicular",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "right_outer_knob",
+          "type": "revolute",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "knob",
+            "orientation": "perpendicular",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        }
+      ],
+      "visual_only_parts": [
+        {
+          "name": "digital_time_display",
+          "what_it_is": "digital_display",
+          "location": "top control panel, center"
+        },
+        {
+          "name": "brand_logo_adura",
+          "what_it_is": "brand_logo",
+          "location": "lower oven door, bottom edge center"
+        },
+        {
+          "name": "left_outer_knob_indicator_light",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, next to left_outer_knob"
+        },
+        {
+          "name": "left_inner_knob_indicator_light",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, next to left_inner_knob"
+        },
+        {
+          "name": "right_inner_knob_indicator_light",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, next to right_inner_knob"
+        },
+        {
+          "name": "right_outer_knob_indicator_light",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, next to right_outer_knob"
+        },
+        {
+          "name": "display_setting_light_1",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, left of digital display, top"
+        },
+        {
+          "name": "display_setting_light_2",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, left of digital display, bottom"
+        },
+        {
+          "name": "display_setting_light_3",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, right of digital display, top"
+        },
+        {
+          "name": "display_setting_light_4",
+          "what_it_is": "indicator_light",
+          "location": "top control panel, right of digital display, bottom"
+        }
+      ],
+      "front_face_layout": [
+        {
+          "name": "top_control_panel",
+          "height_pct": 15,
+          "description": "Contains knobs, digital display, and indicator lights."
+        },
+        {
+          "name": "upper_oven_zone",
+          "height_pct": 35,
+          "description": "Upper oven door with handle and glass window."
+        },
+        {
+          "name": "middle_divider_strip",
+          "height_pct": 5,
+          "description": "Stainless steel strip separating upper and lower ovens."
+        },
+        {
+          "name": "lower_oven_zone",
+          "height_pct": 35,
+          "description": "Lower oven door with handle, glass window, and brand logo."
+        },
+        {
+          "name": "bottom_trim_panel",
+          "height_pct": 10,
+          "description": "Stainless steel trim panel at the bottom of the appliance."
+        }
+      ],
+      "count_summary": {
+        "doors": 2,
+        "knobs": 4,
+        "handles": 2,
+        "buttons": 0,
+        "digital_displays": 1
+      }
+    }
+  },
+  "gemini_data": {
+    "object_type": "double_wall_oven",
+    "parts": [
+      {
+        "name": "upper_oven_door",
+        "type": "revolute",
+        "hinge_side": "bottom",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "glass_window",
+              "coverage_pct": 60,
+              "material": "glass",
+              "is_transparent": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "upper_oven_handle",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "lower_oven_door",
+        "type": "revolute",
+        "hinge_side": "bottom",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "glass_window",
+              "coverage_pct": 60,
+              "material": "glass",
+              "is_transparent": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "lower_oven_handle",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "left_outer_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "left_inner_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "right_inner_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "right_outer_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      }
+    ],
+    "visual_only_parts": [
+      {
+        "name": "digital_time_display",
+        "what_it_is": "digital_display",
+        "location": "top control panel, center"
+      },
+      {
+        "name": "brand_logo_adura",
+        "what_it_is": "brand_logo",
+        "location": "lower oven door, bottom edge center"
+      },
+      {
+        "name": "left_outer_knob_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, next to left_outer_knob"
+      },
+      {
+        "name": "left_inner_knob_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, next to left_inner_knob"
+      },
+      {
+        "name": "right_inner_knob_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, next to right_inner_knob"
+      },
+      {
+        "name": "right_outer_knob_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, next to right_outer_knob"
+      },
+      {
+        "name": "display_setting_light_1",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, left of digital display, top"
+      },
+      {
+        "name": "display_setting_light_2",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, left of digital display, bottom"
+      },
+      {
+        "name": "display_setting_light_3",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, right of digital display, top"
+      },
+      {
+        "name": "display_setting_light_4",
+        "what_it_is": "indicator_light",
+        "location": "top control panel, right of digital display, bottom"
+      }
+    ],
+    "front_face_layout": [
+      {
+        "name": "top_control_panel",
+        "height_pct": 15,
+        "description": "Contains knobs, digital display, and indicator lights."
+      },
+      {
+        "name": "upper_oven_zone",
+        "height_pct": 35,
+        "description": "Upper oven door with handle and glass window."
+      },
+      {
+        "name": "middle_divider_strip",
+        "height_pct": 5,
+        "description": "Stainless steel strip separating upper and lower ovens."
+      },
+      {
+        "name": "lower_oven_zone",
+        "height_pct": 35,
+        "description": "Lower oven door with handle, glass window, and brand logo."
+      },
+      {
+        "name": "bottom_trim_panel",
+        "height_pct": 10,
+        "description": "Stainless steel trim panel at the bottom of the appliance."
+      }
+    ],
+    "count_summary": {
+      "doors": 2,
+      "knobs": 4,
+      "handles": 2,
+      "buttons": 0,
+      "digital_displays": 1
+    }
+  },
+  "perception_results": {
+    "gemini": {
+      "status": "success",
+      "n_parts": 8
+    },
+    "sam3": {
+      "status": "success",
+      "n_detections": 8
+    },
+    "depth_pro": {
+      "status": "success",
+      "depth_range": [
+        1.729217529296875,
+        1.9562485218048096
+      ],
+      "focal_length": 792.5931396484375
+    },
+    "depth_anything": {
+      "status": "success",
+      "consistency": 0.536
+    }
+  },
+  "usd_structure": {
+    "root_prim": "/body",
+    "links": {
+      "upper_oven_door": {
+        "parent": "body",
+        "role": "door"
+      },
+      "upper_oven_handle": {
+        "parent": "upper_oven_door",
+        "role": "handle"
+      },
+      "lower_oven_handle": {
+        "parent": "upper_oven_door",
+        "role": "handle"
+      },
+      "upper_oven_door_handle": {
+        "parent": "upper_oven_door",
+        "role": "handle"
+      },
+      "lower_oven_door_handle": {
+        "parent": "upper_oven_door",
+        "role": "handle"
+      },
+      "lower_oven_door": {
+        "parent": "body",
+        "role": "door"
+      },
+      "left_outer_knob": {
+        "parent": "body",
+        "role": "knob"
+      },
+      "left_inner_knob": {
+        "parent": "body",
+        "role": "knob"
+      },
+      "right_inner_knob": {
+        "parent": "body",
+        "role": "knob"
+      },
+      "right_outer_knob": {
+        "parent": "body",
+        "role": "knob"
+      }
+    },
+    "joints": {
+      "body_to_upper_oven_door": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "upper_oven_door",
+        "axis": "X",
+        "limits": [
+          -1.57,
+          0
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "upper_oven_door_to_upper_oven_handle": {
+        "type": "fixed",
+        "parent": "upper_oven_door",
+        "child": "upper_oven_handle",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "upper_oven_door_to_lower_oven_handle": {
+        "type": "fixed",
+        "parent": "upper_oven_door",
+        "child": "lower_oven_handle",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "upper_oven_door_to_upper_oven_door_handle": {
+        "type": "fixed",
+        "parent": "upper_oven_door",
+        "child": "upper_oven_door_handle",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "upper_oven_door_to_lower_oven_door_handle": {
+        "type": "fixed",
+        "parent": "upper_oven_door",
+        "child": "lower_oven_door_handle",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_lower_oven_door": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "lower_oven_door",
+        "axis": "X",
+        "limits": [
+          -1.57,
+          0
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "body_to_left_outer_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "left_outer_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "body_to_left_inner_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "left_inner_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "body_to_right_inner_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "right_inner_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "body_to_right_outer_knob": {
+        "type": "revolute",
+        "parent": "body",
+        "child": "right_outer_knob",
+        "axis": "Y",
+        "limits": [
+          0,
+          4.71
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      }
+    }
+  }
+}

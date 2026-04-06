@@ -1,0 +1,151 @@
+{
+  "asset_name": "built_in_double_electric_oven",
+  "is_articulated": true,
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "metal",
+      "is_base": true
+    },
+    "upper_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6304,
+        0.0943,
+        0.3142
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "lower_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6354,
+        0.1468,
+        0.4894
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "upper_oven_function_knob": {
+      "mass_kg": 0.199,
+      "material": "metal",
+      "dimensions": [
+        0.0435,
+        0.013,
+        0.0452
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "upper_oven_temperature_knob": {
+      "mass_kg": 0.197,
+      "material": "metal",
+      "dimensions": [
+        0.0422,
+        0.0127,
+        0.0472
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "lower_oven_function_knob": {
+      "mass_kg": 0.182,
+      "material": "metal",
+      "dimensions": [
+        0.0422,
+        0.0127,
+        0.0435
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "lower_oven_temperature_knob": {
+      "mass_kg": 0.181,
+      "material": "metal",
+      "dimensions": [
+        0.0422,
+        0.0127,
+        0.0434
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "upper_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "lower_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_oven_function_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_function_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_oven_temperature_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_temperature_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "lower_oven_function_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_function_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "lower_oven_temperature_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_temperature_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  }
+}

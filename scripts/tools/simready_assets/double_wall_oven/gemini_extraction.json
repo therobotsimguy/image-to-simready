@@ -1,0 +1,225 @@
+{
+  "object_type": "double_wall_oven",
+  "parts": [
+    {
+      "name": "upper_oven_door",
+      "type": "revolute",
+      "hinge_side": "bottom",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "flush"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "flat_panel",
+        "sub_features": [
+          {
+            "name": "glass_window",
+            "coverage_pct": 60,
+            "material": "glass",
+            "is_transparent": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "upper_oven_handle",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "flush"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    },
+    {
+      "name": "lower_oven_door",
+      "type": "revolute",
+      "hinge_side": "bottom",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "flush"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "flat_panel",
+        "sub_features": [
+          {
+            "name": "glass_window",
+            "coverage_pct": 60,
+            "material": "glass",
+            "is_transparent": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "lower_oven_handle",
+      "type": "fixed",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "handle_bar",
+        "orientation": "horizontal",
+        "placement": "flush"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    },
+    {
+      "name": "left_outer_knob",
+      "type": "revolute",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "knob",
+        "orientation": "perpendicular",
+        "placement": "upper_third"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    },
+    {
+      "name": "left_inner_knob",
+      "type": "revolute",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "knob",
+        "orientation": "perpendicular",
+        "placement": "upper_third"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    },
+    {
+      "name": "right_inner_knob",
+      "type": "revolute",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "knob",
+        "orientation": "perpendicular",
+        "placement": "upper_third"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    },
+    {
+      "name": "right_outer_knob",
+      "type": "revolute",
+      "hinge_side": "none",
+      "interaction": {
+        "type": "knob",
+        "orientation": "perpendicular",
+        "placement": "upper_third"
+      },
+      "material": "metal",
+      "shape": {
+        "base_form": "cylinder",
+        "sub_features": []
+      }
+    }
+  ],
+  "visual_only_parts": [
+    {
+      "name": "digital_time_display",
+      "what_it_is": "digital_display",
+      "location": "top control panel, center"
+    },
+    {
+      "name": "brand_logo_adura",
+      "what_it_is": "brand_logo",
+      "location": "lower oven door, bottom edge center"
+    },
+    {
+      "name": "left_outer_knob_indicator_light",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, next to left_outer_knob"
+    },
+    {
+      "name": "left_inner_knob_indicator_light",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, next to left_inner_knob"
+    },
+    {
+      "name": "right_inner_knob_indicator_light",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, next to right_inner_knob"
+    },
+    {
+      "name": "right_outer_knob_indicator_light",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, next to right_outer_knob"
+    },
+    {
+      "name": "display_setting_light_1",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, left of digital display, top"
+    },
+    {
+      "name": "display_setting_light_2",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, left of digital display, bottom"
+    },
+    {
+      "name": "display_setting_light_3",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, right of digital display, top"
+    },
+    {
+      "name": "display_setting_light_4",
+      "what_it_is": "indicator_light",
+      "location": "top control panel, right of digital display, bottom"
+    }
+  ],
+  "front_face_layout": [
+    {
+      "name": "top_control_panel",
+      "height_pct": 15,
+      "description": "Contains knobs, digital display, and indicator lights."
+    },
+    {
+      "name": "upper_oven_zone",
+      "height_pct": 35,
+      "description": "Upper oven door with handle and glass window."
+    },
+    {
+      "name": "middle_divider_strip",
+      "height_pct": 5,
+      "description": "Stainless steel strip separating upper and lower ovens."
+    },
+    {
+      "name": "lower_oven_zone",
+      "height_pct": 35,
+      "description": "Lower oven door with handle, glass window, and brand logo."
+    },
+    {
+      "name": "bottom_trim_panel",
+      "height_pct": 10,
+      "description": "Stainless steel trim panel at the bottom of the appliance."
+    }
+  ],
+  "count_summary": {
+    "doors": 2,
+    "knobs": 4,
+    "handles": 2,
+    "buttons": 0,
+    "digital_displays": 1
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "decision": "YES",
+  "alignment_score": 0.923,
+  "threshold": 0.85,
+  "reasoning": "Layout-intent alignment exceeds threshold",
+  "gemini_alignment": 1.0,
+  "matrix_alignment": 0.909,
+  "constraint_satisfaction": "14/15",
+  "violations": [],
+  "recommendations": [],
+  "confidence": "MEDIUM",
+  "domain_results": {
+    "1": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Motion directions consistent"
+    },
+    "2": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint ranges within bounds"
+    },
+    "3": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Pivot points from kinematic tree"
+    },
+    "4": {
+      "status": "WARNING",
+      "score": 0,
+      "detail": "12 clearance issue(s)"
+    },
+    "5": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "No multi-step sequences"
+    },
+    "6": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Forces within Franka capability (70N)"
+    },
+    "7": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Friction adequate"
+    },
+    "8": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Symmetry consistent"
+    },
+    "9": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Materials from reference data"
+    },
+    "10": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Internal volume accounted for"
+    },
+    "11": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "15 joints in chain"
+    },
+    "12": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Gravity + manual actuation"
+    },
+    "13": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint limits as feedback"
+    },
+    "14": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Hard stops via joint limits"
+    },
+    "15": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Geometry-only (no textures)"
+    }
+  },
+  "gemini_result": {
+    "overall_alignment": 1.0,
+    "behavior_analysis": [
+      {
+        "behavior": "Top oven door opens downwards on a bottom hinge.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'upper_oven_door' component with role 'door' is present, fulfilling the requirement for a top oven door. Hinge details are for later stages."
+      },
+      {
+        "behavior": "Top oven handle is graspable for pulling the door open.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'upper_oven_door_handle' component with role 'handle' is present, which is suitable for grasping."
+      },
+      {
+        "behavior": "Bottom oven door opens downwards on a bottom hinge.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'lower_oven_door' component with role 'door' is present, fulfilling the requirement for a bottom oven door. Hinge details are for later stages."
+      },
+      {
+        "behavior": "Bottom oven handle is graspable for pulling the door open.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'lower_oven_door_handle' component with role 'handle' is present, which is suitable for grasping."
+      },
+      {
+        "behavior": "Control knobs are rotatable to adjust oven settings (e.g., temperature, mode).",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Multiple components ('upper_left_knob', 'upper_middle_left_knob', 'upper_middle_right_knob', 'upper_right_knob') with role 'knob' are present, indicating rotatable controls."
+      },
+      {
+        "behavior": "Digital control panel allows for pressing or tapping to set time and functions.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'control_panel' component with role 'panel' is present, which can be configured for pressing or tapping interactions in a digital context."
+      }
+    ],
+    "issues": [],
+    "recommendations": []
+  },
+  "attempt": 1
+}

@@ -1,0 +1,313 @@
+{
+  "object_type": "oven",
+  "hardware_spec": {
+    "lower_oven_temperature_knob": {
+      "bracket_width_mm": 15.0,
+      "stiffness_Nm_per_rad": 0.5,
+      "stiffness_Nm_per_rad_divergence": 0.462,
+      "bracket_thickness_mm": 2.0,
+      "latch_force_N": 0.0,
+      "damping_Nms_per_rad": 0.3,
+      "spring_torque_Nm": 0.8,
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback.",
+      "pin_diameter_mm": 6.0,
+      "close_time_seconds": 0.0,
+      "mechanism_type": "detent_knob",
+      "center_of_mass_offset": "centered",
+      "source": "merged"
+    },
+    "lower_oven_function_knob": {
+      "bracket_width_mm": 15.0,
+      "stiffness_Nm_per_rad": 0.5,
+      "stiffness_Nm_per_rad_divergence": 0.462,
+      "bracket_thickness_mm": 2.0,
+      "latch_force_N": 0.0,
+      "damping_Nms_per_rad": 0.3,
+      "spring_torque_Nm": 0.8,
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback.",
+      "pin_diameter_mm": 6.0,
+      "close_time_seconds": 0.0,
+      "mechanism_type": "detent_knob",
+      "center_of_mass_offset": "centered",
+      "source": "merged"
+    },
+    "upper_oven_temperature_knob": {
+      "bracket_width_mm": 15.0,
+      "stiffness_Nm_per_rad": 0.5,
+      "stiffness_Nm_per_rad_divergence": 0.462,
+      "bracket_thickness_mm": 2.0,
+      "latch_force_N": 0.0,
+      "damping_Nms_per_rad": 0.3,
+      "spring_torque_Nm": 0.8,
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback.",
+      "pin_diameter_mm": 6.0,
+      "close_time_seconds": 0.0,
+      "mechanism_type": "detent_knob",
+      "center_of_mass_offset": "centered",
+      "source": "merged"
+    },
+    "upper_oven_function_knob": {
+      "bracket_width_mm": 15.0,
+      "stiffness_Nm_per_rad": 0.5,
+      "stiffness_Nm_per_rad_divergence": 0.462,
+      "bracket_thickness_mm": 2.0,
+      "latch_force_N": 0.0,
+      "damping_Nms_per_rad": 0.3,
+      "spring_torque_Nm": 0.8,
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback.",
+      "pin_diameter_mm": 6.0,
+      "close_time_seconds": 0.0,
+      "mechanism_type": "detent_knob",
+      "center_of_mass_offset": "centered",
+      "source": "merged"
+    },
+    "upper_oven_door": {
+      "bracket_width_mm": 20.0,
+      "stiffness_Nm_per_rad": 20.813,
+      "bracket_thickness_mm": 3.0,
+      "latch_force_N": 25.0,
+      "damping_Nms_per_rad": 0.247,
+      "spring_torque_Nm": 20.813,
+      "computation_notes": "Math engine values accepted. Non-uniform frame (thicker top/bottom) shifts CoM toward frame, but 85% glass coverage is close to 80% assumption. Torque calculations remain valid for bottom-pivot mechanism.",
+      "pin_diameter_mm": 1.22,
+      "close_time_seconds": 2.0,
+      "mechanism_type": "bottom_pivot_door",
+      "center_of_mass_offset": "toward_frame",
+      "source": "merged"
+    },
+    "lower_oven_door": {
+      "bracket_width_mm": 20.0,
+      "stiffness_Nm_per_rad": 32.418,
+      "bracket_thickness_mm": 3.0,
+      "latch_force_N": 30.0,
+      "damping_Nms_per_rad": 0.599,
+      "spring_torque_Nm": 32.418,
+      "computation_notes": "Math engine values accepted. Larger door (0.489m height vs 0.314m) correctly results in higher torque and damping. Bottom-pivot mechanism confirmed.",
+      "pin_diameter_mm": 1.22,
+      "close_time_seconds": 2.0,
+      "mechanism_type": "bottom_pivot_door",
+      "center_of_mass_offset": "toward_frame",
+      "source": "merged"
+    }
+  },
+  "turn1_observations": {
+    "upper_oven_door": {
+      "hinge_type": "bottom_pivot",
+      "hinge_side": "bottom",
+      "hinge_visible": false,
+      "handle_attachment": "standoff_bracket",
+      "handle_distance_from_hinge_pct": 100,
+      "glass_mounting": "flush",
+      "glass_coverage_pct": 85,
+      "frame_thickness_uniform": false,
+      "frame_thicker_side": null,
+      "knob_protrusion": null,
+      "knob_has_detent_markings": null,
+      "visible_gap_mm": 1,
+      "seal_visible": false,
+      "additional_observations": "The door features a stainless steel frame at the top (handle side) and bottom (hinge side), which are visibly thicker than the black side frames around the glass panel. The handle is a horizontal bar."
+    },
+    "lower_oven_door": {
+      "hinge_type": "bottom_pivot",
+      "hinge_side": "bottom",
+      "hinge_visible": false,
+      "handle_attachment": "standoff_bracket",
+      "handle_distance_from_hinge_pct": 100,
+      "glass_mounting": "flush",
+      "glass_coverage_pct": 85,
+      "frame_thickness_uniform": false,
+      "frame_thicker_side": null,
+      "knob_protrusion": null,
+      "knob_has_detent_markings": null,
+      "visible_gap_mm": 1,
+      "seal_visible": false,
+      "additional_observations": "The door features a stainless steel frame at the top (handle side) and bottom (hinge side), which are visibly thicker than the black side frames around the glass panel. The handle is a horizontal bar."
+    },
+    "upper_oven_function_knob": {
+      "hinge_type": null,
+      "hinge_side": null,
+      "hinge_visible": null,
+      "handle_attachment": null,
+      "handle_distance_from_hinge_pct": null,
+      "glass_mounting": null,
+      "glass_coverage_pct": null,
+      "frame_thickness_uniform": null,
+      "frame_thicker_side": null,
+      "knob_protrusion": "protruding",
+      "knob_has_detent_markings": true,
+      "visible_gap_mm": null,
+      "seal_visible": null,
+      "additional_observations": "The knob has a metallic finish and features a clear indicator line on its surface. There are multiple small dots visible on the control panel around the base of the knob, suggesting distinct detent positions for settings."
+    },
+    "upper_oven_temperature_knob": {
+      "hinge_type": null,
+      "hinge_side": null,
+      "hinge_visible": null,
+      "handle_attachment": null,
+      "handle_distance_from_hinge_pct": null,
+      "glass_mounting": null,
+      "glass_coverage_pct": null,
+      "frame_thickness_uniform": null,
+      "frame_thicker_side": null,
+      "knob_protrusion": "protruding",
+      "knob_has_detent_markings": true,
+      "visible_gap_mm": null,
+      "seal_visible": null,
+      "additional_observations": "The knob has a metallic finish and features a clear indicator line on its surface. There are multiple small dots visible on the control panel around the base of the knob, suggesting distinct detent positions for temperature settings."
+    },
+    "lower_oven_function_knob": {
+      "hinge_type": null,
+      "hinge_side": null,
+      "hinge_visible": null,
+      "handle_attachment": null,
+      "handle_distance_from_hinge_pct": null,
+      "glass_mounting": null,
+      "glass_coverage_pct": null,
+      "frame_thickness_uniform": null,
+      "frame_thicker_side": null,
+      "knob_protrusion": "protruding",
+      "knob_has_detent_markings": true,
+      "visible_gap_mm": null,
+      "seal_visible": null,
+      "additional_observations": "The knob has a metallic finish and features a clear indicator line on its surface. There are multiple small dots visible on the control panel around the base of the knob, suggesting distinct detent positions for settings."
+    },
+    "lower_oven_temperature_knob": {
+      "hinge_type": null,
+      "hinge_side": null,
+      "hinge_visible": null,
+      "handle_attachment": null,
+      "handle_distance_from_hinge_pct": null,
+      "glass_mounting": null,
+      "glass_coverage_pct": null,
+      "frame_thickness_uniform": null,
+      "frame_thicker_side": null,
+      "knob_protrusion": "protruding",
+      "knob_has_detent_markings": true,
+      "visible_gap_mm": null,
+      "seal_visible": null,
+      "additional_observations": "The knob has a metallic finish and features a clear indicator line on its surface. There are multiple small dots visible on the control panel around the base of the knob, suggesting distinct detent positions for temperature settings."
+    }
+  },
+  "turn3_answers": {
+    "Q1": "An exact count of detent positions (dots) around each knob is not possible from the image due to resolution and partial obscuring by the knobs. However, for the function knobs, approximately 7-8 distinct positions (including 'OFF' and various symbols) are visible. For the temperature knobs, approximately 9-11 small dots are visible along the arc, marking temperature increments from 'OFF' to what appears to be a maximum setting.",
+    "Q2": "The door hinges are not visible in the image, therefore it is not possible to determine if they are spring-loaded or counterbalanced from visual inspection. No visible spring mechanisms or gas struts can be seen."
+  },
+  "claude_spec": {
+    "upper_oven_door": {
+      "mechanism_type": "bottom_pivot_door",
+      "bracket_width_mm": 20.0,
+      "bracket_thickness_mm": 3.0,
+      "pin_diameter_mm": 1.22,
+      "spring_torque_Nm": 20.813,
+      "stiffness_Nm_per_rad": 20.813,
+      "damping_Nms_per_rad": 0.247,
+      "latch_force_N": 25.0,
+      "close_time_seconds": 2.0,
+      "center_of_mass_offset": "toward_frame",
+      "computation_notes": "Math engine values accepted. Non-uniform frame (thicker top/bottom) shifts CoM toward frame, but 85% glass coverage is close to 80% assumption. Torque calculations remain valid for bottom-pivot mechanism."
+    },
+    "lower_oven_door": {
+      "mechanism_type": "bottom_pivot_door",
+      "bracket_width_mm": 20.0,
+      "bracket_thickness_mm": 3.0,
+      "pin_diameter_mm": 1.22,
+      "spring_torque_Nm": 32.418,
+      "stiffness_Nm_per_rad": 32.418,
+      "damping_Nms_per_rad": 0.599,
+      "latch_force_N": 30.0,
+      "close_time_seconds": 2.0,
+      "center_of_mass_offset": "toward_frame",
+      "computation_notes": "Math engine values accepted. Larger door (0.489m height vs 0.314m) correctly results in higher torque and damping. Bottom-pivot mechanism confirmed."
+    },
+    "upper_oven_function_knob": {
+      "mechanism_type": "detent_knob",
+      "bracket_width_mm": 15.0,
+      "bracket_thickness_mm": 2.0,
+      "pin_diameter_mm": 6.0,
+      "spring_torque_Nm": 0.8,
+      "stiffness_Nm_per_rad": 0.8,
+      "damping_Nms_per_rad": 0.3,
+      "latch_force_N": 0.0,
+      "close_time_seconds": 0.0,
+      "center_of_mass_offset": "centered",
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback."
+    },
+    "upper_oven_temperature_knob": {
+      "mechanism_type": "detent_knob",
+      "bracket_width_mm": 15.0,
+      "bracket_thickness_mm": 2.0,
+      "pin_diameter_mm": 6.0,
+      "spring_torque_Nm": 0.8,
+      "stiffness_Nm_per_rad": 0.8,
+      "damping_Nms_per_rad": 0.3,
+      "latch_force_N": 0.0,
+      "close_time_seconds": 0.0,
+      "center_of_mass_offset": "centered",
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback."
+    },
+    "lower_oven_function_knob": {
+      "mechanism_type": "detent_knob",
+      "bracket_width_mm": 15.0,
+      "bracket_thickness_mm": 2.0,
+      "pin_diameter_mm": 6.0,
+      "spring_torque_Nm": 0.8,
+      "stiffness_Nm_per_rad": 0.8,
+      "damping_Nms_per_rad": 0.3,
+      "latch_force_N": 0.0,
+      "close_time_seconds": 0.0,
+      "center_of_mass_offset": "centered",
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback."
+    },
+    "lower_oven_temperature_knob": {
+      "mechanism_type": "detent_knob",
+      "bracket_width_mm": 15.0,
+      "bracket_thickness_mm": 2.0,
+      "pin_diameter_mm": 6.0,
+      "spring_torque_Nm": 0.8,
+      "stiffness_Nm_per_rad": 0.8,
+      "damping_Nms_per_rad": 0.3,
+      "latch_force_N": 0.0,
+      "close_time_seconds": 0.0,
+      "center_of_mass_offset": "centered",
+      "computation_notes": "Adjusted stiffness from 0.5 to 0.8 Nm/rad due to visible detent markings requiring higher spring force for distinct position feedback."
+    }
+  },
+  "gemini_spec": {
+    "upper_oven_door": {
+      "mechanism_type": "counterbalanced_hinge",
+      "bracket_width_mm": 20.0,
+      "pin_diameter_mm": 1.22,
+      "stiffness_Nm_per_rad": 20.813,
+      "damping_Nms_per_rad": 0.247,
+      "close_time_seconds": 2.0
+    },
+    "lower_oven_door": {
+      "mechanism_type": "counterbalanced_hinge",
+      "bracket_width_mm": 20.0,
+      "pin_diameter_mm": 1.22,
+      "stiffness_Nm_per_rad": 32.418,
+      "damping_Nms_per_rad": 0.599,
+      "close_time_seconds": 2.0
+    },
+    "upper_oven_function_knob": {
+      "mechanism_type": "rotary_detent",
+      "stiffness_Nm_per_rad": 0.5,
+      "damping_Nms_per_rad": 0.3
+    },
+    "upper_oven_temperature_knob": {
+      "mechanism_type": "rotary_detent",
+      "stiffness_Nm_per_rad": 0.5,
+      "damping_Nms_per_rad": 0.3
+    },
+    "lower_oven_function_knob": {
+      "mechanism_type": "rotary_detent",
+      "stiffness_Nm_per_rad": 0.5,
+      "damping_Nms_per_rad": 0.3
+    },
+    "lower_oven_temperature_knob": {
+      "mechanism_type": "rotary_detent",
+      "stiffness_Nm_per_rad": 0.5,
+      "damping_Nms_per_rad": 0.3
+    }
+  }
+}

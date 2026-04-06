@@ -1,0 +1,126 @@
+{
+  "root": "body",
+  "children": [
+    {
+      "name": "top_oven_door",
+      "parent": "body",
+      "role": "door",
+      "joint_type": "revolute",
+      "joint_axis": "X",
+      "joint_limits": [
+        -1.57,
+        0
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": [
+        {
+          "name": "top_oven_door_handle",
+          "parent": "top_oven_door",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        },
+        {
+          "name": "bottom_oven_door_handle",
+          "parent": "bottom_oven_door",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "bottom_oven_door",
+      "parent": "body",
+      "role": "door",
+      "joint_type": "revolute",
+      "joint_axis": "X",
+      "joint_limits": [
+        -1.57,
+        0
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "top_left_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "top_right_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "bottom_left_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "bottom_right_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    }
+  ]
+}

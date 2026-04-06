@@ -1,0 +1,129 @@
+{
+  "object_type": "oven",
+  "expected_behaviors": [
+    "upper oven door opens outward via hinge rotation after grasping handle",
+    "lower oven door opens outward via hinge rotation after grasping handle",
+    "control knobs are graspable and rotatable to select settings",
+    "handles are graspable for opening doors"
+  ],
+  "behavior_types": [
+    "rotational",
+    "grasping",
+    "sequential"
+  ],
+  "components": [
+    {
+      "name": "oven_body",
+      "type": "rectangular_panel",
+      "role": "body",
+      "interaction": "fixed"
+    },
+    {
+      "name": "upper_oven_door",
+      "type": "rectangular_panel",
+      "role": "door",
+      "interaction": "rotatable"
+    },
+    {
+      "name": "upper_oven_handle",
+      "type": "bar",
+      "role": "handle",
+      "interaction": "graspable"
+    },
+    {
+      "name": "lower_oven_door",
+      "type": "rectangular_panel",
+      "role": "door",
+      "interaction": "rotatable"
+    },
+    {
+      "name": "lower_oven_handle",
+      "type": "bar",
+      "role": "handle",
+      "interaction": "graspable"
+    },
+    {
+      "name": "control_knob_1",
+      "type": "cylindrical",
+      "role": "knob",
+      "interaction": "rotatable"
+    },
+    {
+      "name": "control_knob_2",
+      "type": "cylindrical",
+      "role": "knob",
+      "interaction": "rotatable"
+    },
+    {
+      "name": "control_knob_3",
+      "type": "cylindrical",
+      "role": "knob",
+      "interaction": "rotatable"
+    },
+    {
+      "name": "control_knob_4",
+      "type": "cylindrical",
+      "role": "knob",
+      "interaction": "rotatable"
+    }
+  ],
+  "constraints": {
+    "opening_angle_max": 100,
+    "handle_height_min": 0.3,
+    "handle_height_max": 0.9,
+    "friction_coefficient_min": 0.15,
+    "slide_distance_max": 0
+  },
+  "required_domains": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    14
+  ],
+  "domain_details": {
+    "1": {
+      "name": "Directional Semantics",
+      "detail": "Direction of rotation must be specified (CW/CCW)",
+      "from_behavior": "rotational"
+    },
+    "2": {
+      "name": "Range Limits",
+      "detail": "Rotation range limits (e.g., 0-110 degrees)",
+      "from_behavior": "rotational"
+    },
+    "3": {
+      "name": "Pivot Placement",
+      "detail": "Pivot point must be at hinge/axis location",
+      "from_behavior": "rotational"
+    },
+    "4": {
+      "name": "Clearance",
+      "detail": "Rotating part must clear surrounding geometry",
+      "from_behavior": "rotational"
+    },
+    "6": {
+      "name": "Force/Torque",
+      "detail": "Cumulative force/torque across steps",
+      "from_behavior": "sequential"
+    },
+    "7": {
+      "name": "Contact/Friction",
+      "detail": "Contact surfaces must have sufficient friction for stable grip",
+      "from_behavior": "grasping"
+    },
+    "14": {
+      "name": "Safety Limits",
+      "detail": "Safety limits on grip force to prevent damage",
+      "from_behavior": "grasping"
+    },
+    "5": {
+      "name": "Sequential Dependency",
+      "detail": "Step ordering must be enforced (unlock BEFORE open)",
+      "from_behavior": "sequential"
+    }
+  }
+}

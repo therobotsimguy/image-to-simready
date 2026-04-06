@@ -1,0 +1,30 @@
+{
+  "asset_name": "euro_double_wall_oven_with_digital_display",
+  "description": "Euro double wall oven with digital display and mechanical knobs",
+  "is_articulated": true,
+  "links": [
+    "body",
+    "upper_oven_door",
+    "lower_oven_door",
+    "knob_1",
+    "knob_2",
+    "knob_3",
+    "knob_4"
+  ],
+  "joints": [
+    "upper_oven_door",
+    "lower_oven_door",
+    "knob_1",
+    "knob_2",
+    "knob_3",
+    "knob_4"
+  ],
+  "confidence": 1.0,
+  "scale": {
+    "detected_unit": "meters",
+    "factor_to_meters": 1.0,
+    "max_dimension_raw": 0.8001,
+    "max_dimension_meters": 0.8001
+  },
+  "notes": "Auto-generated from object_spec.json + USD origins (v2 pipeline)"
+}

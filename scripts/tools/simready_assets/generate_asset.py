@@ -487,19 +487,45 @@ def compute_coordinates(results, vdata):
                     "size": [round(grid.leg_width, 4), round(grid.leg_width, 4), round(grid.leg_height, 4)],
                 })
 
+            # Determine row types from gemini_type
+            row_contents = gt.get("grid", {}).get("row_contents", []) if "grid" in gt else []
+            row_types = []
+            for rc in row_contents:
+                rc_lower = rc.lower() if isinstance(rc, str) else ""
+                if "drawer" in rc_lower:
+                    row_types.append("drawers")
+                elif "door" in rc_lower:
+                    row_types.append("doors")
+                else:
+                    row_types.append("unknown")
+            coords["grid"]["row_types"] = row_types
+
             # Per-cell objects (doors, drawers, hardware)
             for row in range(n_rows):
+                rt = row_types[row] if row < len(row_types) else "unknown"
                 for col in range(n_cols):
                     cx = grid.col_center(col)
                     cz = grid.row_center(row)
-                    dw, dt, dh = grid.door_dims(col, row)
                     fy = grid.front_panel_y()
+
+                    if rt == "drawers":
+                        # Drawer: 5-sided box, depth = ~80% of carcass depth
+                        dw, dt, dh = grid.door_dims(col, row)  # front panel dims
+                        drawer_depth = round(D * 0.8, 4)
+                        cell_size = [round(dw, 4), drawer_depth, round(dh, 4)]
+                        cell_type = "drawer"
+                    else:
+                        # Door: flat panel
+                        dw, dt, dh = grid.door_dims(col, row)
+                        cell_size = [round(dw, 4), round(dt, 4), round(dh, 4)]
+                        cell_type = "door"
 
                     coords["objects"].append({
                         "name": f"Cell_r{row}_c{col}",
+                        "type": cell_type,
                         "col": col, "row": row,
                         "center": [round(cx, 4), round(fy, 4), round(cz, 4)],
-                        "size": [round(dw, 4), round(dt, 4), round(dh, 4)],
+                        "size": cell_size,
                         "col_center_x": round(cx, 4),
                         "row_center_z": round(cz, 4),
                         "row_bottom_z": round(grid.row_bottom(row), 4),
@@ -709,6 +735,9 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=98
 
     from judge import query_blender_scene, audit_structure
 
+    # Pre-compute coordinates for D validation
+    expected_coords = compute_coordinates(results, vdata)
+
     spec_with_fixes = spec_summary
 
     full_prompt = SCRIPT_GEN_PROMPT.format(
@@ -800,7 +829,7 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=98
         # Structural audit
         scene = query_blender_scene(port=blender_port)
         if scene and "error" not in scene:
-            passed, issues = audit_structure(scene, behavior, bodies)
+            passed, issues = audit_structure(scene, behavior, bodies, expected_coords=expected_coords)
             print(f"  D (structural): {'PASS' if passed else 'FAIL'} — {len(issues)} issues")
             for iss in issues:
                 print(f"    ✗ {iss}")

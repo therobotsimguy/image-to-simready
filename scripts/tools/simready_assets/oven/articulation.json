@@ -1,0 +1,228 @@
+{
+  "asset_name": "double_electric_oven",
+  "is_articulated": true,
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "metal",
+      "is_base": true
+    },
+    "upper_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6304,
+        0.0943,
+        0.3142
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "lower_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6354,
+        0.1468,
+        0.4894
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "upper_left_knob": {
+      "mass_kg": 0.194,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0471
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "upper_middle_left_knob": {
+      "mass_kg": 0.193,
+      "material": "metal",
+      "dimensions": [
+        0.0418,
+        0.0125,
+        0.0473
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "upper_middle_right_knob": {
+      "mass_kg": 0.201,
+      "material": "metal",
+      "dimensions": [
+        0.0436,
+        0.0131,
+        0.0451
+      ],
+      "dimension_source": "measured_low_conf",
+      "is_base": false
+    },
+    "upper_right_knob": {
+      "mass_kg": 0.202,
+      "material": "metal",
+      "dimensions": [
+        0.0436,
+        0.0131,
+        0.0453
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "control_panel": {
+      "mass_kg": 20.774,
+      "material": "metal",
+      "dimensions": [
+        0.6331,
+        0.0355,
+        0.1185
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "middle_divider_panel": {
+      "mass_kg": 0.608,
+      "material": "metal",
+      "dimensions": [
+        0.6,
+        0.013,
+        0.01
+      ],
+      "dimension_source": "computed_from_sam_gap",
+      "is_base": false
+    },
+    "bottom_trim_panel": {
+      "mass_kg": 5.379,
+      "material": "metal",
+      "dimensions": [
+        0.6443,
+        0.0179,
+        0.0598
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "upper_oven_racks": {
+      "mass_kg": 5.382,
+      "material": "metal",
+      "dimensions": [
+        0.6446,
+        0.0179,
+        0.0598
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    },
+    "lower_oven_racks": {
+      "mass_kg": 18.495,
+      "material": "metal",
+      "dimensions": [
+        0.6,
+        0.013,
+        0.304
+      ],
+      "dimension_source": "computed_from_layout_pct",
+      "is_base": false
+    },
+    "upper_oven_cavity_interior": {
+      "mass_kg": 18.495,
+      "material": "metal",
+      "dimensions": [
+        0.6,
+        0.013,
+        0.304
+      ],
+      "dimension_source": "computed_from_layout_pct",
+      "is_base": false
+    },
+    "lower_oven_cavity_interior": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.4311,
+        0.0845,
+        0.2818
+      ],
+      "dimension_source": "measured+validated",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "upper_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "lower_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "lower_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_middle_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_middle_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_middle_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_middle_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "upper_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "upper_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  }
+}

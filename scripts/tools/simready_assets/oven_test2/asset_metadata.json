@@ -1,0 +1,60 @@
+{
+  "object_type": "oven",
+  "behavior_types": [
+    "rotational",
+    "grasping",
+    "sequential"
+  ],
+  "expected_behaviors": [
+    "Top oven door opens outwards on a hinge after handle is grasped.",
+    "Bottom oven door opens outwards on a hinge after handle is grasped.",
+    "Top oven handle is graspable.",
+    "Bottom oven handle is graspable.",
+    "Control knobs are rotatable to adjust settings."
+  ],
+  "constraints": {
+    "opening_angle_max": 95,
+    "handle_height_min": 0.4,
+    "handle_height_max": 0.95,
+    "friction_coefficient_min": 0.15,
+    "slide_distance_max": null
+  },
+  "n_components": 11,
+  "n_joints": 10,
+  "topology_confidence": 0.85,
+  "intent_decision": "YES",
+  "intent_confidence": "HIGH",
+  "constraint_satisfaction": "14/15",
+  "preflight_status": "PASS",
+  "ready_for_simulation": true,
+  "grasp_test_label": null,
+  "grasp_features": {
+    "handle_diameter": 25.0,
+    "friction_coefficient": 0.15,
+    "topology_feasibility": 0.85,
+    "handle_reachability": 0.673,
+    "clearance_adequacy": 0.7,
+    "mass": 0,
+    "contact_force_variance": 2.0,
+    "joint_jitter": 0.001,
+    "collision_count": 0,
+    "handle_grip_stability": 0.9
+  },
+  "stage_times": {
+    "stage_0": 10.577661275863647,
+    "stage_1": 35.42465615272522,
+    "stage_2": 0.0003407001495361328,
+    "stage_4": 0.00022101402282714844,
+    "stage_3": 0.000141143798828125,
+    "stage_4.5": 6.861180543899536,
+    "stage_5": 0.10903072357177734,
+    "stage_6": 0.017772912979125977,
+    "stage_7": 0.08419680595397949,
+    "stage_8": 0.0009770393371582031
+  },
+  "version": "v1.19",
+  "version_key": "oven_v1.19",
+  "timestamp": "2026-04-04T15:55:41Z",
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/oven_test2/integrated_double_electric_oven_simready.usd",
+  "archived_usd": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/oven_v1.19/integrated_double_electric_oven_simready.usd"
+}

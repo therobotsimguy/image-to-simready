@@ -86,13 +86,13 @@
         "count": 3
       }
     },
-    "depth_consistency": 1.0,
+    "depth_consistency": null,
     "model_status": {
       "dino": "success",
       "sam3": "success",
       "depth_pro": "success",
-      "depth_anything": "success"
+      "depth_anything": "error"
     },
-    "elapsed_s": 17.5
+    "elapsed_s": 17.4
   }
 }

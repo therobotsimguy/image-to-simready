@@ -1,0 +1,277 @@
+[
+  {
+    "component_id": "body",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6,
+      0.5,
+      0.8
+    ],
+    "material": "metal",
+    "position": [
+      0.3,
+      0.25,
+      0.4
+    ],
+    "role": "body",
+    "interaction": "fixed",
+    "confidence": 0.95,
+    "source": "inferred"
+  },
+  {
+    "component_id": "upper_oven_door",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6304,
+      0.0943,
+      0.3142
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "door",
+    "interaction": "rotatable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      17.152751922607422,
+      73.5411148071289,
+      296.9418029785156,
+      212.98858642578125
+    ],
+    "sam_center_y": 143.26485061645508
+  },
+  {
+    "component_id": "upper_oven_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.1,
+      0.1
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.7,
+    "source": "gemini",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      39.56180953979492,
+      88.15631866455078,
+      275.0538024902344,
+      97.92744445800781
+    ],
+    "sam_center_y": 93.0418815612793
+  },
+  {
+    "component_id": "lower_oven_door",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.6354,
+      0.1468,
+      0.4894
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "door",
+    "interaction": "rotatable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      16.897077560424805,
+      215.0514678955078,
+      296.207763671875,
+      430.16412353515625
+    ],
+    "sam_center_y": 322.60779571533203
+  },
+  {
+    "component_id": "lower_oven_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.1,
+      0.1
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.7,
+    "source": "gemini",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      39.664852142333984,
+      232.5753936767578,
+      272.4891357421875,
+      242.47682189941406
+    ],
+    "sam_center_y": 237.52610778808594
+  },
+  {
+    "component_id": "left_outer_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.0419,
+      0.0126,
+      0.0468
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      60.45783996582031,
+      37.928016662597656,
+      79.2580795288086,
+      58.93423080444336
+    ],
+    "sam_center_y": 48.43112373352051
+  },
+  {
+    "component_id": "left_inner_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.0418,
+      0.0125,
+      0.0467
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      60.4290657043457,
+      37.92707824707031,
+      79.21292877197266,
+      58.91214370727539
+    ],
+    "sam_center_y": 48.41961097717285
+  },
+  {
+    "component_id": "right_inner_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.0436,
+      0.0131,
+      0.0449
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      235.6875,
+      38.00244903564453,
+      255.1962890625,
+      58.09224319458008
+    ],
+    "sam_center_y": 48.047346115112305
+  },
+  {
+    "component_id": "right_outer_knob",
+    "type": "cylindrical",
+    "dimensions": [
+      0.0436,
+      0.0131,
+      0.0451
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "knob",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "depth_consistency": 0.536,
+    "sam_bbox": [
+      235.64422607421875,
+      37.962928771972656,
+      255.15261840820312,
+      58.14285659790039
+    ],
+    "sam_center_y": 48.05289268493652
+  },
+  {
+    "component_id": "upper_oven_door_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "parent": "upper_oven_door"
+  },
+  {
+    "component_id": "lower_oven_door_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "metal",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured",
+    "parent": "lower_oven_door"
+  }
+]

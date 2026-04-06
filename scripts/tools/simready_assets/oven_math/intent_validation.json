@@ -1,0 +1,137 @@
+{
+  "decision": "YES",
+  "alignment_score": 0.963,
+  "threshold": 0.85,
+  "reasoning": "Layout-intent alignment exceeds threshold",
+  "gemini_alignment": 0.83,
+  "matrix_alignment": 0.986,
+  "constraint_satisfaction": "15/15",
+  "violations": [],
+  "recommendations": [],
+  "confidence": "HIGH",
+  "domain_results": {
+    "1": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Motion directions consistent"
+    },
+    "2": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint ranges within bounds"
+    },
+    "3": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Pivot points from kinematic tree"
+    },
+    "4": {
+      "status": "PASS",
+      "score": 0.85,
+      "detail": "1 clearance issue(s)"
+    },
+    "5": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "No multi-step sequences"
+    },
+    "6": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Forces within Franka capability (70N)"
+    },
+    "7": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Friction adequate"
+    },
+    "8": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Symmetry consistent"
+    },
+    "9": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Materials from reference data"
+    },
+    "10": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Internal volume accounted for"
+    },
+    "11": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "8 joints in chain"
+    },
+    "12": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Gravity + manual actuation"
+    },
+    "13": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint limits as feedback"
+    },
+    "14": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Hard stops via joint limits"
+    },
+    "15": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Geometry-only (no textures)"
+    }
+  },
+  "gemini_result": {
+    "overall_alignment": 0.83,
+    "behavior_analysis": [
+      {
+        "behavior": "Upper oven door opens downwards on a hinge mechanism.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'upper_oven_door' component is present and has the 'door' role, which implies it can be opened."
+      },
+      {
+        "behavior": "Lower oven door opens downwards on a hinge mechanism.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'lower_oven_door' component is present and has the 'door' role, which implies it can be opened."
+      },
+      {
+        "behavior": "Upper oven door handle is graspable for opening and closing the door.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'upper_oven_door_handle' component is present and has the 'handle' role, indicating it is graspable."
+      },
+      {
+        "behavior": "Lower oven door handle is graspable for opening and closing the door.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'lower_oven_door_handle' component is present and has the 'handle' role, indicating it is graspable."
+      },
+      {
+        "behavior": "Control knobs are rotatable to adjust settings like temperature and cooking mode.",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Four distinct knob components (upper_oven_function_knob, upper_oven_temperature_knob, lower_oven_function_knob, lower_oven_temperature_knob) are present, all with the 'knob' role, supporting rotatable interaction."
+      },
+      {
+        "behavior": "Digital display buttons are pressable for setting time and other functions.",
+        "alignment": 0.0,
+        "achievable": false,
+        "reason": "There are no components defined for a 'digital display' or any 'buttons' to facilitate pressing actions."
+      }
+    ],
+    "issues": [
+      "Missing components for a digital display and its associated buttons."
+    ],
+    "recommendations": [
+      "Add components representing a 'digital display' and individual 'digital display buttons' with an appropriate 'button' role to support pressable interactions."
+    ]
+  },
+  "attempt": 1
+}

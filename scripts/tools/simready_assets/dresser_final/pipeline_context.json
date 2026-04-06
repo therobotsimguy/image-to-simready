@@ -1,0 +1,2866 @@
+{
+  "object_type": "dresser",
+  "object_type_slug": "dresser",
+  "image": "/home/msi/IsaacLab/scripts/tools/simready_assets/cabinet.png",
+  "images": [
+    "/home/msi/IsaacLab/scripts/tools/simready_assets/cabinet.png"
+  ],
+  "dims": null,
+  "description": "",
+  "output_dir": "/home/msi/IsaacLab/scripts/tools/simready_assets/dresser_final",
+  "tools_dir": "/home/msi/IsaacLab/scripts/tools",
+  "blender_port": 9876,
+  "behavioral_contract": {
+    "object_type": "dresser",
+    "primary_material": "wood",
+    "primary_material_density_kg_m3": 600,
+    "estimated_overall_dims_m": [
+      1.6,
+      0.5,
+      0.8
+    ],
+    "expected_behaviors": [
+      "each drawer slides out for storage access to its internal volume"
+    ],
+    "behavior_types": [
+      "linear",
+      "grasping"
+    ],
+    "part_arrangement": {
+      "layout_type": "grid",
+      "rows": 3,
+      "columns": 2,
+      "description": "3 rows x 2 columns of equal-sized drawers"
+    },
+    "components": [
+      {
+        "name": "drawer_R1C1",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 1, col 1"
+      },
+      {
+        "name": "handle_R1C1",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 1, col 1"
+      },
+      {
+        "name": "drawer_R1C2",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 1, col 2"
+      },
+      {
+        "name": "handle_R1C2",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 1, col 2"
+      },
+      {
+        "name": "drawer_R2C1",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 2, col 1"
+      },
+      {
+        "name": "handle_R2C1",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 2, col 1"
+      },
+      {
+        "name": "drawer_R2C2",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 2, col 2"
+      },
+      {
+        "name": "handle_R2C2",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 2, col 2"
+      },
+      {
+        "name": "drawer_R3C1",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 3, col 1"
+      },
+      {
+        "name": "handle_R3C1",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 3, col 1"
+      },
+      {
+        "name": "drawer_R3C2",
+        "type": "rectangular_panel",
+        "role": "drawer",
+        "interaction": "slidable",
+        "material": "wood",
+        "estimated_weight_kg": 8.0,
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "motion_range": "0.4m slide",
+        "mechanism": "ball_bearing_slide",
+        "grid_position": "row 3, col 2"
+      },
+      {
+        "name": "handle_R3C2",
+        "type": "bar",
+        "role": "handle",
+        "interaction": "graspable",
+        "material": "brass",
+        "estimated_weight_kg": 0.17,
+        "joint_type": "fixed",
+        "joint_axis": "none",
+        "motion_range": "fixed",
+        "mechanism": "none",
+        "grid_position": "row 3, col 2"
+      }
+    ],
+    "structural_features": [
+      {
+        "name": "front_left_leg",
+        "type": "leg",
+        "material": "wood",
+        "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+      },
+      {
+        "name": "front_right_leg",
+        "type": "leg",
+        "material": "wood",
+        "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+      },
+      {
+        "name": "back_left_leg",
+        "type": "leg",
+        "material": "wood",
+        "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+      },
+      {
+        "name": "back_right_leg",
+        "type": "leg",
+        "material": "wood",
+        "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+      }
+    ],
+    "constraints": {
+      "opening_angle_max": null,
+      "slide_distance_m": 0.4,
+      "handle_height_min": 0.25,
+      "handle_height_max": 0.69,
+      "friction_coefficient_min": 0.35
+    },
+    "required_domains": [
+      1,
+      2,
+      4,
+      6,
+      7,
+      14
+    ],
+    "domain_details": {
+      "1": {
+        "name": "Directional Semantics",
+        "detail": "Direction of translation must be specified (forward/backward/up/down)",
+        "from_behavior": "linear"
+      },
+      "2": {
+        "name": "Range Limits",
+        "detail": "Slide distance limits (e.g., 0-50cm)",
+        "from_behavior": "linear"
+      },
+      "4": {
+        "name": "Clearance",
+        "detail": "Sliding part must clear surrounding geometry",
+        "from_behavior": "linear"
+      },
+      "6": {
+        "name": "Force/Torque",
+        "detail": "Grip force must be within gripper limits (Franka: 70N max)",
+        "from_behavior": "grasping"
+      },
+      "7": {
+        "name": "Contact/Friction",
+        "detail": "Contact surfaces must have sufficient friction for stable grip",
+        "from_behavior": "grasping"
+      },
+      "14": {
+        "name": "Safety Limits",
+        "detail": "Safety limits on grip force to prevent damage",
+        "from_behavior": "grasping"
+      }
+    }
+  },
+  "components": [
+    {
+      "component_id": "body",
+      "type": "rectangular_panel",
+      "dimensions": [
+        1.3509000539779663,
+        0.30000001192092896,
+        0.6025500297546387
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.4
+      ],
+      "role": "body",
+      "interaction": "fixed",
+      "confidence": 0.95,
+      "source": "inferred"
+    },
+    {
+      "component_id": "main_cabinet_frame",
+      "type": "rectangular_panel",
+      "dimensions": [
+        1.3509,
+        0.1807,
+        0.6025
+      ],
+      "material": "wood",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "part",
+      "interaction": "fixed",
+      "confidence": 0.8,
+      "source": "measured_low_conf",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        61.346920013427734,
+        114.0774917602539,
+        692.9647827148438,
+        395.7640075683594
+      ],
+      "sam_center_y": 254.92074966430664
+    },
+    {
+      "component_id": "front_left_leg",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.0682,
+        0.0205,
+        0.1357
+      ],
+      "material": "wood",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "part",
+      "interaction": "fixed",
+      "confidence": 0.8,
+      "source": "measured_low_conf",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        76.45661163330078,
+        394.33734130859375,
+        106.0907974243164,
+        453.278076171875
+      ],
+      "sam_center_y": 423.8077087402344
+    },
+    {
+      "component_id": "front_right_leg",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.1334,
+        0.0282,
+        0.094
+      ],
+      "material": "wood",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "part",
+      "interaction": "fixed",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        641.5,
+        411.0,
+        699.0,
+        451.5
+      ],
+      "sam_center_y": 431.25
+    },
+    {
+      "component_id": "back_left_leg",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.1431,
+        0.0175,
+        0.0584
+      ],
+      "material": "wood",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "part",
+      "interaction": "fixed",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        113.5,
+        421.0,
+        173.5,
+        445.5
+      ],
+      "sam_center_y": 433.25
+    },
+    {
+      "component_id": "back_right_leg",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.1199,
+        0.0155,
+        0.0517
+      ],
+      "material": "wood",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "role": "part",
+      "interaction": "fixed",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        611.0,
+        422.0,
+        662.0,
+        444.0
+      ],
+      "sam_center_y": 433.0
+    },
+    {
+      "component_id": "drawer_row1_col1",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6528,
+        0.0588,
+        0.1959
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.07725000000000001
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.9,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        379.0597229003906,
+        293.50494384765625,
+        683.5261840820312,
+        384.876708984375
+      ],
+      "sam_center_y": 339.1908264160156
+    },
+    {
+      "component_id": "drawer_row1_col2",
+      "type": "rectangular_panel",
+      "dimensions": [
+        1.2137,
+        0.088,
+        0.4302
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.20635000000000003
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        406.5,
+        88.5,
+        707.0,
+        195.0
+      ],
+      "sam_center_y": 141.75
+    },
+    {
+      "component_id": "drawer_row2_col1",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6422,
+        0.0682,
+        0.2272
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.33545
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        103.5,
+        195.5,
+        404.5,
+        302.0
+      ],
+      "sam_center_y": 248.75
+    },
+    {
+      "component_id": "drawer_row2_col2",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6689,
+        0.0711,
+        0.237
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.4645500000000001
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        406.5,
+        195.5,
+        707.0,
+        302.0
+      ],
+      "sam_center_y": 248.75
+    },
+    {
+      "component_id": "drawer_row3_col1",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6744,
+        0.0729,
+        0.2431
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.5936500000000001
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        103.5,
+        302.5,
+        404.5,
+        411.0
+      ],
+      "sam_center_y": 356.75
+    },
+    {
+      "component_id": "drawer_row3_col2",
+      "type": "rectangular_panel",
+      "dimensions": [
+        0.6861,
+        0.0743,
+        0.2477
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.25,
+        0.7227500000000001
+      ],
+      "role": "drawer",
+      "interaction": "slidable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "depth_consistency": 0.708,
+      "sam_bbox": [
+        406.5,
+        302.5,
+        707.0,
+        411.0
+      ],
+      "sam_center_y": 356.75
+    },
+    {
+      "component_id": "drawer_row1_col1_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.07725000000000001
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.9,
+      "source": "measured+validated",
+      "parent": "drawer_row1_col1"
+    },
+    {
+      "component_id": "drawer_row1_col2_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.20635000000000003
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "parent": "drawer_row1_col2"
+    },
+    {
+      "component_id": "drawer_row2_col1_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.33545
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "parent": "drawer_row2_col1"
+    },
+    {
+      "component_id": "drawer_row2_col2_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.4645500000000001
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "parent": "drawer_row2_col2"
+    },
+    {
+      "component_id": "drawer_row3_col1_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.5936500000000001
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "parent": "drawer_row3_col1"
+    },
+    {
+      "component_id": "drawer_row3_col2_handle",
+      "type": "bar",
+      "dimensions": [
+        0.1,
+        0.02,
+        0.02
+      ],
+      "material": "wood",
+      "position": [
+        0.8,
+        0.27,
+        0.7227500000000001
+      ],
+      "role": "handle",
+      "interaction": "graspable",
+      "confidence": 0.85,
+      "source": "measured+validated",
+      "parent": "drawer_row3_col2"
+    }
+  ],
+  "kinematic_tree": {
+    "root": "body",
+    "children": [
+      {
+        "name": "main_cabinet_frame",
+        "parent": "body",
+        "role": "part",
+        "joint_type": "fixed",
+        "joint_axis": [
+          0,
+          0,
+          0
+        ],
+        "joint_limits": [
+          0,
+          0
+        ],
+        "joint_damping": 0,
+        "joint_friction": 0,
+        "children": []
+      },
+      {
+        "name": "front_left_leg",
+        "parent": "body",
+        "role": "part",
+        "joint_type": "fixed",
+        "joint_axis": [
+          0,
+          0,
+          0
+        ],
+        "joint_limits": [
+          0,
+          0
+        ],
+        "joint_damping": 0,
+        "joint_friction": 0,
+        "children": []
+      },
+      {
+        "name": "front_right_leg",
+        "parent": "body",
+        "role": "part",
+        "joint_type": "fixed",
+        "joint_axis": [
+          0,
+          0,
+          0
+        ],
+        "joint_limits": [
+          0,
+          0
+        ],
+        "joint_damping": 0,
+        "joint_friction": 0,
+        "children": []
+      },
+      {
+        "name": "back_left_leg",
+        "parent": "body",
+        "role": "part",
+        "joint_type": "fixed",
+        "joint_axis": [
+          0,
+          0,
+          0
+        ],
+        "joint_limits": [
+          0,
+          0
+        ],
+        "joint_damping": 0,
+        "joint_friction": 0,
+        "children": []
+      },
+      {
+        "name": "back_right_leg",
+        "parent": "body",
+        "role": "part",
+        "joint_type": "fixed",
+        "joint_axis": [
+          0,
+          0,
+          0
+        ],
+        "joint_limits": [
+          0,
+          0
+        ],
+        "joint_damping": 0,
+        "joint_friction": 0,
+        "children": []
+      },
+      {
+        "name": "drawer_row1_col1",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      },
+      {
+        "name": "drawer_row1_col2",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      },
+      {
+        "name": "drawer_row2_col1",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      },
+      {
+        "name": "drawer_row2_col2",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      },
+      {
+        "name": "drawer_row3_col1",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      },
+      {
+        "name": "drawer_row3_col2",
+        "parent": "body",
+        "role": "drawer",
+        "joint_type": "prismatic",
+        "joint_axis": "Y",
+        "joint_limits": [
+          0,
+          0.4
+        ],
+        "joint_damping": 2.0,
+        "joint_friction": 0.2,
+        "children": []
+      }
+    ]
+  },
+  "topology_report": {
+    "status": "VALID",
+    "checks": {
+      "size_hierarchy": "PASS",
+      "overlap_detection": "PASS",
+      "kinematic_feasibility": "PASS"
+    },
+    "issues": [
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'main_cabinet_frame' and 'front_left_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'main_cabinet_frame' and 'front_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'main_cabinet_frame' and 'back_left_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'main_cabinet_frame' and 'back_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'front_left_leg' and 'front_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'front_left_leg' and 'back_left_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'front_left_leg' and 'back_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'front_right_leg' and 'back_left_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'front_right_leg' and 'back_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'back_left_leg' and 'back_right_leg' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row1_col1' and 'drawer_row1_col2' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row1_col2' and 'drawer_row2_col1' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row1_col2' and 'drawer_row2_col2' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row1_col2' and 'drawer_row1_col1_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row1_col2' and 'drawer_row2_col1_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row2_col1' and 'drawer_row2_col2' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row2_col2' and 'drawer_row3_col1' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row3_col1' and 'drawer_row3_col2' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row3_col1' and 'drawer_row2_col2_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row3_col1' and 'drawer_row3_col2_handle' may overlap at rest"
+      },
+      {
+        "check": "overlap_detection",
+        "severity": "WARNING",
+        "message": "Components 'drawer_row3_col2' and 'drawer_row3_col1_handle' may overlap at rest"
+      }
+    ],
+    "errors": 0,
+    "warnings": 21,
+    "confidence": 0.5800000000000001
+  },
+  "layout": {
+    "body_dims": [
+      1.3509000539779663,
+      0.30000001192092896,
+      0.6025500297546387
+    ],
+    "components": {
+      "body": {
+        "position": [
+          0.8,
+          0.25,
+          0.4
+        ],
+        "dimensions": [
+          1.3509000539779663,
+          0.30000001192092896,
+          0.6025500297546387
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "body",
+        "material": "wood"
+      },
+      "main_cabinet_frame": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          1.3509,
+          0.1807,
+          0.6025
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "part",
+        "material": "wood"
+      },
+      "front_left_leg": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.0682,
+          0.0205,
+          0.1357
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "part",
+        "material": "wood"
+      },
+      "front_right_leg": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.1334,
+          0.0282,
+          0.094
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "part",
+        "material": "wood"
+      },
+      "back_left_leg": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.1431,
+          0.0175,
+          0.0584
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "part",
+        "material": "wood"
+      },
+      "back_right_leg": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "dimensions": [
+          0.1199,
+          0.0155,
+          0.0517
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "part",
+        "material": "wood"
+      },
+      "drawer_row1_col1": {
+        "position": [
+          0.8,
+          0.25,
+          0.07725000000000001
+        ],
+        "dimensions": [
+          0.6528,
+          0.0588,
+          0.1959
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row1_col2": {
+        "position": [
+          0.8,
+          0.25,
+          0.20635000000000003
+        ],
+        "dimensions": [
+          1.2137,
+          0.088,
+          0.4302
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row2_col1": {
+        "position": [
+          0.8,
+          0.25,
+          0.33545
+        ],
+        "dimensions": [
+          0.6422,
+          0.0682,
+          0.2272
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row2_col2": {
+        "position": [
+          0.8,
+          0.25,
+          0.4645500000000001
+        ],
+        "dimensions": [
+          0.6689,
+          0.0711,
+          0.237
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row3_col1": {
+        "position": [
+          0.8,
+          0.25,
+          0.5936500000000001
+        ],
+        "dimensions": [
+          0.6744,
+          0.0729,
+          0.2431
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row3_col2": {
+        "position": [
+          0.8,
+          0.25,
+          0.7227500000000001
+        ],
+        "dimensions": [
+          0.6861,
+          0.0743,
+          0.2477
+        ],
+        "reachability": 0.5,
+        "friction_coefficient": 0.3,
+        "role": "drawer",
+        "material": "wood"
+      },
+      "drawer_row1_col1_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.07725000000000001
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.7083501992566188,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      },
+      "drawer_row1_col2_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.20635000000000003
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.0,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      },
+      "drawer_row2_col1_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.33545
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.0,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      },
+      "drawer_row2_col2_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.4645500000000001
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.0,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      },
+      "drawer_row3_col1_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.5936500000000001
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.0,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      },
+      "drawer_row3_col2_handle": {
+        "position": [
+          0.8,
+          0.27,
+          0.7227500000000001
+        ],
+        "handle_diameter": 0.018,
+        "handle_clearance": 0.03,
+        "reachability": 0.0,
+        "friction_coefficient": 0.37,
+        "role": "handle",
+        "material": "wood"
+      }
+    },
+    "constraints_satisfied": true,
+    "violations": [],
+    "handle_reachability": 0.1180583665427698,
+    "topology_feasibility": 0.9
+  },
+  "intent_validation": {
+    "decision": "YES",
+    "alignment_score": 0.919,
+    "threshold": 0.85,
+    "reasoning": "Layout-intent alignment exceeds threshold",
+    "gemini_alignment": 1.0,
+    "matrix_alignment": 0.905,
+    "constraint_satisfaction": "14/15",
+    "violations": [],
+    "recommendations": [],
+    "confidence": "MEDIUM",
+    "domain_results": {
+      "1": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Motion directions consistent"
+      },
+      "2": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Joint ranges within bounds"
+      },
+      "3": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Pivot points from kinematic tree"
+      },
+      "4": {
+        "status": "WARNING",
+        "score": 0,
+        "detail": "21 clearance issue(s)"
+      },
+      "5": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "No multi-step sequences"
+      },
+      "6": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Forces within Franka capability (70N)"
+      },
+      "7": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Friction adequate"
+      },
+      "8": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Symmetry consistent"
+      },
+      "9": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Materials from reference data"
+      },
+      "10": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Internal volume accounted for"
+      },
+      "11": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "11 joints in chain"
+      },
+      "12": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Gravity + manual actuation"
+      },
+      "13": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Joint limits as feedback"
+      },
+      "14": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Hard stops via joint limits"
+      },
+      "15": {
+        "status": "PASS",
+        "score": 1.0,
+        "detail": "Geometry-only (no textures)"
+      }
+    },
+    "gemini_result": {
+      "overall_alignment": 1.0,
+      "behavior_analysis": [
+        {
+          "behavior": "each drawer slides out for storage access to its internal volume",
+          "alignment": 1.0,
+          "achievable": true,
+          "reason": "All six drawer components (`drawer_row1_col1` through `drawer_row3_col2`) are present, each with an associated handle component, enabling the interaction necessary for sliding and accessing internal volume. The roles are correctly assigned."
+        }
+      ],
+      "issues": [],
+      "recommendations": []
+    },
+    "attempt": 2
+  },
+  "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/dresser_final/raw_blueprint.usd",
+  "physics_usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/dresser_final/dresser_simready.usd",
+  "preflight_report": {
+    "status": "PASS",
+    "checks": {
+      "usd_structure": "PASS",
+      "physics_properties": "PASS",
+      "collision_detection": "PASS",
+      "simready_compliance": "PASS"
+    },
+    "issues": [],
+    "ready_for_simulation": true
+  },
+  "grasp_test_data": {
+    "asset_id": "dresser_1775371829",
+    "object_type": "dresser",
+    "features": [
+      18.0,
+      0.37,
+      0.58,
+      0.118,
+      0,
+      0,
+      2.0,
+      0.001,
+      0,
+      0.9
+    ],
+    "feature_names": [
+      "handle_diameter",
+      "friction_coefficient",
+      "topology_feasibility",
+      "handle_reachability",
+      "clearance_adequacy",
+      "mass",
+      "contact_force_variance",
+      "joint_jitter",
+      "collision_count",
+      "handle_grip_stability"
+    ],
+    "feature_dict": {
+      "handle_diameter": 18.0,
+      "friction_coefficient": 0.37,
+      "topology_feasibility": 0.58,
+      "handle_reachability": 0.118,
+      "clearance_adequacy": 0,
+      "mass": 0,
+      "contact_force_variance": 2.0,
+      "joint_jitter": 0.001,
+      "collision_count": 0,
+      "handle_grip_stability": 0.9
+    },
+    "label": null,
+    "timestamp": "2026-04-04T23:50:29Z",
+    "usd_path": "/home/msi/IsaacLab/scripts/tools/simready_assets/dresser_final/dresser_simready.usd"
+  },
+  "asset_version": {
+    "version": "v1.20",
+    "version_key": "dresser_v1.20",
+    "archive_dir": "/home/msi/IsaacLab/scripts/tools/v3/asset_archive/dresser_v1.20"
+  },
+  "stage_times": {
+    "stage_0": 17.124577283859253,
+    "stage_1": 62.181967973709106,
+    "stage_2": 0.0005509853363037109,
+    "stage_4": 0.0003418922424316406,
+    "stage_3": 0.0003085136413574219,
+    "stage_4.5": 19.90897512435913,
+    "stage_5": 0.203322172164917,
+    "stage_6": 0.04940676689147949,
+    "stage_7": 0.1283097267150879,
+    "stage_8": 0.001390218734741211,
+    "stage_10": 0.0008540153503417969
+  },
+  "verbose": false,
+  "test": false,
+  "skip_gemini": false,
+  "max_intent_retries": 3,
+  "spec_data": {
+    "asset_name": "dresser",
+    "description": "dresser",
+    "is_articulated": true,
+    "body_dims": [
+      1.3509000539779663,
+      0.30000001192092896,
+      0.6025500297546387
+    ],
+    "body_material": "wood",
+    "links": {
+      "body": {
+        "mass_kg": 40.0,
+        "material": "wood",
+        "is_base": true
+      },
+      "main_cabinet_frame": {
+        "mass_kg": 30.0,
+        "material": "wood",
+        "dimensions": [
+          1.3509,
+          0.1807,
+          0.6025
+        ],
+        "dimension_source": "measured_low_conf",
+        "is_base": false
+      },
+      "front_left_leg": {
+        "mass_kg": 0.114,
+        "material": "wood",
+        "dimensions": [
+          0.0682,
+          0.0205,
+          0.1357
+        ],
+        "dimension_source": "measured_low_conf",
+        "is_base": false
+      },
+      "front_right_leg": {
+        "mass_kg": 0.212,
+        "material": "wood",
+        "dimensions": [
+          0.1334,
+          0.0282,
+          0.094
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "back_left_leg": {
+        "mass_kg": 0.1,
+        "material": "wood",
+        "dimensions": [
+          0.1431,
+          0.0175,
+          0.0584
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "back_right_leg": {
+        "mass_kg": 0.1,
+        "material": "wood",
+        "dimensions": [
+          0.1199,
+          0.0155,
+          0.0517
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row1_col1": {
+        "mass_kg": 4.512,
+        "material": "wood",
+        "dimensions": [
+          0.6528,
+          0.0588,
+          0.1959
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row1_col2": {
+        "mass_kg": 27.569,
+        "material": "wood",
+        "dimensions": [
+          1.2137,
+          0.088,
+          0.4302
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row2_col1": {
+        "mass_kg": 5.971,
+        "material": "wood",
+        "dimensions": [
+          0.6422,
+          0.0682,
+          0.2272
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row2_col2": {
+        "mass_kg": 6.763,
+        "material": "wood",
+        "dimensions": [
+          0.6689,
+          0.0711,
+          0.237
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row3_col1": {
+        "mass_kg": 7.171,
+        "material": "wood",
+        "dimensions": [
+          0.6744,
+          0.0729,
+          0.2431
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      },
+      "drawer_row3_col2": {
+        "mass_kg": 7.576,
+        "material": "wood",
+        "dimensions": [
+          0.6861,
+          0.0743,
+          0.2477
+        ],
+        "dimension_source": "measured+validated",
+        "is_base": false
+      }
+    },
+    "joints": {
+      "drawer_row1_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row1_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "drawer_row1_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row1_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "drawer_row2_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row2_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "drawer_row2_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row2_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "drawer_row3_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row3_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      },
+      "drawer_row3_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row3_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.18
+        ],
+        "damping": 2.0,
+        "friction": 0.1
+      }
+    },
+    "_gemini_source": {
+      "object_type": "dresser",
+      "parts": [
+        {
+          "name": "main_cabinet_frame",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "rounded_box",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "front_left_leg",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "front_right_leg",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "back_left_leg",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "back_right_leg",
+          "type": "fixed",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "cylinder",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row1_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row1_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row1_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row1_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row2_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row2_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row2_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row2_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row3_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row3_col1",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "drawer_row3_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "none",
+            "orientation": "none",
+            "placement": "none"
+          },
+          "material": "wood",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        },
+        {
+          "name": "handle_row3_col2",
+          "type": "prismatic",
+          "hinge_side": "none",
+          "interaction": {
+            "type": "handle_bar",
+            "orientation": "horizontal",
+            "placement": "upper_third"
+          },
+          "material": "metal",
+          "shape": {
+            "base_form": "flat_panel",
+            "sub_features": []
+          }
+        }
+      ],
+      "visual_only_parts": [],
+      "front_face_layout": [
+        {
+          "name": "top_drawer_row",
+          "height_pct": 33.33,
+          "description": "Contains two side-by-side drawers with horizontal metal handles."
+        },
+        {
+          "name": "middle_drawer_row",
+          "height_pct": 33.33,
+          "description": "Contains two side-by-side drawers with horizontal metal handles."
+        },
+        {
+          "name": "bottom_drawer_row",
+          "height_pct": 33.34,
+          "description": "Contains two side-by-side drawers with horizontal metal handles."
+        }
+      ],
+      "count_summary": {
+        "doors": 0,
+        "knobs": 0,
+        "handles": 6,
+        "buttons": 0,
+        "digital_displays": 0
+      }
+    }
+  },
+  "gemini_data": {
+    "object_type": "dresser",
+    "parts": [
+      {
+        "name": "main_cabinet_frame",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "rounded_box",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "front_left_leg",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "front_right_leg",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "back_left_leg",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "back_right_leg",
+        "type": "fixed",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row1_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row1_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row1_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row1_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row2_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row2_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row2_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row2_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row3_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row3_col1",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "drawer_row3_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "none",
+          "orientation": "none",
+          "placement": "none"
+        },
+        "material": "wood",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "handle_row3_col2",
+        "type": "prismatic",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": []
+        }
+      }
+    ],
+    "visual_only_parts": [],
+    "front_face_layout": [
+      {
+        "name": "top_drawer_row",
+        "height_pct": 33.33,
+        "description": "Contains two side-by-side drawers with horizontal metal handles."
+      },
+      {
+        "name": "middle_drawer_row",
+        "height_pct": 33.33,
+        "description": "Contains two side-by-side drawers with horizontal metal handles."
+      },
+      {
+        "name": "bottom_drawer_row",
+        "height_pct": 33.34,
+        "description": "Contains two side-by-side drawers with horizontal metal handles."
+      }
+    ],
+    "count_summary": {
+      "doors": 0,
+      "knobs": 0,
+      "handles": 6,
+      "buttons": 0,
+      "digital_displays": 0
+    }
+  },
+  "perception_results": {
+    "gemini": {
+      "status": "success",
+      "n_parts": 17
+    },
+    "sam3": {
+      "status": "success",
+      "n_detections": 19
+    },
+    "depth_pro": {
+      "status": "success",
+      "depth_range": [
+        2.4295732975006104,
+        6.0246100425720215
+      ],
+      "focal_length": 1280.784423828125
+    },
+    "depth_anything": {
+      "status": "success",
+      "consistency": 0.708
+    }
+  },
+  "usd_structure": {
+    "root_prim": "/body",
+    "links": {
+      "main_cabinet_frame": {
+        "parent": "body",
+        "role": "part"
+      },
+      "front_left_leg": {
+        "parent": "body",
+        "role": "part"
+      },
+      "front_right_leg": {
+        "parent": "body",
+        "role": "part"
+      },
+      "back_left_leg": {
+        "parent": "body",
+        "role": "part"
+      },
+      "back_right_leg": {
+        "parent": "body",
+        "role": "part"
+      },
+      "drawer_row1_col1": {
+        "parent": "body",
+        "role": "drawer"
+      },
+      "drawer_row1_col2": {
+        "parent": "body",
+        "role": "drawer"
+      },
+      "drawer_row2_col1": {
+        "parent": "body",
+        "role": "drawer"
+      },
+      "drawer_row2_col2": {
+        "parent": "body",
+        "role": "drawer"
+      },
+      "drawer_row3_col1": {
+        "parent": "body",
+        "role": "drawer"
+      },
+      "drawer_row3_col2": {
+        "parent": "body",
+        "role": "drawer"
+      }
+    },
+    "joints": {
+      "body_to_main_cabinet_frame": {
+        "type": "fixed",
+        "parent": "body",
+        "child": "main_cabinet_frame",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_front_left_leg": {
+        "type": "fixed",
+        "parent": "body",
+        "child": "front_left_leg",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_front_right_leg": {
+        "type": "fixed",
+        "parent": "body",
+        "child": "front_right_leg",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_back_left_leg": {
+        "type": "fixed",
+        "parent": "body",
+        "child": "back_left_leg",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_back_right_leg": {
+        "type": "fixed",
+        "parent": "body",
+        "child": "back_right_leg",
+        "axis": [
+          0,
+          0,
+          0
+        ],
+        "limits": [
+          0,
+          0
+        ],
+        "damping": 0,
+        "friction": 0
+      },
+      "body_to_drawer_row1_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row1_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      },
+      "body_to_drawer_row1_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row1_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      },
+      "body_to_drawer_row2_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row2_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      },
+      "body_to_drawer_row2_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row2_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      },
+      "body_to_drawer_row3_col1": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row3_col1",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      },
+      "body_to_drawer_row3_col2": {
+        "type": "prismatic",
+        "parent": "body",
+        "child": "drawer_row3_col2",
+        "axis": "Y",
+        "limits": [
+          0,
+          0.4
+        ],
+        "damping": 2.0,
+        "friction": 0.2
+      }
+    }
+  },
+  "flywheel_prediction": {
+    "recommendations": [
+      "Domain 7: drawer_row1_col1_handle friction 0.300 < expected 0.35",
+      "Domain 7: drawer_row1_col2_handle friction 0.300 < expected 0.35",
+      "Domain 7: drawer_row2_col1_handle friction 0.300 < expected 0.35",
+      "Domain 7: drawer_row2_col2_handle friction 0.300 < expected 0.35",
+      "Domain 7: drawer_row3_col1_handle friction 0.300 < expected 0.35",
+      "Domain 7: drawer_row3_col2_handle friction 0.300 < expected 0.35"
+    ]
+  },
+  "hardware_spec": {
+    "drawer_row3_col2": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Largest bottom drawer with maximum damping coefficient for smooth operation under full load.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 6,
+      "latch_force_N_divergence": 0.857,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 19,
+      "damping_Nms_per_rad_divergence": 1.707,
+      "bracket_width_mm": 50.0,
+      "bracket_width_mm_divergence": 0.2,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 4.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "drawer_row2_col1": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Medium drawer with standard sliding mechanism. Damping slightly higher due to increased depth.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 5,
+      "latch_force_N_divergence": 1.0,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 16,
+      "damping_Nms_per_rad_divergence": 1.657,
+      "bracket_width_mm": 47.5,
+      "bracket_width_mm_divergence": 0.105,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 4.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "drawer_row1_col2": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Larger drawer requires heavier-duty slides with increased damping coefficient. Pin diameter scaled for higher load capacity.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 8,
+      "latch_force_N_divergence": 0.609,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 25,
+      "damping_Nms_per_rad_divergence": 1.774,
+      "bracket_width_mm": 55.0,
+      "bracket_width_mm_divergence": 0.364,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 5.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "drawer_row1_col1": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Sliding drawer mechanism with ball-bearing or roller slides. Damping based on typical soft-close drawer slides. No rotational torque required.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 5,
+      "latch_force_N_divergence": 1.0,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 15,
+      "damping_Nms_per_rad_divergence": 1.636,
+      "bracket_width_mm": 47.5,
+      "bracket_width_mm_divergence": 0.105,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 4.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "drawer_row3_col1": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Bottom drawer with increased depth requires slightly higher damping and latch force.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 6,
+      "latch_force_N_divergence": 0.857,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 18,
+      "damping_Nms_per_rad_divergence": 1.692,
+      "bracket_width_mm": 49.5,
+      "bracket_width_mm_divergence": 0.182,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 4.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "drawer_row2_col2": {
+      "mechanism_type": "sliding_drawer",
+      "close_time_seconds": 1.5,
+      "stiffness_Nm_per_rad": 0,
+      "stiffness_Nm_per_rad_divergence": 2.0,
+      "computation_notes": "Similar sized drawer to row2_col1 with proportionally scaled hardware dimensions.",
+      "spring_torque_Nm": 0,
+      "spring_torque_Nm_divergence": 2.0,
+      "latch_force_N": 5,
+      "latch_force_N_divergence": 1.0,
+      "center_of_mass_offset": "centered",
+      "damping_Nms_per_rad": 17,
+      "damping_Nms_per_rad_divergence": 1.676,
+      "bracket_width_mm": 48.5,
+      "bracket_width_mm_divergence": 0.144,
+      "bracket_thickness_mm": 2.1,
+      "bracket_thickness_mm_divergence": 0.857,
+      "pin_diameter_mm": 4.0,
+      "pin_diameter_mm_divergence": 2.0,
+      "source": "merged"
+    },
+    "_contract": {
+      "object_type": "dresser",
+      "primary_material": "wood",
+      "primary_material_density_kg_m3": 600,
+      "estimated_overall_dims_m": [
+        1.6,
+        0.5,
+        0.8
+      ],
+      "expected_behaviors": [
+        "each drawer slides out for storage access to its internal volume"
+      ],
+      "behavior_types": [
+        "linear",
+        "grasping"
+      ],
+      "part_arrangement": {
+        "layout_type": "grid",
+        "rows": 3,
+        "columns": 2,
+        "description": "3 rows x 2 columns of equal-sized drawers"
+      },
+      "components": [
+        {
+          "name": "drawer_R1C1",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 1, col 1"
+        },
+        {
+          "name": "handle_R1C1",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 1, col 1"
+        },
+        {
+          "name": "drawer_R1C2",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 1, col 2"
+        },
+        {
+          "name": "handle_R1C2",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 1, col 2"
+        },
+        {
+          "name": "drawer_R2C1",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 2, col 1"
+        },
+        {
+          "name": "handle_R2C1",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 2, col 1"
+        },
+        {
+          "name": "drawer_R2C2",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 2, col 2"
+        },
+        {
+          "name": "handle_R2C2",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 2, col 2"
+        },
+        {
+          "name": "drawer_R3C1",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 3, col 1"
+        },
+        {
+          "name": "handle_R3C1",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 3, col 1"
+        },
+        {
+          "name": "drawer_R3C2",
+          "type": "rectangular_panel",
+          "role": "drawer",
+          "interaction": "slidable",
+          "material": "wood",
+          "estimated_weight_kg": 8.0,
+          "joint_type": "prismatic",
+          "joint_axis": "Y",
+          "motion_range": "0.4m slide",
+          "mechanism": "ball_bearing_slide",
+          "grid_position": "row 3, col 2"
+        },
+        {
+          "name": "handle_R3C2",
+          "type": "bar",
+          "role": "handle",
+          "interaction": "graspable",
+          "material": "brass",
+          "estimated_weight_kg": 0.17,
+          "joint_type": "fixed",
+          "joint_axis": "none",
+          "motion_range": "fixed",
+          "mechanism": "none",
+          "grid_position": "row 3, col 2"
+        }
+      ],
+      "structural_features": [
+        {
+          "name": "front_left_leg",
+          "type": "leg",
+          "material": "wood",
+          "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+        },
+        {
+          "name": "front_right_leg",
+          "type": "leg",
+          "material": "wood",
+          "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+        },
+        {
+          "name": "back_left_leg",
+          "type": "leg",
+          "material": "wood",
+          "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+        },
+        {
+          "name": "back_right_leg",
+          "type": "leg",
+          "material": "wood",
+          "description": "angled mid-century tapered leg, ~15cm tall, splayed outwards"
+        }
+      ],
+      "constraints": {
+        "opening_angle_max": null,
+        "slide_distance_m": 0.4,
+        "handle_height_min": 0.25,
+        "handle_height_max": 0.69,
+        "friction_coefficient_min": 0.35
+      },
+      "required_domains": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        14
+      ],
+      "domain_details": {
+        "1": {
+          "name": "Directional Semantics",
+          "detail": "Direction of translation must be specified (forward/backward/up/down)",
+          "from_behavior": "linear"
+        },
+        "2": {
+          "name": "Range Limits",
+          "detail": "Slide distance limits (e.g., 0-50cm)",
+          "from_behavior": "linear"
+        },
+        "4": {
+          "name": "Clearance",
+          "detail": "Sliding part must clear surrounding geometry",
+          "from_behavior": "linear"
+        },
+        "6": {
+          "name": "Force/Torque",
+          "detail": "Grip force must be within gripper limits (Franka: 70N max)",
+          "from_behavior": "grasping"
+        },
+        "7": {
+          "name": "Contact/Friction",
+          "detail": "Contact surfaces must have sufficient friction for stable grip",
+          "from_behavior": "grasping"
+        },
+        "14": {
+          "name": "Safety Limits",
+          "detail": "Safety limits on grip force to prevent damage",
+          "from_behavior": "grasping"
+        }
+      }
+    }
+  }
+}

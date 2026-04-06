@@ -1,0 +1,123 @@
+{
+  "decision": "YES",
+  "alignment_score": 0.989,
+  "threshold": 0.85,
+  "reasoning": "Layout-intent alignment exceeds threshold",
+  "gemini_alignment": 1.0,
+  "matrix_alignment": 0.987,
+  "constraint_satisfaction": "15/15",
+  "violations": [],
+  "recommendations": [],
+  "confidence": "HIGH",
+  "domain_results": {
+    "1": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Motion directions consistent"
+    },
+    "2": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint ranges within bounds"
+    },
+    "3": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Pivot points from kinematic tree"
+    },
+    "4": {
+      "status": "PASS",
+      "score": 0.85,
+      "detail": "1 clearance issue(s)"
+    },
+    "5": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "No multi-step sequences"
+    },
+    "6": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Forces within Franka capability (70N)"
+    },
+    "7": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Friction adequate"
+    },
+    "8": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Symmetry consistent"
+    },
+    "9": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Materials from reference data"
+    },
+    "10": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Internal volume accounted for"
+    },
+    "11": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "8 joints in chain"
+    },
+    "12": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Gravity + manual actuation"
+    },
+    "13": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint limits as feedback"
+    },
+    "14": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Hard stops via joint limits"
+    },
+    "15": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Geometry-only (no textures)"
+    }
+  },
+  "gemini_result": {
+    "overall_alignment": 1.0,
+    "behavior_analysis": [
+      {
+        "behavior": "upper oven door opens outward via hinge rotation after grasping handle",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'top_oven_door' component is present with a 'door' role, and its associated 'top_oven_door_handle' is present with a 'handle' role. These components support the expected interaction types (grasping and rotation)."
+      },
+      {
+        "behavior": "lower oven door opens outward via hinge rotation after grasping handle",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "The 'bottom_oven_door' component is present with a 'door' role, and its associated 'bottom_oven_door_handle' is present with a 'handle' role. These components support the expected interaction types (grasping and rotation)."
+      },
+      {
+        "behavior": "control knobs are graspable and rotatable to select settings",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Four knob components ('top_left_knob', 'top_right_knob', 'bottom_left_knob', 'bottom_right_knob') are present, all with a 'knob' role, which inherently supports graspable and rotatable interactions."
+      },
+      {
+        "behavior": "handles are graspable for opening doors",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Both 'top_oven_door_handle' and 'bottom_oven_door_handle' components are present, each with a 'handle' role and specified grasp-related properties (diameter, clearance), explicitly supporting graspable interactions."
+      }
+    ],
+    "issues": [],
+    "recommendations": [
+      "Address the 'bottom_right_knob' component's reachability (0.0). While the component is present and of the correct type, its current layout prevents a robot from grasping it, which impacts the practical achievement of the 'control knobs are graspable' behavior. This might require repositioning the knob or adjusting the robot's operating constraints."
+    ]
+  },
+  "attempt": 1
+}

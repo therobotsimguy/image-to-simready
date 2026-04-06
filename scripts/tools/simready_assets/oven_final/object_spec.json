@@ -1,0 +1,353 @@
+{
+  "asset_name": "double_oven",
+  "description": "double_oven",
+  "is_articulated": true,
+  "body_dims": [
+    0.6,
+    0.5,
+    0.8
+  ],
+  "body_material": "metal",
+  "links": {
+    "body": {
+      "mass_kg": 40.0,
+      "material": "metal",
+      "is_base": true
+    },
+    "top_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6303,
+        0.0944,
+        0.3147
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "bottom_oven_door": {
+      "mass_kg": 30.0,
+      "material": "metal",
+      "dimensions": [
+        0.6355,
+        0.1468,
+        0.4895
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "top_left_knob": {
+      "mass_kg": 0.194,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0471
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "top_right_knob": {
+      "mass_kg": 0.201,
+      "material": "metal",
+      "dimensions": [
+        0.0436,
+        0.0131,
+        0.0451
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "bottom_left_knob": {
+      "mass_kg": 0.194,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0471
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    },
+    "bottom_right_knob": {
+      "mass_kg": 0.194,
+      "material": "metal",
+      "dimensions": [
+        0.042,
+        0.0126,
+        0.0471
+      ],
+      "dimension_source": "measured",
+      "is_base": false
+    }
+  },
+  "joints": {
+    "top_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "top_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "bottom_oven_door": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "bottom_oven_door",
+      "axis": "X",
+      "limits": [
+        -1.57,
+        0
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "top_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "top_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "top_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "top_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "bottom_left_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "bottom_left_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    },
+    "bottom_right_knob": {
+      "type": "revolute",
+      "parent": "body",
+      "child": "bottom_right_knob",
+      "axis": "Y",
+      "limits": [
+        0,
+        4.71
+      ],
+      "damping": 2.0,
+      "friction": 0.1
+    }
+  },
+  "_gemini_source": {
+    "object_type": "double_oven",
+    "parts": [
+      {
+        "name": "top_oven_door",
+        "type": "revolute",
+        "hinge_side": "bottom",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "glass_window",
+              "coverage_pct": 80,
+              "material": "glass",
+              "is_transparent": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "bottom_oven_door",
+        "type": "revolute",
+        "hinge_side": "bottom",
+        "interaction": {
+          "type": "handle_bar",
+          "orientation": "horizontal",
+          "placement": "upper_third"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "flat_panel",
+          "sub_features": [
+            {
+              "name": "glass_window",
+              "coverage_pct": 80,
+              "material": "glass",
+              "is_transparent": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "top_left_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "top_right_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "bottom_left_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      },
+      {
+        "name": "bottom_right_knob",
+        "type": "revolute",
+        "hinge_side": "none",
+        "interaction": {
+          "type": "knob",
+          "orientation": "perpendicular",
+          "placement": "flush"
+        },
+        "material": "metal",
+        "shape": {
+          "base_form": "cylinder",
+          "sub_features": []
+        }
+      }
+    ],
+    "visual_only_parts": [
+      {
+        "name": "time_display",
+        "what_it_is": "digital_display",
+        "location": "control_panel_center"
+      },
+      {
+        "name": "aduro_logo",
+        "what_it_is": "brand_logo",
+        "location": "lower_oven_door_bottom_edge"
+      },
+      {
+        "name": "top_left_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "control_panel_near_top_left_knob"
+      },
+      {
+        "name": "top_right_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "control_panel_near_top_right_knob"
+      },
+      {
+        "name": "bottom_left_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "control_panel_near_bottom_left_knob"
+      },
+      {
+        "name": "bottom_right_indicator_light",
+        "what_it_is": "indicator_light",
+        "location": "control_panel_near_bottom_right_knob"
+      },
+      {
+        "name": "top_oven_interior_light",
+        "what_it_is": "interior_light",
+        "location": "inside_top_oven_back"
+      },
+      {
+        "name": "bottom_oven_interior_light",
+        "what_it_is": "interior_light",
+        "location": "inside_bottom_oven_back"
+      },
+      {
+        "name": "top_oven_racks",
+        "what_it_is": "oven_racks",
+        "location": "inside_top_oven"
+      },
+      {
+        "name": "bottom_oven_racks",
+        "what_it_is": "oven_racks",
+        "location": "inside_bottom_oven"
+      }
+    ],
+    "front_face_layout": [
+      {
+        "name": "control_panel",
+        "height_pct": 10,
+        "description": "Top section with knobs and digital display."
+      },
+      {
+        "name": "top_oven_section",
+        "height_pct": 40,
+        "description": "Upper oven door with handle and glass window."
+      },
+      {
+        "name": "middle_separator",
+        "height_pct": 5,
+        "description": "Horizontal metal strip between the two oven compartments."
+      },
+      {
+        "name": "bottom_oven_section",
+        "height_pct": 40,
+        "description": "Lower oven door with handle, glass window, and brand logo."
+      },
+      {
+        "name": "bottom_trim",
+        "height_pct": 5,
+        "description": "Bottom metal trim of the appliance."
+      }
+    ],
+    "count_summary": {
+      "doors": 2,
+      "knobs": 4,
+      "handles": 2,
+      "buttons": 0,
+      "digital_displays": 1
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "decision": "YES",
+  "alignment_score": 0.919,
+  "threshold": 0.85,
+  "reasoning": "Layout-intent alignment exceeds threshold",
+  "gemini_alignment": 1.0,
+  "matrix_alignment": 0.905,
+  "constraint_satisfaction": "14/15",
+  "violations": [],
+  "recommendations": [],
+  "confidence": "MEDIUM",
+  "domain_results": {
+    "1": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Motion directions consistent"
+    },
+    "2": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint ranges within bounds"
+    },
+    "3": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Pivot points from kinematic tree"
+    },
+    "4": {
+      "status": "WARNING",
+      "score": 0,
+      "detail": "38 clearance issue(s)"
+    },
+    "5": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "No multi-step sequences"
+    },
+    "6": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Forces within Franka capability (70N)"
+    },
+    "7": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Friction adequate"
+    },
+    "8": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Symmetry consistent"
+    },
+    "9": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Materials from reference data"
+    },
+    "10": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Internal volume accounted for"
+    },
+    "11": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "11 joints in chain"
+    },
+    "12": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Gravity + manual actuation"
+    },
+    "13": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Joint limits as feedback"
+    },
+    "14": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Hard stops via joint limits"
+    },
+    "15": {
+      "status": "PASS",
+      "score": 1.0,
+      "detail": "Geometry-only (no textures)"
+    }
+  },
+  "gemini_result": {
+    "overall_alignment": 1.0,
+    "behavior_analysis": [
+      {
+        "behavior": "each of the six drawers slides open linearly to provide storage access",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Six distinct components are explicitly defined with the 'drawer' role: Drawer_top_left, Drawer_middle_left, Drawer_bottom_left, Drawer_top_right, Drawer_middle_right, Drawer_bottom_right. These components are suitable for implementing linear sliding behavior for storage."
+      },
+      {
+        "behavior": "handles can be grasped to pull open drawers",
+        "alignment": 1.0,
+        "achievable": true,
+        "reason": "Six distinct components are explicitly defined with the 'handle' role, each corresponding to a drawer (e.g., Drawer_top_left_handle for Drawer_top_left). The 'handle' role is appropriate for supporting grasping interactions."
+      }
+    ],
+    "issues": [],
+    "recommendations": []
+  },
+  "attempt": 3
+}

@@ -1,0 +1,251 @@
+{
+  "body_dims": [
+    1.8,
+    0.45,
+    0.8
+  ],
+  "components": {
+    "body": {
+      "position": [
+        0.9,
+        0.225,
+        0.4
+      ],
+      "dimensions": [
+        1.8,
+        0.45,
+        0.8
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "body",
+      "material": "wood"
+    },
+    "dresser_frame": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "dimensions": [
+        1.3839,
+        0.2228,
+        0.7427
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "part",
+      "material": "wood"
+    },
+    "leg_front_left": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "dimensions": [
+        0.0908,
+        0.0272,
+        0.0956
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "part",
+      "material": "wood"
+    },
+    "leg_front_right": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "dimensions": [
+        0.0884,
+        0.0265,
+        0.0931
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "part",
+      "material": "wood"
+    },
+    "drawer_top_left": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "dimensions": [
+        2.2255,
+        0.144,
+        0.8511
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_top_right": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "dimensions": [
+        2.2371,
+        0.1447,
+        0.8543
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_middle_left": {
+      "position": [
+        0.9,
+        0.225,
+        0.4
+      ],
+      "dimensions": [
+        0.7532,
+        0.0864,
+        0.2881
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_middle_right": {
+      "position": [
+        0.9,
+        0.225,
+        0.4
+      ],
+      "dimensions": [
+        0.7774,
+        0.0891,
+        0.2969
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_bottom_left": {
+      "position": [
+        0.9,
+        0.225,
+        0.03270000000000001
+      ],
+      "dimensions": [
+        0.7693,
+        0.0811,
+        0.2702
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_bottom_right": {
+      "position": [
+        0.9,
+        0.225,
+        0.03270000000000001
+      ],
+      "dimensions": [
+        0.7834,
+        0.0824,
+        0.2747
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.3,
+      "role": "drawer",
+      "material": "wood"
+    },
+    "drawer_top_left_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    },
+    "drawer_top_right_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    },
+    "drawer_middle_left_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    },
+    "drawer_middle_right_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    },
+    "drawer_bottom_left_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    },
+    "drawer_bottom_right_handle": {
+      "position": [
+        0.9,
+        0,
+        0.48
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.0,
+      "friction_coefficient": 0.37,
+      "role": "handle",
+      "material": "wood"
+    }
+  },
+  "constraints_satisfied": true,
+  "violations": [],
+  "handle_reachability": 0.0,
+  "topology_feasibility": 0.9
+}

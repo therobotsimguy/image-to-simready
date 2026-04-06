@@ -1,0 +1,162 @@
+{
+  "root": "body",
+  "children": [
+    {
+      "name": "upper_oven_door",
+      "parent": "body",
+      "role": "door",
+      "joint_type": "revolute",
+      "joint_axis": "X",
+      "joint_limits": [
+        -1.57,
+        0
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": [
+        {
+          "name": "upper_oven_handle",
+          "parent": "body",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        },
+        {
+          "name": "lower_oven_handle",
+          "parent": "body",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        },
+        {
+          "name": "upper_oven_door_handle",
+          "parent": "upper_oven_door",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        },
+        {
+          "name": "lower_oven_door_handle",
+          "parent": "lower_oven_door",
+          "role": "handle",
+          "joint_type": "fixed",
+          "joint_axis": [
+            0,
+            0,
+            0
+          ],
+          "joint_limits": [
+            0,
+            0
+          ],
+          "joint_damping": 0,
+          "joint_friction": 0,
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "lower_oven_door",
+      "parent": "body",
+      "role": "door",
+      "joint_type": "revolute",
+      "joint_axis": "X",
+      "joint_limits": [
+        -1.57,
+        0
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "left_outer_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "left_inner_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "right_inner_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    },
+    {
+      "name": "right_outer_knob",
+      "parent": "body",
+      "role": "knob",
+      "joint_type": "revolute",
+      "joint_axis": "Y",
+      "joint_limits": [
+        0,
+        4.71
+      ],
+      "joint_damping": 2.0,
+      "joint_friction": 0.1,
+      "children": []
+    }
+  ]
+}

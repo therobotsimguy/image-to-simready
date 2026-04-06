@@ -1,0 +1,438 @@
+[
+  {
+    "component_id": "body",
+    "type": "rectangular_panel",
+    "dimensions": [
+      1.6,
+      0.45,
+      0.85
+    ],
+    "material": "wood",
+    "position": [
+      0.8,
+      0.225,
+      0.425
+    ],
+    "role": "body",
+    "interaction": "fixed",
+    "confidence": 0.95,
+    "source": "inferred"
+  },
+  {
+    "component_id": "Drawer_top_left",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5899,
+      0.0495,
+      0.1651
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      135.5,
+      122.5,
+      412.5,
+      200.0
+    ],
+    "sam_center_y": 161.25
+  },
+  {
+    "component_id": "Drawer_middle_left",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5904,
+      0.0502,
+      0.1673
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      135.5,
+      201.0,
+      412.5,
+      279.5
+    ],
+    "sam_center_y": 240.25
+  },
+  {
+    "component_id": "Drawer_bottom_left",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5946,
+      0.0496,
+      0.1653
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      135.5,
+      280.5,
+      412.5,
+      357.5
+    ],
+    "sam_center_y": 319.0
+  },
+  {
+    "component_id": "Drawer_top_right",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5919,
+      0.0497,
+      0.1656
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      418.0,
+      122.5,
+      695.0,
+      200.0
+    ],
+    "sam_center_y": 161.25
+  },
+  {
+    "component_id": "Drawer_middle_right",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5917,
+      0.0503,
+      0.1677
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      418.0,
+      201.0,
+      695.0,
+      279.5
+    ],
+    "sam_center_y": 240.25
+  },
+  {
+    "component_id": "Drawer_bottom_right",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.5942,
+      0.0496,
+      0.1652
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "drawer",
+    "interaction": "slidable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      418.0,
+      280.5,
+      695.0,
+      357.5
+    ],
+    "sam_center_y": 319.0
+  },
+  {
+    "component_id": "Main_frame",
+    "type": "rectangular_panel",
+    "dimensions": [
+      1.213,
+      0.1773,
+      0.5909
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      133.0,
+      120.0,
+      697.5,
+      395.0
+    ],
+    "sam_center_y": 257.5
+  },
+  {
+    "component_id": "Leg_front_left",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.0941,
+      0.0282,
+      0.1392
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      165.0,
+      394.5,
+      202.5,
+      450.0
+    ],
+    "sam_center_y": 422.25
+  },
+  {
+    "component_id": "Leg_front_right",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.073,
+      0.0219,
+      0.1286
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      634.5,
+      394.5,
+      666.0,
+      450.0
+    ],
+    "sam_center_y": 422.25
+  },
+  {
+    "component_id": "Leg_back_left",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.0463,
+      0.0139,
+      0.1081
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      140.0,
+      391.0,
+      158.0,
+      433.0
+    ],
+    "sam_center_y": 412.0
+  },
+  {
+    "component_id": "Leg_back_right",
+    "type": "rectangular_panel",
+    "dimensions": [
+      0.0461,
+      0.0138,
+      0.1077
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "part",
+    "interaction": "fixed",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "depth_consistency": 0.855,
+    "sam_bbox": [
+      673.5,
+      391.0,
+      691.5,
+      433.0
+    ],
+    "sam_center_y": 412.0
+  },
+  {
+    "component_id": "Drawer_top_left_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_top_left"
+  },
+  {
+    "component_id": "Drawer_middle_left_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_middle_left"
+  },
+  {
+    "component_id": "Drawer_bottom_left_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_bottom_left"
+  },
+  {
+    "component_id": "Drawer_top_right_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_top_right"
+  },
+  {
+    "component_id": "Drawer_middle_right_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_middle_right"
+  },
+  {
+    "component_id": "Drawer_bottom_right_handle",
+    "type": "bar",
+    "dimensions": [
+      0.1,
+      0.02,
+      0.02
+    ],
+    "material": "wood",
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "role": "handle",
+    "interaction": "graspable",
+    "confidence": 0.85,
+    "source": "measured+validated",
+    "parent": "Drawer_bottom_right"
+  }
+]

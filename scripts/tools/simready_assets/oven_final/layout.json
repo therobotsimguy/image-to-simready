@@ -1,0 +1,135 @@
+{
+  "body_dims": [
+    0.6,
+    0.5,
+    0.8
+  ],
+  "components": {
+    "body": {
+      "position": [
+        0.3,
+        0.25,
+        0.4
+      ],
+      "dimensions": [
+        0.6,
+        0.5,
+        0.8
+      ],
+      "reachability": 0.5,
+      "friction_coefficient": 0.15,
+      "role": "body",
+      "material": "metal"
+    },
+    "top_oven_door": {
+      "position": [
+        0.3,
+        0.25,
+        0.5817056640139269
+      ],
+      "dimensions": [
+        0.6303,
+        0.0944,
+        0.3147
+      ],
+      "reachability": 0.880550473291285,
+      "friction_coefficient": 0.15,
+      "role": "door",
+      "material": "metal"
+    },
+    "bottom_oven_door": {
+      "position": [
+        0.3,
+        0.25,
+        0.24805566401392692
+      ],
+      "dimensions": [
+        0.6355,
+        0.1468,
+        0.4895
+      ],
+      "reachability": 0.8410941603757994,
+      "friction_coefficient": 0.15,
+      "role": "door",
+      "material": "metal"
+    },
+    "top_left_knob": {
+      "position": [
+        0.1125,
+        0,
+        0.7473
+      ],
+      "diameter": 0.025,
+      "reachability": 0.8161163232896179,
+      "friction_coefficient": 0.15,
+      "role": "knob",
+      "material": "metal"
+    },
+    "top_right_knob": {
+      "position": [
+        0.2375,
+        0,
+        0.7473
+      ],
+      "diameter": 0.025,
+      "reachability": 0.7828861420785084,
+      "friction_coefficient": 0.15,
+      "role": "knob",
+      "material": "metal"
+    },
+    "bottom_left_knob": {
+      "position": [
+        0.3625,
+        0,
+        0.7473
+      ],
+      "diameter": 0.025,
+      "reachability": 0.7285611193418555,
+      "friction_coefficient": 0.15,
+      "role": "knob",
+      "material": "metal"
+    },
+    "bottom_right_knob": {
+      "position": [
+        0.4875,
+        0,
+        0.7473
+      ],
+      "diameter": 0.025,
+      "reachability": 0.0,
+      "friction_coefficient": 0.15,
+      "role": "knob",
+      "material": "metal"
+    },
+    "top_oven_door_handle": {
+      "position": [
+        0.3,
+        0,
+        0.6570622656055708
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.8551937234330269,
+      "friction_coefficient": 0.15,
+      "role": "handle",
+      "material": "metal"
+    },
+    "bottom_oven_door_handle": {
+      "position": [
+        0.3,
+        0,
+        0.3652690624222831
+      ],
+      "handle_diameter": 0.018,
+      "handle_clearance": 0.03,
+      "reachability": 0.8528360498776527,
+      "friction_coefficient": 0.15,
+      "role": "handle",
+      "material": "metal"
+    }
+  },
+  "constraints_satisfied": true,
+  "violations": [],
+  "handle_reachability": 0.6725988930034436,
+  "topology_feasibility": 0.9
+}
