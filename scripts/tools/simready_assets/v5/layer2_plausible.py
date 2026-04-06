@@ -177,8 +177,32 @@ def run_layer2(contract: BehaviorContract):
         if part.plausible_behaviors:
             print(f"      plausible: {part.plausible_behaviors}")
 
+    # ── ROOT SELECTION (Layer 2's job, not Layer 1's) ──
+    # Root = static part with largest bounding box volume
+    static_parts = [p for p in contract.parts if p.is_static]
+    if static_parts:
+        def bbox_vol(p):
+            return p.dims_mm[0] * p.dims_mm[1] * p.dims_mm[2]
+        root = max(static_parts, key=bbox_vol)
+        contract.root_part = root.name
+        print(f"\n  Root body: {root.name} (volume={bbox_vol(root)/1e6:.1f}L, type={root.part_type})")
+    else:
+        # No static part identified — use largest overall
+        def bbox_vol(p):
+            return p.dims_mm[0] * p.dims_mm[1] * p.dims_mm[2]
+        root = max(contract.parts, key=bbox_vol)
+        root.is_static = True
+        root.part_type = "chassis"
+        contract.root_part = root.name
+        print(f"\n  Root body (fallback): {root.name} (largest volume)")
+
+    # Set parent relationships — all non-root parts parent to root
+    for part in contract.parts:
+        if part.name != contract.root_part:
+            part.parent_part = contract.root_part
+
     contract.layer2_complete = True
-    print(f"\n  Layer 2 complete: {sum(1 for p in contract.parts if not p.is_static)} moving parts identified")
+    print(f"  Layer 2 complete: {sum(1 for p in contract.parts if not p.is_static)} moving parts identified")
     return contract
 
 

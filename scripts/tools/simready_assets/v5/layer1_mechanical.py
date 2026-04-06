@@ -236,10 +236,9 @@ def run_layer1(source_file, contract=None, port=9876):
     # Overall dims
     contract.overall_dims_mm = tuple(scene.get("overall_dims_mm", (0, 0, 0)))
 
-    # Find the root body (largest by vertex count)
-    if objects:
-        root_obj = max(objects, key=lambda o: o["vertices"])
-        contract.root_part = root_obj["name"]
+    # Layer 1 does NOT decide root_part — that's Layer 2's job
+    # Layer 1 only extracts data
+    contract.root_part = None
 
     # Create PartContract for each object
     for obj in objects:
@@ -248,7 +247,7 @@ def run_layer1(source_file, contract=None, port=9876):
         part = PartContract(
             name=obj["name"],
             part_type="unknown",  # Layer 2 will identify this
-            is_static=(obj["name"] == contract.root_part),
+            is_static=False,      # Layer 2 will decide this
             vertices=obj["vertices"],
             faces=obj["faces"],
             bbox_min=tuple(obj["bbox_min"]),
@@ -257,7 +256,7 @@ def run_layer1(source_file, contract=None, port=9876):
             origin=tuple(obj["origin"]),
             materials=obj["materials"],
             mass_kg=mass,
-            parent_part=contract.root_part if obj["name"] != contract.root_part else None,
+            parent_part=None,  # Layer 2 will set parent relationships
         )
 
         # Note front-blocking faces for Layer 3

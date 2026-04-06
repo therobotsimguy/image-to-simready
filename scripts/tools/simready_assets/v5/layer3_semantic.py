@@ -147,7 +147,7 @@ SEMANTIC_SPECS = {
             "direction": "forward_slide",
             "damping": 5.0,
             "force_nm": 10.0,
-            "collision_type": "none",  # too thin for convex hull
+            "collision_type": "boundingCube",  # need collision to sit on rails
             "mass_default": 2.0,
             "constraints": {
                 "directional": (True, True, "Slides forward to pull out"),
@@ -164,7 +164,13 @@ SEMANTIC_SPECS = {
     },
 
     "chassis": {
-        # Static — no behaviors
+        "static": {
+            "joint_type": "fixed",
+            "pivot": "bottom_center",
+            "collision_type": "boundingCube",
+            "mass_default": 45.0,
+            "constraints": {},
+        },
     },
 }
 
@@ -194,6 +200,9 @@ def compute_pivot(part, pivot_type):
         return (cx, cy, cz)
     elif pivot_type == "back_center":
         return (cx, bmax[1], cz)
+    elif pivot_type == "bottom_center":
+        # Chassis: center XY, bottom Z
+        return (cx, cy, 0.0)
     else:
         return (cx, cy, cz)
 

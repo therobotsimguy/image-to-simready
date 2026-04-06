@@ -51,6 +51,31 @@ def run_blender_prep(contract: BehaviorContract, port=9876):
         name = part.name
 
         # 1. Set origin to pivot point
+        # IMPORTANT: shift vertices so pivot is at world origin of the object,
+        # but keep obj.location at the pivot position.
+        # Then we DON'T apply location — USD exporter needs the translate.
+        # Actually NO — the USD exporter writes obj.location as xformOp:translate
+        # which double-offsets the mesh. Instead: shift vertices, keep location.
+        # The USD will have translate=pivot and mesh relative to that. Correct.
+        #
+        # Wait — the REAL issue: Blender shows it right because it combines
+        # location + mesh. But USD also combines translate + mesh. So it should
+        # be the same. Unless the mesh vertices are in WORLD space after transform_apply...
+        #
+        # The ACTUAL fix: our set_origin shifts vertices by -offset and sets location.
+        # This is correct for Blender. For USD, the exporter writes:
+        #   xformOp:translate = obj.location (the pivot)
+        #   mesh points = vertices relative to origin (shifted by -offset)
+        # Isaac Sim applies translate to the mesh → mesh appears at translate + vertex positions
+        # Since vertex positions are already world-relative minus the offset, this IS correct.
+        #
+        # BUT: if the vertices were already at world positions (because transform_apply
+        # was called with all objects at origin=0,0,0), then after set_origin:
+        #   vertex at world (0, -0.083, 0.118) → shifted by -(0,-0.083,0.118) = vertex at (0, 0, 0)
+        #   obj.location = (0, -0.083, 0.118)
+        #   USD: translate=(0,-0.083,0.118) + vertex(0,0,0) = world (0,-0.083,0.118) ✓
+        #
+        # That should be correct. Let me NOT change the logic but verify the actual issue.
         if behavior.pivot_position:
             px, py, pz = behavior.pivot_position
             script = (
@@ -246,6 +271,19 @@ def run_physx(contract: BehaviorContract, usd_path: str):
 
             limits = behavior.joint_limits_m
             print(f"    {part.name}: prismatic {behavior.joint_axis} [{limits[0]*1000:.0f}-{limits[1]*1000:.0f}mm]")
+
+    # Zero out xform translates on articulated children
+    # PhysX articulation uses localPos0 for positioning, NOT xform translate
+    # Having both causes double-offset
+    from pxr import UsdGeom
+    for part in contract.parts:
+        if part.is_static:
+            continue
+        xform_path = f"/root/{part.name}"
+        prim = stage.GetPrimAtPath(xform_path)
+        attr = prim.GetAttribute("xformOp:translate")
+        if attr and attr.Get():
+            attr.Set(Gf.Vec3d(0, 0, 0))
 
     # Physics scene
     UsdPhysics.Scene.Define(stage, "/physicsScene").CreateGravityDirectionAttr(Gf.Vec3f(0, 0, -1))
