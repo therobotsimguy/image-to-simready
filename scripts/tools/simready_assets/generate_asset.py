@@ -37,6 +37,8 @@ BEST_CLAUDE = "claude-opus-4-6"
 
 # Path B: Vision Stack
 from vision_stack import run_vision_stack
+# Path D: Judge
+from judge import run_judge
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -130,21 +132,31 @@ For complex objects: describe step by step.
 Return ONLY the JSON.""",
 }
 
-# Path C: Blender script generation prompt
-SCRIPT_GEN_PROMPT = """You are an expert Blender 4.3 Python scripter. You must write a complete Blender script to create the 3D object described below.
+_BLENDER_RULES = """## Blender 4.3 API rules:
+- NO `use_auto_smooth` (removed in 4.x)
+- NO `Specular` input on Principled BSDF (removed)
+- Use `bpy.ops.mesh.primitive_*_add()` for primitives
+- For revolution/lathe objects: use `from_pydata()` with computed vertices
+- For threaded bolts: modulate vertex radius along helix
+- Apply scale: `bpy.ops.object.transform_apply(scale=True)`
+- Materials: create node tree with ShaderNodeOutputMaterial + ShaderNodeBsdfPrincipled
+- All dimensions in METERS (convert from mm).
+- The script runs via exec() inside Blender — no `if __name__` guards.
+- Write ONLY Python code, no markdown fences, no explanations."""
+
+SCRIPT_GEN_PROMPT = """You are an expert Blender 4.3 Python scripter. Write a COMPLETE Blender script to create the 3D object described below.
 
 ## Object Analysis (from 6 AI agents + 4 vision models):
 {spec_data}
 
 ## Rules:
 1. Clear the scene first (remove all objects, meshes, materials).
-2. Use Blender 4.3 API ONLY — no deprecated functions.
-3. All dimensions in METERS (convert from mm).
-4. Create proper materials using Principled BSDF nodes.
-5. Each body listed as separate = a separate Blender object.
-6. Apply transforms (scale, rotation) after creating each object.
-7. Use smooth shading on all objects.
-8. Set object origins correctly for physics articulation:
+2. All dimensions in METERS (convert from mm).
+3. Create proper materials using Principled BSDF nodes.
+4. Each body listed as separate = a separate Blender object.
+5. Apply transforms (scale, rotation) after creating each object.
+6. Use smooth shading on all objects.
+7. Set object origins correctly for physics articulation:
    - DOORS: origin MUST be at the HINGE EDGE (left or right edge), NOT center.
    - DRAWERS: origin at center is fine (prismatic joint slides along axis).
    - To move the origin WITHOUT moving the visible geometry, use this pattern:
@@ -157,31 +169,19 @@ SCRIPT_GEN_PROMPT = """You are an expert Blender 4.3 Python scripter. You must w
          for v in obj.data.vertices:
              v.co -= offset
      ```
-     Call this AFTER creating each door, passing the hinge edge position as the new origin.
-     The door stays visually in the same place but its origin moves to the hinge edge.
-9. Export to USD and save .blend file at the end.
+8. Export to USD and save .blend file at the end.
 
-## Blender 4.3 API reminders:
-- NO `use_auto_smooth` (removed in 4.x)
-- NO `Specular` input on Principled BSDF (removed)
-- Use `bpy.ops.mesh.primitive_*_add()` for primitives
-- For revolution/lathe objects: use `from_pydata()` with computed vertices
-- For threaded bolts: modulate vertex radius along helix
-- Apply scale: `bpy.ops.object.transform_apply(scale=True)`
-- Materials: create node tree with ShaderNodeOutputMaterial + ShaderNodeBsdfPrincipled
-- USD export: `bpy.ops.wm.usd_export(filepath='...', export_materials=True)`
-- Save: `bpy.ops.wm.save_as_mainfile(filepath='...')`
+{blender_rules}
 
 ## Output paths:
 - USD: {output_usd}
 - Blend: {output_blend}
 
 ## IMPORTANT:
-- Write the COMPLETE script. No placeholders, no "TODO", no imports that aren't available in Blender.
-- The script runs via exec() inside Blender — no `if __name__` guards.
-- Print object count, vertex count, and dimensions at the end for verification.
+- Write the COMPLETE script. No placeholders, no "TODO".
+- Print object count, vertex count, and dimensions at the end.
 
-Write ONLY the Python script, no markdown fences, no explanations."""
+Write ONLY the Python script."""
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -462,7 +462,7 @@ def build_spec_summary(results, vdata):
     return "\n".join(lines)
 
 
-def run_pipeline(image_path, api_keys, output_usd, output_blend):
+def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=9876):
     gkey = api_keys["gemini"]["api_key"]
     ckey = api_keys["anthropic"]["api_key"]
 
@@ -551,32 +551,141 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend):
     print(f"  Object: {obj_type}")
     print(f"  Geometry approach: {approach}")
 
-    # Claude writes the Blender script (sees image + all analysis)
-    script_prompt = SCRIPT_GEN_PROMPT.format(
-        spec_data=spec_summary,
+    # ── C → Blender → D race: Gemini and Claude both generate, try each ──
+    behavior = results.get("claude_behavior", {}).get("parsed", {})
+    bodies = results.get("claude_bodies", {}).get("parsed", {})
+    script = None
+
+    from judge import query_blender_scene, audit_structure
+
+    spec_with_fixes = spec_summary
+
+    full_prompt = SCRIPT_GEN_PROMPT.format(
+        blender_rules=_BLENDER_RULES,
+        spec_data=spec_with_fixes,
         output_usd=output_usd,
         output_blend=output_blend,
     )
 
-    print(f"  Generating Blender script with {BEST_CLAUDE}...")
+    # Both generate full scripts in parallel — try Claude first (better quality),
+    # fall back to Gemini, retry with fixes if needed
+    script_results = {}
+    script_ready = {"gemini": threading.Event(), "claude": threading.Event()}
 
-    try:
-        raw_script = call_claude(ckey, BEST_CLAUDE, script_prompt, image_path=image_path)
-        script = extract_script(raw_script)
-        print(f"  Script: {len(script.splitlines())} lines, {len(script)} chars")
-    except Exception as e:
-        print(f"  Claude script generation FAILED: {e}")
-        print(f"  Falling back to Gemini...")
+    def _gen_gemini():
         try:
-            raw_script = call_gemini(gkey, BEST_GEMINI, script_prompt, image_path=image_path)
-            script = extract_script(raw_script)
-            print(f"  Gemini script: {len(script.splitlines())} lines")
-        except Exception as e2:
-            print(f"  Gemini also failed: {e2}")
-            return None, results
+            raw = call_gemini(gkey, BEST_GEMINI, full_prompt, image_path=image_path)
+            script_results["gemini"] = extract_script(raw)
+        except Exception as e:
+            script_results["gemini_error"] = str(e)
+        script_ready["gemini"].set()
+
+    def _gen_claude():
+        try:
+            raw = call_claude(ckey, BEST_CLAUDE, full_prompt, image_path=image_path)
+            script_results["claude"] = extract_script(raw)
+        except Exception as e:
+            script_results["claude_error"] = str(e)
+        script_ready["claude"].set()
+
+    print(f"  Generating scripts: Gemini ‖ Claude (parallel, prefer Claude)...")
+    t_script = time.time()
+    threading.Thread(target=_gen_gemini, daemon=True).start()
+    threading.Thread(target=_gen_claude, daemon=True).start()
+
+    # Try Claude first (higher quality), then Gemini as fallback, then retry
+    candidates = ["claude", "gemini", "claude_retry"]
+    candidates_tried = []
+    winner = None
+    fix_history = ""
+
+    for attempt, candidate in enumerate(candidates, 1):
+        if candidate == "claude":
+            script_ready["claude"].wait(timeout=180)
+            if "claude" not in script_results:
+                print(f"  Claude failed: {script_results.get('claude_error', '?')}")
+                continue
+        elif candidate == "gemini":
+            script_ready["gemini"].wait(timeout=180)
+            if "gemini" not in script_results:
+                print(f"  Gemini failed: {script_results.get('gemini_error', '?')}")
+                continue
+        elif candidate == "claude_retry":
+            if not fix_history:
+                break
+            print(f"  Retrying Claude with fix instructions...")
+            fix_prompt = SCRIPT_GEN_PROMPT.format(
+                blender_rules=_BLENDER_RULES,
+                spec_data=spec_with_fixes + fix_history,
+                output_usd=output_usd,
+                output_blend=output_blend,
+            )
+            try:
+                raw = call_claude(ckey, BEST_CLAUDE, fix_prompt, image_path=image_path)
+                script_results["claude_retry"] = extract_script(raw)
+            except Exception as e:
+                print(f"  Retry failed: {e}")
+                break
+
+        candidates_tried.append(candidate)
+        test_script = script_results[candidate]
+        lines = len(test_script.splitlines())
+        elapsed = time.time() - t_script
+
+        print(f"\n  ── Testing {candidate} ({lines} lines, {elapsed:.0f}s) ──")
+
+        # Execute in Blender
+        try:
+            result = send_to_blender(test_script, port=blender_port)
+            if result.get("status") == "error":
+                print(f"  Blender ERROR: {result.get('message', '?')[:150]}")
+                fix_history = f"\n\n## {candidate} FAILED — Blender error:\n{result.get('message', '?')[:500]}\nFix the error."
+                continue
+            print(f"  Blender: OK")
+        except Exception as e:
+            print(f"  Blender connection error: {e}")
+            continue
+
+        # Structural audit
+        scene = query_blender_scene(port=blender_port)
+        if scene and "error" not in scene:
+            passed, issues = audit_structure(scene, behavior, bodies)
+            print(f"  D (structural): {'PASS' if passed else 'FAIL'} — {len(issues)} issues")
+            for iss in issues:
+                print(f"    ✗ {iss}")
+
+            if passed:
+                script = test_script
+                winner = candidate
+                print(f"\n  ✓ WINNER: {candidate} (attempt {attempt}, {elapsed:.0f}s)")
+                break
+            else:
+                fix_lines = [f"\n\n## {candidate} structural issues:"]
+                for i, iss in enumerate(issues, 1):
+                    fix_lines.append(f"  {i}. {iss}")
+                fix_history = "\n".join(fix_lines)
+        else:
+            print(f"  Could not inspect scene")
+
+    total_script_time = time.time() - t_script
+
+    if not script:
+        # Use best available even if D didn't pass
+        for fallback in ["claude", "gemini", "claude_retry"]:
+            if fallback in script_results:
+                script = script_results[fallback]
+                winner = f"{fallback} (fallback)"
+                print(f"\n  No script passed D — using {fallback} as fallback")
+                break
+
+    if not script:
+        print(f"  All script generation failed")
+        return None, results
+
+    print(f"  Script gen total: {total_script_time:.1f}s")
 
     phase2_time = time.time() - t1
-    print(f"  Phase 2: {phase2_time:.1f}s")
+    print(f"\n  Phase 2 total: {phase2_time:.1f}s")
     print(f"  Total: {phase1_time + phase2_time:.1f}s")
 
     return script, {
@@ -620,20 +729,32 @@ def main():
     print(f"  Path A:   {BEST_GEMINI} (×3) + {BEST_CLAUDE} (×3)")
     print(f"  Path B:   DINO + SAM3 + DepthPro + DepthAnything3")
     print(f"  Path C:   {BEST_CLAUDE} (Blender script generation)")
-    print(f"  Workers:  10 parallel (6 AI + 4 vision) + 1 script gen")
+    print(f"  Path D:   Gemini + Claude (judge) + structural audit")
+    print(f"  Workers:  10 parallel + script gen + judge (max 3 retries)")
     print("=" * 70)
 
     api_keys = load_api_keys()
     t0 = time.time()
 
-    script, log = run_pipeline(image_path, api_keys, output_usd, output_blend)
+    if args.no_execute:
+        # Skip execution — just generate script
+        script, log = run_pipeline(image_path, api_keys, output_usd, output_blend,
+                                    blender_port=args.blender_port)
+        if script:
+            script_path = os.path.join(output_dir, "final_blender_script.py")
+            with open(script_path, "w") as f:
+                f.write(script)
+            print(f"\n  Script saved: {script_path}")
+        return
+
+    script, log = run_pipeline(image_path, api_keys, output_usd, output_blend,
+                                blender_port=args.blender_port)
     if not script:
         print("\n  Pipeline failed.")
         return
 
-    # Save
+    # Save outputs
     def _json_default(o):
-        """Handle numpy types for JSON serialization."""
         import numpy as np
         if isinstance(o, (np.bool_,)):
             return bool(o)
@@ -651,56 +772,32 @@ def main():
     with open(script_path, "w") as f:
         f.write(script)
 
-    if args.no_execute:
-        print(f"\n  Script saved: {script_path}")
-        return
-
-    # Execute
-    print("\n" + "=" * 70)
-    print("  EXECUTING IN BLENDER")
-    print("=" * 70)
-
+    # Final beauty screenshot (3/4 view)
     try:
-        t1 = time.time()
-        result = send_to_blender(script, port=args.blender_port)
-
-        if result.get("status") == "error":
-            print(f"\n  BLENDER ERROR: {result.get('message', '?')}")
-            print(f"  Script: {script_path}")
-        else:
-            print(f"\n  Success ({time.time()-t1:.1f}s)")
-            out = result.get("result", {})
-            print(f"  {out.get('result', '')[:500] if isinstance(out, dict) else str(out)[:500]}")
-
-            # Screenshot
-            time.sleep(1)
-            setup = ('import bpy, math\n'
-                     'for a in bpy.context.screen.areas:\n'
-                     '    if a.type == "VIEW_3D":\n'
-                     '        for s in a.spaces:\n'
-                     '            if s.type == "VIEW_3D": s.shading.type = "MATERIAL"\n'
-                     '        for r in a.regions:\n'
-                     '            if r.type == "WINDOW":\n'
-                     '                with bpy.context.temp_override(area=a, region=r):\n'
-                     '                    bpy.ops.view3d.view_axis(type="BACK")\n'
-                     '                    bpy.ops.view3d.view_all()\n'
-                     '                    bpy.ops.view3d.view_orbit(angle=math.radians(15), type="ORBITDOWN")\n'
-                     '                    bpy.ops.view3d.view_orbit(angle=math.radians(-20), type="ORBITRIGHT")\n'
-                     '                break\n'
-                     'bpy.ops.object.select_all(action="DESELECT")\n')
-            send_to_blender(setup, port=args.blender_port)
-            time.sleep(1)
-
-            ss = f"/tmp/{obj_name}_vp.png"
-            if blender_screenshot(ss, port=args.blender_port):
-                import shutil
-                shutil.copy(ss, os.path.join(output_dir, "viewport.png"))
-                print(f"  Screenshot saved")
-
-    except ConnectionRefusedError:
-        print(f"\n  ERROR: Blender MCP not running")
-    except Exception as e:
-        print(f"\n  ERROR: {e}")
+        time.sleep(1)
+        setup = ('import bpy, math\n'
+                 'for a in bpy.context.screen.areas:\n'
+                 '    if a.type == "VIEW_3D":\n'
+                 '        for s in a.spaces:\n'
+                 '            if s.type == "VIEW_3D": s.shading.type = "MATERIAL"\n'
+                 '        for r in a.regions:\n'
+                 '            if r.type == "WINDOW":\n'
+                 '                with bpy.context.temp_override(area=a, region=r):\n'
+                 '                    bpy.ops.view3d.view_axis(type="BACK")\n'
+                 '                    bpy.ops.view3d.view_all()\n'
+                 '                    bpy.ops.view3d.view_orbit(angle=math.radians(15), type="ORBITDOWN")\n'
+                 '                    bpy.ops.view3d.view_orbit(angle=math.radians(-20), type="ORBITRIGHT")\n'
+                 '                break\n'
+                 'bpy.ops.object.select_all(action="DESELECT")\n')
+        send_to_blender(setup, port=args.blender_port)
+        time.sleep(1)
+        ss = f"/tmp/{obj_name}_vp.png"
+        if blender_screenshot(ss, port=args.blender_port):
+            import shutil
+            shutil.copy(ss, os.path.join(output_dir, "viewport.png"))
+            print(f"  Final screenshot saved")
+    except:
+        pass
 
     print(f"\n  Total: {time.time()-t0:.1f}s")
 
