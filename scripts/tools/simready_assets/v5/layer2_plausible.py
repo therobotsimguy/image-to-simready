@@ -18,6 +18,7 @@ _ASSETS_DIR = os.path.dirname(_DIR)
 sys.path.insert(0, _ASSETS_DIR)
 
 from v5.behavior_contract import BehaviorContract, BEHAVIORS
+from geometry_math import bbox_volume_mm3
 from v5.ai_agents import (
     load_api_keys, call_claude, call_gemini, parse_json,
     load_behavior_definitions, run_parallel_agents,
@@ -181,16 +182,11 @@ def run_layer2(contract: BehaviorContract):
     # Root = static part with largest bounding box volume
     static_parts = [p for p in contract.parts if p.is_static]
     if static_parts:
-        def bbox_vol(p):
-            return p.dims_mm[0] * p.dims_mm[1] * p.dims_mm[2]
-        root = max(static_parts, key=bbox_vol)
+        root = max(static_parts, key=lambda p: bbox_volume_mm3(p.dims_mm))
         contract.root_part = root.name
-        print(f"\n  Root body: {root.name} (volume={bbox_vol(root)/1e6:.1f}L, type={root.part_type})")
+        print(f"\n  Root body: {root.name} (volume={bbox_volume_mm3(root.dims_mm)/1e6:.1f}L, type={root.part_type})")
     else:
-        # No static part identified — use largest overall
-        def bbox_vol(p):
-            return p.dims_mm[0] * p.dims_mm[1] * p.dims_mm[2]
-        root = max(contract.parts, key=bbox_vol)
+        root = max(contract.parts, key=lambda p: bbox_volume_mm3(p.dims_mm))
         root.is_static = True
         root.part_type = "chassis"
         contract.root_part = root.name

@@ -182,6 +182,7 @@ def run_physx(contract: BehaviorContract, usd_path: str):
     print("=" * 60)
 
     from pxr import Usd, UsdPhysics, Sdf, Gf
+    from geometry_math import meters_to_cm
 
     stage = Usd.Stage.Open(usd_path)
     root = stage.GetPrimAtPath("/root")
@@ -252,8 +253,8 @@ def run_physx(contract: BehaviorContract, usd_path: str):
             j.CreateAxisAttr(behavior.joint_axis)
 
             if behavior.joint_limits_m:
-                j.CreateLowerLimitAttr(behavior.joint_limits_m[0] * 100)  # m to cm
-                j.CreateUpperLimitAttr(behavior.joint_limits_m[1] * 100)
+                j.CreateLowerLimitAttr(meters_to_cm(behavior.joint_limits_m[0]))  # m to cm
+                j.CreateUpperLimitAttr(meters_to_cm(behavior.joint_limits_m[1]))
 
             if part.joint_local_pos0:
                 j.CreateLocalPos0Attr(Gf.Vec3f(*part.joint_local_pos0))

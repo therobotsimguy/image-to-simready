@@ -20,6 +20,7 @@ _ASSETS_DIR = os.path.dirname(_DIR)
 sys.path.insert(0, _ASSETS_DIR)
 
 from v5.behavior_contract import BehaviorContract, PartContract
+from geometry_math import bbox_volume_mm3, estimate_mass_kg, material_density
 
 
 def send_to_blender(script, port=9876):
@@ -145,45 +146,6 @@ print(json.dumps(scene_data))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# MASS ESTIMATION from geometry + material
-# ═══════════════════════════════════════════════════════════════════════════════
-
-MATERIAL_DENSITY = {
-    # material name keywords → density kg/m³
-    "stainless": 8000,
-    "steel": 7800,
-    "chrome": 7190,
-    "metal": 7800,
-    "wood": 600,
-    "glass": 2500,
-    "enamel": 2500,
-    "plastic": 1200,
-    "rubber": 1100,
-}
-
-
-def estimate_mass(dims_mm, materials):
-    """Estimate mass from bounding box volume and material."""
-    vol_m3 = (dims_mm[0] / 1000) * (dims_mm[1] / 1000) * (dims_mm[2] / 1000)
-
-    # Find best density match
-    density = 1000  # default: water
-    for mat_name in materials:
-        mat_lower = mat_name.lower()
-        for keyword, d in MATERIAL_DENSITY.items():
-            if keyword in mat_lower:
-                density = d
-                break
-
-    # Hollow objects: reduce effective volume
-    # If any dimension > 200mm, assume 20% fill factor
-    max_dim = max(dims_mm)
-    fill_factor = 0.2 if max_dim > 200 else 0.8
-
-    return round(vol_m3 * density * fill_factor, 2)
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
 # LAYER 1 MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -242,7 +204,10 @@ def run_layer1(source_file, contract=None, port=9876):
 
     # Create PartContract for each object
     for obj in objects:
-        mass = estimate_mass(obj["dims_mm"], obj["materials"])
+        density = material_density(obj["materials"])
+        max_dim = max(obj["dims_mm"])
+        fill = 0.2 if max_dim > 200 else 0.8
+        mass = estimate_mass_kg(tuple(obj["dims_mm"]), density, fill)
 
         part = PartContract(
             name=obj["name"],

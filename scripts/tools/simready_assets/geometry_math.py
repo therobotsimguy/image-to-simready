@@ -461,6 +461,166 @@ def fits_inside(inner_size: float, outer_size: float, min_clearance: float = 0.0
 
 
 # ═══════════════════════════════════════════════════════════════════
+# V5 PIPELINE MATH — used by every layer
+# ═══════════════════════════════════════════════════════════════════
+
+def bbox_volume_mm3(dims_mm: Tuple[float, float, float]) -> float:
+    """Bounding box volume in mm³."""
+    return dims_mm[0] * dims_mm[1] * dims_mm[2]
+
+
+def bbox_volume_m3(dims_mm: Tuple[float, float, float]) -> float:
+    """Bounding box volume in m³ from mm dimensions."""
+    return (dims_mm[0] / 1000) * (dims_mm[1] / 1000) * (dims_mm[2] / 1000)
+
+
+def estimate_mass_kg(dims_mm: Tuple[float, float, float], density_kg_m3: float, fill_factor: float = 0.2) -> float:
+    """Estimate mass from bounding box dimensions, density, and fill factor.
+
+    fill_factor: 0.2 for hollow objects (ovens, cabinets), 0.8 for solid objects (bolts).
+    """
+    vol = bbox_volume_m3(dims_mm)
+    return round(vol * density_kg_m3 * fill_factor, 2)
+
+
+def material_density(material_names: List[str]) -> float:
+    """Get density (kg/m³) from material name keywords."""
+    DENSITIES = {
+        "stainless": 8000, "steel": 7800, "chrome": 7190, "metal": 7800,
+        "wood": 600, "glass": 2500, "enamel": 2500, "plastic": 1200,
+        "rubber": 1100, "aluminum": 2700, "brass": 8500, "copper": 8960,
+    }
+    for mat_name in material_names:
+        for keyword, d in DENSITIES.items():
+            if keyword in mat_name.lower():
+                return d
+    return 1000  # default: water
+
+
+def compute_pivot_position(
+    bbox_min: Tuple[float, float, float],
+    bbox_max: Tuple[float, float, float],
+    pivot_type: str,
+) -> Tuple[float, float, float]:
+    """Compute pivot world position from bounding box and pivot type.
+
+    pivot_type: bottom_edge, top_edge, left_edge, right_edge, hinge_edge,
+                center, back_center, front_center, bottom_center
+    """
+    cx = (bbox_min[0] + bbox_max[0]) / 2
+    cy = (bbox_min[1] + bbox_max[1]) / 2
+    cz = (bbox_min[2] + bbox_max[2]) / 2
+
+    pivots = {
+        "bottom_edge": (cx, bbox_min[1], bbox_min[2]),
+        "top_edge": (cx, bbox_min[1], bbox_max[2]),
+        "left_edge": (bbox_min[0], cy, cz),
+        "right_edge": (bbox_max[0], cy, cz),
+        "hinge_edge": (bbox_min[0], cy, cz),
+        "center": (cx, cy, cz),
+        "back_center": (cx, bbox_max[1], cz),
+        "front_center": (cx, bbox_min[1], cz),
+        "bottom_center": (cx, cy, 0.0),
+    }
+    return pivots.get(pivot_type, (cx, cy, cz))
+
+
+def compute_local_offset(
+    world_pos: Tuple[float, float, float],
+    parent_origin: Tuple[float, float, float],
+) -> Tuple[float, float, float]:
+    """Compute position relative to parent origin (for localPos0)."""
+    return (
+        round(world_pos[0] - parent_origin[0], 4),
+        round(world_pos[1] - parent_origin[1], 4),
+        round(world_pos[2] - parent_origin[2], 4),
+    )
+
+
+def is_point_inside_bbox(
+    point: Tuple[float, float, float],
+    bbox_min: Tuple[float, float, float],
+    bbox_max: Tuple[float, float, float],
+    tolerance: float = 0.01,
+) -> bool:
+    """Check if a point is inside a bounding box (with tolerance)."""
+    return all(
+        bbox_min[i] - tolerance <= point[i] <= bbox_max[i] + tolerance
+        for i in range(3)
+    )
+
+
+def is_bbox_inside_bbox(
+    inner_min: Tuple[float, float, float],
+    inner_max: Tuple[float, float, float],
+    outer_min: Tuple[float, float, float],
+    outer_max: Tuple[float, float, float],
+    tolerance: float = 0.05,
+) -> bool:
+    """Check if inner bbox fits inside outer bbox."""
+    return all(
+        outer_min[i] - tolerance <= inner_min[i] and inner_max[i] <= outer_max[i] + tolerance
+        for i in range(3)
+    )
+
+
+def validate_joint_limits(joint_type: str, limits) -> Tuple[bool, str]:
+    """Validate joint limits are physically reasonable."""
+    if joint_type == "revolute" and limits:
+        lo, hi = limits
+        if lo >= hi:
+            return False, f"lower limit {lo}° >= upper limit {hi}°"
+        if hi - lo > 360:
+            return False, f"range {hi-lo}° exceeds 360°"
+        if lo < -360 or hi > 360:
+            return False, f"limits [{lo},{hi}]° outside [-360, 360]"
+        return True, "OK"
+    elif joint_type == "prismatic" and limits:
+        lo, hi = limits
+        if lo >= hi:
+            return False, f"lower limit {lo}m >= upper limit {hi}m"
+        if abs(hi - lo) > 2.0:
+            return False, f"travel {abs(hi-lo)*1000:.0f}mm exceeds 2000mm"
+        return True, "OK"
+    return True, "no limits to validate"
+
+
+def validate_mass(child_mass: float, parent_mass: float) -> Tuple[bool, str]:
+    """Validate child mass is less than parent mass."""
+    if child_mass > parent_mass:
+        return False, f"child mass {child_mass}kg > parent mass {parent_mass}kg"
+    return True, "OK"
+
+
+def validate_part_fits_parent(
+    part_dims_mm: Tuple[float, float, float],
+    parent_dims_mm: Tuple[float, float, float],
+) -> Tuple[bool, str]:
+    """Validate part dimensions fit within parent."""
+    for i, axis in enumerate(["width", "depth", "height"]):
+        if part_dims_mm[i] > parent_dims_mm[i] * 1.1:  # 10% tolerance
+            return False, f"part {axis} {part_dims_mm[i]:.0f}mm > parent {parent_dims_mm[i]:.0f}mm"
+    return True, "OK"
+
+
+def meters_to_cm(m: float) -> float:
+    """Convert meters to centimeters (for USD prismatic joint limits)."""
+    return m * 100
+
+
+def vertex_shift_for_pivot(
+    vertex_world: Tuple[float, float, float],
+    pivot: Tuple[float, float, float],
+) -> Tuple[float, float, float]:
+    """Compute shifted vertex position (local to pivot)."""
+    return (
+        vertex_world[0] - pivot[0],
+        vertex_world[1] - pivot[1],
+        vertex_world[2] - pivot[2],
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════
 # SELF-TEST
 # ═══════════════════════════════════════════════════════════════════
 

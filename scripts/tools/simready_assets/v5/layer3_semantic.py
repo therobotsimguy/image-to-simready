@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """V5 Layer 3: Semantic Filtering — "What SHOULD each part do?"
 
-For each plausible behavior from Layer 2:
-  - Check all 15 semantic constraint domains
-  - Using the 16×15 matrix from BEHAVIOR_DEFINITIONS.md
-  - Generate the Behavior Contract with exact parameters
+AI reads the knowledge base (BEHAVIOR_DEFINITIONS.md + ISAAC_SIM_PHYSICS_REFERENCE.md)
+as context, then generates the Behavior Contract for ANY object — seen or unseen.
 
-Uses Claude API with BEHAVIOR_DEFINITIONS.md as context for reasoning.
+No hardcoded lookup tables. The knowledge base teaches the AI how to reason.
+The AI applies that reasoning to whatever parts it sees.
+
+Uses Claude + Gemini in parallel for speed.
 """
 
 import json
-import math
 import os
 import sys
 
 _DIR = os.path.dirname(os.path.abspath(__file__))
 _ASSETS_DIR = os.path.dirname(_DIR)
+_DOCS_DIR = os.path.join(_ASSETS_DIR, "docs")
 sys.path.insert(0, _ASSETS_DIR)
 
 from v5.behavior_contract import (
@@ -23,234 +24,94 @@ from v5.behavior_contract import (
 )
 from v5.ai_agents import (
     load_api_keys, call_claude, call_gemini, parse_json,
-    load_behavior_definitions, run_parallel_agents,
+    run_parallel_agents,
+)
+from geometry_math import (
+    compute_pivot_position, compute_local_offset,
+    is_point_inside_bbox, validate_joint_limits,
+    validate_mass, validate_part_fits_parent,
 )
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SEMANTIC CONSTRAINT SPECS PER PART TYPE
-# These are deterministic — no AI needed for common types
+# KNOWLEDGE BASE LOADER
 # ═══════════════════════════════════════════════════════════════════════════════
 
-SEMANTIC_SPECS = {
-    "oven_door": {
-        "rotational": {
-            "joint_type": "revolute",
-            "joint_axis": "X",  # horizontal hinge, swings down
-            "limits_deg": (0, 90),
-            "pivot": "bottom_edge",
-            "direction": "downward_swing",
-            "damping": 10.0,
-            "force_nm": 5.0,
-            "collision_type": "boundingCube",
-            "mass_default": 10.0,
-            "constraints": {
-                "directional": (True, True, "Door swings downward (outward) to open"),
-                "range_limits": (True, True, "0-90° — fully open is horizontal"),
-                "pivot_placement": (True, True, "Hinge at bottom edge of door"),
-                "clearance": (True, True, "Door must clear chassis when opening"),
-                "sequential": (False, None, "No prerequisite actions"),
-                "force_torque": (True, True, "5 Nm typical for oven door"),
-                "contact_friction": (True, True, "Hinge bearing maintains contact"),
-                "symmetry": (True, True, "Symmetric left-right"),
-                "material": (True, True, "Glass + metal frame"),
-                "internal_volume": (True, True, "No front face blocking cavity — door IS the front face"),
-                "kinematic_chain": (True, True, "Single revolute joint"),
-                "energy": (True, True, "Gravity-assisted closing"),
-                "feedback": (False, None, "No sensors needed"),
-                "safety": (True, True, "Hard stop at 90°"),
-                "aesthetic": (True, True, "Glass window in door frame"),
-            },
-        },
-        "grasping": {
-            "joint_type": None,
-            "constraints": {
-                "force_torque": (True, True, "Grip force 5-10N on handle"),
-                "contact_friction": (True, True, "Handle provides grip surface"),
-            },
-        },
-    },
+def load_knowledge_base():
+    """Load reference docs as context for AI reasoning."""
+    docs = {}
+    for name in ["BEHAVIOR_DEFINITIONS.md", "ISAAC_SIM_PHYSICS_REFERENCE.md"]:
+        path = os.path.join(_DOCS_DIR, name)
+        if os.path.exists(path):
+            with open(path) as f:
+                content = f.read()
+            # Truncate if too long for context window
+            if len(content) > 40000:
+                content = content[:40000] + "\n... (truncated)"
+            docs[name] = content
+    return docs
 
-    "cabinet_door": {
-        "rotational": {
-            "joint_type": "revolute",
-            "joint_axis": "Z",  # vertical hinge, swings outward
-            "limits_deg": (0, 110),
-            "pivot": "hinge_edge",  # left or right edge
-            "direction": "outward_swing",
-            "damping": 5.0,
-            "force_nm": 3.0,
-            "collision_type": "boundingCube",
-            "mass_default": 5.0,
-            "constraints": {
-                "directional": (True, True, "Door swings outward only"),
-                "range_limits": (True, True, "0-110° — limited by furniture behind"),
-                "pivot_placement": (True, True, "Hinge at left or right edge"),
-                "clearance": (True, True, "Door clears frame and adjacent doors"),
-                "internal_volume": (True, True, "Cannot swing inward — shelves inside"),
-                "kinematic_chain": (True, True, "Single revolute joint"),
-                "safety": (True, True, "Hard stop at 110°"),
-            },
-        },
-    },
 
-    "drawer": {
-        "linear": {
-            "joint_type": "prismatic",
-            "joint_axis": "Y",  # slides front-back
-            "limits_m": (-0.4, 0.0),  # slides out 400mm
-            "pivot": "center",
-            "direction": "forward_pull",
-            "damping": 5.0,
-            "force_nm": 25.0,
-            "collision_type": "none",
-            "mass_default": 3.0,
-            "constraints": {
-                "directional": (True, True, "Pulls forward only"),
-                "range_limits": (True, True, "0 to 90% of depth"),
-                "pivot_placement": (False, None, "N/A for linear"),
-                "clearance": (True, True, "Drawer clears frame sides"),
-                "internal_volume": (True, True, "Cannot push through back panel"),
-                "kinematic_chain": (True, True, "Single prismatic joint"),
-                "safety": (True, True, "Hard stop at max extension"),
-            },
-        },
-    },
-
-    "knob": {
-        "rotational": {
-            "joint_type": "revolute",
-            "joint_axis": "Y",  # rotates around depth axis
-            "limits_deg": (0, 270),
-            "pivot": "center",
-            "direction": "clockwise",
-            "damping": 0.5,
-            "force_nm": 1.0,
-            "collision_type": "convexHull",
-            "mass_default": 0.1,
-            "constraints": {
-                "directional": (True, True, "Rotates CW/CCW"),
-                "range_limits": (True, True, "0-270° typical for oven knobs"),
-                "pivot_placement": (True, True, "Rotates around own center"),
-                "kinematic_chain": (True, True, "Single revolute joint"),
-                "safety": (True, True, "Detent stops at positions"),
-            },
-        },
-    },
-
-    "rack": {
-        "linear": {
-            "joint_type": "prismatic",
-            "joint_axis": "Y",
-            "limits_m": (-0.4, 0.0),
-            "pivot": "back_center",
-            "direction": "forward_slide",
-            "damping": 5.0,
-            "force_nm": 10.0,
-            "collision_type": "boundingCube",  # need collision to sit on rails
-            "mass_default": 2.0,
-            "constraints": {
-                "directional": (True, True, "Slides forward to pull out"),
-                "range_limits": (True, True, "0 to rack length"),
-                "clearance": (True, True, "Rack must clear cavity walls"),
-                "kinematic_chain": (True, True, "Single prismatic joint"),
-                "safety": (True, True, "Hard stop at full extension"),
-            },
-        },
-    },
-
-    "handle": {
-        # Handles don't have their own joints — they're grasping points
-    },
-
-    "chassis": {
-        "static": {
-            "joint_type": "fixed",
-            "pivot": "bottom_center",
-            "collision_type": "boundingCube",
-            "mass_default": 45.0,
-            "constraints": {},
-        },
-    },
-}
+    # compute_pivot_position imported from geometry_math
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PIVOT POSITION CALCULATOR
+# AI PROMPT — generates Behavior Contract from knowledge base
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def compute_pivot(part, pivot_type):
-    """Compute exact pivot position from part geometry."""
-    bmin = part.bbox_min
-    bmax = part.bbox_max
-    cx = (bmin[0] + bmax[0]) / 2
-    cy = (bmin[1] + bmax[1]) / 2
-    cz = (bmin[2] + bmax[2]) / 2
+CONTRACT_PROMPT = """You are a robotics simulation physicist. You must generate a Behavior Contract for 3D object parts.
 
-    if pivot_type == "bottom_edge":
-        # Oven door: hinge at bottom edge, front face
-        return (cx, bmin[1], bmin[2])
-    elif pivot_type == "top_edge":
-        return (cx, bmin[1], bmax[2])
-    elif pivot_type == "hinge_edge":
-        # Cabinet door: hinge at left or right edge
-        # Default: left edge
-        return (bmin[0], cy, cz)
-    elif pivot_type == "center":
-        return (cx, cy, cz)
-    elif pivot_type == "back_center":
-        return (cx, bmax[1], cz)
-    elif pivot_type == "bottom_center":
-        # Chassis: center XY, bottom Z
-        return (cx, cy, 0.0)
-    else:
-        return (cx, cy, cz)
+## KNOWLEDGE BASE (how behaviors and constraints work):
 
+{knowledge_base}
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# LAYER 3: AI-ASSISTED SEMANTIC FILTERING FOR UNKNOWN TYPES
-# ═══════════════════════════════════════════════════════════════════════════════
+## OBJECT PARTS TO ANALYZE:
 
-SEMANTIC_PROMPT = """You are a robotics physicist analyzing parts for semantic behavior constraints.
+{parts_data}
 
-Here is the behavior definitions reference (16 behaviors × 15 constraint domains):
-{behavior_defs}
+## YOUR TASK:
 
-Here are parts that need semantic analysis — their types are not in our lookup table:
-{unknown_parts}
+For EACH non-static part, generate a complete behavior specification. Use the knowledge base to reason about:
+- Which of the 16 behaviors is PRIMARY for this part?
+- What joint type (revolute, prismatic, fixed, null)?
+- What joint axis (X, Y, Z)?
+- What joint limits (degrees for revolute, meters for prismatic)?
+- Where is the pivot point? Use one of: bottom_edge, top_edge, left_edge, right_edge, hinge_edge, center, back_center, front_center, bottom_center
+- What damping value?
+- What force/torque required (Nm)?
+- What collision type (convexHull, boundingCube, none)?
+- Should collision between this part and the body be enabled? (usually false for articulated parts)
+- What mass (kg)?
 
-For each part, determine:
-1. What is the PRIMARY behavior? (one of: rotational, linear, grasping, insertion, deformation, contact, sequential, dynamic, sliding_friction, wiping_sweeping, twisting_torque, stacking_placement, compliant_force, impact_striking, pulling_tension, rolling)
-2. Joint type: "revolute", "prismatic", "fixed", or null
-3. Joint axis: "X", "Y", or "Z"
-4. Joint limits in degrees (for revolute) or meters (for prismatic)
-5. Pivot position description: "bottom_edge", "top_edge", "hinge_edge", "center", "back_center"
-6. Damping value (Nm·s/rad for revolute, N·s/m for prismatic)
-7. Required force/torque (Nm)
-8. Collision type: "convexHull", "boundingCube", "none"
-9. For each of the 15 constraint domains: does it apply? is it satisfied?
+RULES:
+- Oven doors swing DOWN → hinge at bottom_edge, revolute on X axis, 0-90°
+- Cabinet doors swing OUTWARD → hinge at left_edge or right_edge, revolute on Z axis, 0-110°
+- Drawers slide FORWARD → prismatic on Y axis, negative limits (e.g., -0.4 to 0.0)
+- Knobs ROTATE → revolute on Y axis (facing user), 0-270°
+- Racks SLIDE OUT → prismatic on Y axis, negative limits
+- Chassis/body/frame → fixed joint, static, is the root
 
-Answer in JSON:
+Answer in EXACTLY this JSON format:
 {{
   "parts": [
     {{
       "name": "part_name",
-      "primary_behavior": "behavior_type",
+      "primary_behavior": "rotational",
       "joint_type": "revolute",
       "joint_axis": "X",
-      "limits_deg": [0, 90],
-      "pivot": "bottom_edge",
+      "joint_limits_deg": [0, 90],
+      "pivot_type": "bottom_edge",
       "damping": 10.0,
       "force_nm": 5.0,
       "collision_type": "boundingCube",
-      "constraints": {{
-        "directional": {{"applies": true, "satisfied": true, "reason": "..."}},
-        ...all 15 domains
-      }}
+      "collision_between_bodies": false,
+      "mass_kg": 10.0,
+      "reasoning": "brief explanation"
     }}
   ]
 }}
-Return ONLY the JSON."""
+
+Return ONLY the JSON. Include ALL non-static parts."""
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -260,22 +121,72 @@ Return ONLY the JSON."""
 def run_layer3(contract: BehaviorContract):
     """Run Layer 3: Semantic Filtering → Behavior Contract.
 
-    For each part with plausible behaviors:
-      - If part type is in SEMANTIC_SPECS: use deterministic lookup
-      - If unknown: use Claude API with BEHAVIOR_DEFINITIONS.md context
-
-    Returns updated contract with complete behavior specifications.
+    AI reads knowledge base + part data → generates specs for every part.
+    No hardcoded lookup tables.
     """
     print("\n" + "=" * 60)
     print("  LAYER 3: Semantic Filtering → Behavior Contract")
-    print("  'What SHOULD each part do?'")
+    print("  'What SHOULD each part do?' (AI + knowledge base)")
     print("=" * 60)
 
-    unknown_parts = []
+    keys = load_api_keys()
+    ckey = keys["anthropic"]["api_key"]
+    gkey = keys["gemini"]["api_key"]
+
+    # Load knowledge base
+    print("  Loading knowledge base...")
+    kb = load_knowledge_base()
+    kb_text = ""
+    for name, content in kb.items():
+        kb_text += f"\n### {name}:\n{content[:20000]}\n"
+    print(f"  Knowledge base: {len(kb)} docs, {len(kb_text)} chars")
+
+    # Build parts data for AI
+    parts_data = []
+    for p in contract.parts:
+        if p.is_static:
+            continue
+        parts_data.append({
+            "name": p.name,
+            "part_type": p.part_type,
+            "plausible_behaviors": p.plausible_behaviors,
+            "dims_mm": list(p.dims_mm),
+            "bbox_min": list(p.bbox_min),
+            "bbox_max": list(p.bbox_max),
+            "materials": p.materials,
+            "mass_estimate_kg": p.mass_kg,
+            "parent": p.parent_part,
+        })
+
+    prompt = CONTRACT_PROMPT.format(
+        knowledge_base=kb_text,
+        parts_data=json.dumps(parts_data, indent=2),
+    )
+
+    # Run Claude + Gemini in parallel
+    print(f"  Generating contracts (Claude ‖ Gemini)...")
+    results, errors = run_parallel_agents([
+        ("claude", lambda: parse_json(call_claude(ckey, prompt, max_tokens=8192))),
+        ("gemini", lambda: parse_json(call_gemini(gkey, prompt))),
+    ])
+
+    # Prefer Claude, fallback to Gemini
+    ai_result = results.get("claude") or results.get("gemini")
+    source = "Claude" if "claude" in results else ("Gemini" if "gemini" in results else "NONE")
+
+    if not ai_result:
+        print(f"  Both AI agents failed: {errors}")
+        contract.layer3_complete = False
+        return contract
+
+    print(f"  Using {source} result")
+
+    # Map AI results to contract
+    ai_parts = {p["name"]: p for p in ai_result.get("parts", [])}
 
     for part in contract.parts:
         if part.is_static:
-            # Static parts: fixed joint, no behaviors
+            # Static: fixed joint, no behavior needed
             spec = BehaviorSpec(
                 behavior_type="static",
                 is_valid=True,
@@ -287,156 +198,119 @@ def run_layer3(contract: BehaviorContract):
             print(f"    {part.name}: STATIC (fixed joint)")
             continue
 
-        if not part.plausible_behaviors:
-            print(f"    {part.name}: no plausible behaviors — skipping")
+        ai = ai_parts.get(part.name, {})
+        if not ai:
+            print(f"    {part.name}: NOT IN AI RESULT — skipping")
             continue
 
-        # Check if we have deterministic specs for this part type
-        type_specs = SEMANTIC_SPECS.get(part.part_type, {})
+        # Compute pivot from AI's pivot_type using geometry_math
+        pivot_type = ai.get("pivot_type", "center")
+        pivot_pos = compute_pivot_position(part.bbox_min, part.bbox_max, pivot_type)
 
-        if type_specs:
-            # DETERMINISTIC PATH — no AI needed
-            primary_behavior_type = part.plausible_behaviors[0]
-            behavior_spec_data = type_specs.get(primary_behavior_type, {})
-
-            if behavior_spec_data and behavior_spec_data.get("joint_type"):
-                # Compute pivot
-                pivot_type = behavior_spec_data.get("pivot", "center")
-                pivot_pos = compute_pivot(part, pivot_type)
-
-                # Compute localPos0 (anchor on parent)
-                root = contract.get_part(contract.root_part)
-                if root:
-                    root_origin = root.origin
-                    part.joint_local_pos0 = (
-                        round(pivot_pos[0] - root_origin[0], 4),
-                        round(pivot_pos[1] - root_origin[1], 4),
-                        round(pivot_pos[2] - root_origin[2], 4),
-                    )
-
-                # Build BehaviorSpec
-                spec = BehaviorSpec(
-                    behavior_type=primary_behavior_type,
-                    is_valid=True,
-                    joint_type=behavior_spec_data["joint_type"],
-                    joint_axis=behavior_spec_data.get("joint_axis"),
-                    joint_limits_deg=behavior_spec_data.get("limits_deg"),
-                    joint_limits_m=behavior_spec_data.get("limits_m"),
-                    damping=behavior_spec_data.get("damping", 0),
-                    force_nm=behavior_spec_data.get("force_nm", 0),
-                    pivot_position=pivot_pos,
-                    pivot_description=pivot_type,
-                    collision_type=behavior_spec_data.get("collision_type", "none"),
-                    collision_enabled_between_bodies=False,
-                )
-
-                # Add constraint checks
-                for domain in CONSTRAINT_DOMAINS:
-                    check_data = behavior_spec_data.get("constraints", {}).get(domain)
-                    if check_data:
-                        applies, satisfied, reason = check_data
-                        spec.constraint_checks.append(ConstraintCheck(
-                            domain=domain,
-                            applies=applies if applies is not None else False,
-                            satisfied=satisfied if satisfied is not None else True,
-                            reason=reason or "",
-                        ))
-
-                # Mass
-                part.mass_kg = max(part.mass_kg, behavior_spec_data.get("mass_default", part.mass_kg))
-
-                # Blender actions from constraints
-                for cc in spec.constraint_checks:
-                    if cc.domain == "internal_volume" and cc.applies:
-                        part.blender_actions.append("CHECK: remove front faces blocking cavity openings")
-                    if cc.domain == "pivot_placement" and cc.applies:
-                        part.blender_actions.append(f"SET_ORIGIN: {pivot_type} at ({pivot_pos[0]*1000:.0f}, {pivot_pos[1]*1000:.0f}, {pivot_pos[2]*1000:.0f})mm")
-
-                part.primary_behavior = spec
-                part.valid_behaviors = [spec]
-
-                limits = spec.joint_limits_deg or spec.joint_limits_m
-                print(f"    {part.name}: {spec.joint_type} {spec.joint_axis} "
-                      f"limits={limits} pivot={pivot_type} "
-                      f"({pivot_pos[0]*1000:.0f},{pivot_pos[1]*1000:.0f},{pivot_pos[2]*1000:.0f})mm "
-                      f"[DETERMINISTIC]")
-            else:
-                unknown_parts.append(part)
-        else:
-            unknown_parts.append(part)
-
-    # AI PATH — for parts not in the deterministic lookup
-    if unknown_parts:
-        print(f"\n  {len(unknown_parts)} unknown parts — using Claude API...")
-        keys = load_api_keys()
-        ckey = keys["anthropic"]["api_key"]
-
-        behavior_defs = load_behavior_definitions()
-        # Truncate to fit context if too long
-        if len(behavior_defs) > 50000:
-            behavior_defs = behavior_defs[:50000] + "\n... (truncated)"
-
-        parts_data = []
-        for p in unknown_parts:
-            parts_data.append({
-                "name": p.name,
-                "part_type": p.part_type,
-                "plausible_behaviors": p.plausible_behaviors,
-                "dims_mm": list(p.dims_mm),
-                "materials": p.materials,
-                "bbox_min": list(p.bbox_min),
-                "bbox_max": list(p.bbox_max),
-            })
-
-        prompt = SEMANTIC_PROMPT.format(
-            behavior_defs=behavior_defs[:30000],
-            unknown_parts=json.dumps(parts_data, indent=2),
+        # Build BehaviorSpec
+        spec = BehaviorSpec(
+            behavior_type=ai.get("primary_behavior", "unknown"),
+            is_valid=True,
+            joint_type=ai.get("joint_type"),
+            joint_axis=ai.get("joint_axis"),
+            damping=ai.get("damping", 5.0),
+            stiffness=ai.get("stiffness", 0.0),
+            force_nm=ai.get("force_nm", 5.0),
+            pivot_position=pivot_pos,
+            pivot_description=pivot_type,
+            collision_type=ai.get("collision_type", "boundingCube"),
+            collision_enabled_between_bodies=ai.get("collision_between_bodies", False),
         )
 
-        try:
-            result = parse_json(call_claude(ckey, prompt))
-            ai_parts = {p["name"]: p for p in result.get("parts", [])}
+        if ai.get("joint_limits_deg"):
+            spec.joint_limits_deg = tuple(ai["joint_limits_deg"])
+        if ai.get("joint_limits_m"):
+            spec.joint_limits_m = tuple(ai["joint_limits_m"])
 
-            for part in unknown_parts:
-                ai = ai_parts.get(part.name, {})
-                if ai:
-                    pivot_pos = compute_pivot(part, ai.get("pivot", "center"))
+        # Mass from AI
+        if ai.get("mass_kg"):
+            part.mass_kg = ai["mass_kg"]
 
-                    spec = BehaviorSpec(
-                        behavior_type=ai.get("primary_behavior", "unknown"),
-                        is_valid=True,
-                        joint_type=ai.get("joint_type"),
-                        joint_axis=ai.get("joint_axis"),
-                        damping=ai.get("damping", 0),
-                        force_nm=ai.get("force_nm", 0),
-                        pivot_position=pivot_pos,
-                        pivot_description=ai.get("pivot", "center"),
-                        collision_type=ai.get("collision_type", "none"),
-                    )
-                    if ai.get("limits_deg"):
-                        spec.joint_limits_deg = tuple(ai["limits_deg"])
-                    if ai.get("limits_m"):
-                        spec.joint_limits_m = tuple(ai["limits_m"])
+        # Compute localPos0 (pivot relative to root)
+        root = contract.get_part(contract.root_part)
+        if root:
+            part.joint_local_pos0 = (
+                round(pivot_pos[0], 4),
+                round(pivot_pos[1], 4),
+                round(pivot_pos[2], 4),
+            )
 
-                    # Constraint checks from AI
-                    for domain, check in ai.get("constraints", {}).items():
-                        if isinstance(check, dict):
-                            spec.constraint_checks.append(ConstraintCheck(
-                                domain=domain,
-                                applies=check.get("applies", False),
-                                satisfied=check.get("satisfied", True),
-                                reason=check.get("reason", ""),
-                            ))
+        # Blender actions
+        part.blender_actions.append(
+            f"SHIFT_VERTICES: pivot={pivot_type} at ({pivot_pos[0]*1000:.0f},{pivot_pos[1]*1000:.0f},{pivot_pos[2]*1000:.0f})mm"
+        )
 
-                    part.primary_behavior = spec
-                    part.valid_behaviors = [spec]
-                    print(f"    {part.name}: {spec.joint_type} {spec.joint_axis} [AI]")
-        except Exception as e:
-            print(f"  Claude API failed: {e}")
+        part.primary_behavior = spec
+        part.valid_behaviors = [spec]
+
+        limits = spec.joint_limits_deg or spec.joint_limits_m or "?"
+        reasoning = ai.get("reasoning", "")[:60]
+        print(f"    {part.name}: {spec.joint_type} {spec.joint_axis} limits={limits} "
+              f"pivot={pivot_type} ({pivot_pos[0]*1000:.0f},{pivot_pos[1]*1000:.0f},{pivot_pos[2]*1000:.0f})mm "
+              f"— {reasoning}")
+
+    # Check for cavity-blocking faces on static parts
+    for part in contract.parts:
+        if part.is_static:
+            has_doors = any(
+                p.primary_behavior and p.primary_behavior.behavior_type == "rotational"
+                for p in contract.parts if not p.is_static
+            )
+            if has_doors:
+                part.blender_actions.append("CHECK: remove front faces blocking cavity openings")
+
+    # ── MATH VALIDATION — catch AI mistakes ──
+    print(f"\n  Math validation:")
+    root_part = contract.get_part(contract.root_part)
+    issues = 0
+
+    for part in contract.parts:
+        if part.is_static or not part.primary_behavior:
+            continue
+        b = part.primary_behavior
+
+        # Validate joint limits
+        limits = b.joint_limits_deg or b.joint_limits_m
+        if limits:
+            ok, msg = validate_joint_limits(b.joint_type, limits)
+            if not ok:
+                print(f"    ✗ {part.name}: {msg}")
+                issues += 1
+
+        # Validate mass vs parent
+        if root_part:
+            ok, msg = validate_mass(part.mass_kg, root_part.mass_kg)
+            if not ok:
+                print(f"    ✗ {part.name}: {msg}")
+                issues += 1
+
+        # Validate part fits inside parent
+        if root_part:
+            ok, msg = validate_part_fits_parent(part.dims_mm, root_part.dims_mm)
+            if not ok:
+                print(f"    ✗ {part.name}: {msg}")
+                issues += 1
+
+        # Validate pivot inside chassis bbox
+        if b.pivot_position and root_part:
+            inside = is_point_inside_bbox(b.pivot_position, root_part.bbox_min, root_part.bbox_max, tolerance=0.05)
+            if not inside:
+                print(f"    ⚠ {part.name}: pivot ({b.pivot_position[0]*1000:.0f},{b.pivot_position[1]*1000:.0f},{b.pivot_position[2]*1000:.0f})mm outside chassis bbox")
+                # Don't count as hard failure — knobs can be outside chassis
+
+    if issues == 0:
+        print(f"    All checks passed")
+    else:
+        print(f"    {issues} issues found")
 
     contract.layer3_complete = True
-    print(f"\n  Layer 3 complete: Behavior Contract generated")
-    print(f"  {sum(1 for p in contract.parts if p.primary_behavior)} parts have behavior specs")
+    n_specs = sum(1 for p in contract.parts if p.primary_behavior)
+    print(f"\n  Layer 3 complete: {n_specs} behavior specs generated ({source})")
     return contract
 
 
