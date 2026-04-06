@@ -31,7 +31,8 @@ from v5.behavior_contract import BehaviorContract
 from v5.layer1_mechanical import run_layer1, send_to_blender
 from v5.layer2_plausible import run_layer2
 from v5.layer3_semantic import run_layer3
-from v5.image_to_geometry import run_image_to_geometry
+# Image path uses V4 pipeline (generate_asset.py) — separate pipeline
+# V5 handles OBJ/Blend files only
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -196,9 +197,15 @@ def run_physx(contract: BehaviorContract, usd_path: str):
             continue
 
         xform_path = f"/root/{part.name}"
-        mesh_path = f"/root/{part.name}/{part.name}"
         xform = stage.GetPrimAtPath(xform_path)
-        mesh = stage.GetPrimAtPath(mesh_path)
+
+        # Find the mesh child — may be named {name} or {name}_mesh
+        mesh = None
+        if xform.IsValid():
+            for child in xform.GetChildren():
+                if child.GetTypeName() == "Mesh":
+                    mesh = child
+                    break
 
         if not xform.IsValid():
             print(f"    SKIP {part.name}: not found in USD")
@@ -209,7 +216,7 @@ def run_physx(contract: BehaviorContract, usd_path: str):
         UsdPhysics.MassAPI.Apply(xform).CreateMassAttr(part.mass_kg)
 
         # Collision
-        if mesh.IsValid() and behavior.collision_type != "none":
+        if mesh and behavior.collision_type != "none":
             UsdPhysics.CollisionAPI.Apply(mesh)
             UsdPhysics.MeshCollisionAPI.Apply(mesh).CreateApproximationAttr(behavior.collision_type)
 
@@ -322,26 +329,17 @@ def main():
 
     t0 = time.time()
 
-    # Detect input type: image or 3D file
+    # V5 handles 3D files only. For images use V4 pipeline (generate_asset.py)
     ext = os.path.splitext(input_path)[1].lower()
-    IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".webp"}
     MESH_EXTS = {".obj", ".blend", ".fbx", ".stl"}
 
-    if ext in IMAGE_EXTS:
-        # IMAGE PATH: generate geometry in Blender first, then Layer 1 reads scene
-        success = run_image_to_geometry(input_path, port=args.port)
-        if not success:
-            print("\n  Image → Geometry failed.")
-            return
-        # Layer 1 reads from Blender scene (already loaded by image_to_geometry)
-        contract = run_layer1(input_path, port=args.port, skip_load=True)
-    elif ext in MESH_EXTS:
-        # MESH PATH: Layer 1 loads the file directly
-        contract = run_layer1(input_path, port=args.port)
-    else:
-        print(f"\n  Unsupported file type: {ext}")
-        print(f"  Supported: {IMAGE_EXTS | MESH_EXTS}")
+    if ext not in MESH_EXTS:
+        print(f"\n  V5 handles 3D files: {MESH_EXTS}")
+        print(f"  For images, use V4: python generate_asset.py --image {input_path}")
         return
+
+    # Layer 1: Mechanical Extraction
+    contract = run_layer1(input_path, port=args.port)
 
     # Layer 2: Plausible Behaviors
     contract = run_layer2(contract)
