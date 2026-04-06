@@ -487,9 +487,11 @@ def compute_coordinates(results, vdata):
                     "size": [round(grid.leg_width, 4), round(grid.leg_width, 4), round(grid.leg_height, 4)],
                 })
 
-            # Determine row types from gemini_type
-            row_contents = gt.get("grid", {}).get("row_contents", []) if "grid" in gt else []
+            # Determine row types — try multiple sources
             row_types = []
+
+            # Source 1: gemini_type grid.row_contents
+            row_contents = gt.get("grid", {}).get("row_contents", []) if "grid" in gt else []
             for rc in row_contents:
                 rc_lower = rc.lower() if isinstance(rc, str) else ""
                 if "drawer" in rc_lower:
@@ -498,6 +500,30 @@ def compute_coordinates(results, vdata):
                     row_types.append("doors")
                 else:
                     row_types.append("unknown")
+
+            # Source 2: if row_types incomplete, infer from claude_behavior
+            if len(row_types) != n_rows or "unknown" in row_types:
+                cb = results.get("claude_behavior", {}).get("parsed", {})
+                behaviors = cb.get("behaviors", [])
+                has_drawers = any("drawer" in b.get("part", "").lower() for b in behaviors)
+                has_doors = any("door" in b.get("part", "").lower() for b in behaviors)
+
+                if n_rows == 2 and has_drawers and has_doors:
+                    # Standard: doors bottom, drawers top
+                    row_types = ["doors", "drawers"]
+                elif n_rows == 1 and has_drawers:
+                    row_types = ["drawers"]
+                elif n_rows == 1 and has_doors:
+                    row_types = ["doors"]
+                else:
+                    row_types = ["unknown"] * n_rows
+
+            # Source 3: if still unknown, check vision spatial layout
+            if "unknown" in row_types:
+                spatial = vdata.get("spatial_layout", {})
+                if spatial.get("bottom_row") and spatial.get("top_row") and n_rows == 2:
+                    row_types = [spatial["bottom_row"], spatial["top_row"]]
+
             coords["grid"]["row_types"] = row_types
 
             # Per-cell objects (doors, drawers, hardware)

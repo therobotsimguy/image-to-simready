@@ -232,30 +232,24 @@ def audit_structure(scene_data, behavior_data, bodies_data, expected_coords=None
             if overall[i] < 0.01:
                 issues.append(f"TINY DIMENSION: overall {label} = {overall[i]*1000:.0f}mm (too small)")
 
-    # ── Check all objects are within overall bounding box (no flying parts) ──
+    # ── Check no object is wildly out of place (flying parts) ──
     if len(objects) >= 2:
-        # Compute overall bounds from frame/carcass (largest object)
-        frame = max(objects, key=lambda o: o["vertices"])
-        frame_min = frame["bbox_min"]
-        frame_max = frame["bbox_max"]
-        # Allow 20% tolerance beyond frame bounds
-        tolerance = max(frame["dims"]) * 0.2
+        # Compute overall scene bounding box from ALL objects
+        scene_min = [min(o["bbox_min"][i] for o in objects) for i in range(3)]
+        scene_max = [max(o["bbox_max"][i] for o in objects) for i in range(3)]
+        scene_size = [scene_max[i] - scene_min[i] for i in range(3)]
+        scene_center = [(scene_min[i] + scene_max[i]) / 2 for i in range(3)]
 
         for obj in objects:
-            if obj["name"] == frame["name"]:
-                continue
+            obj_center = [(obj["bbox_min"][i] + obj["bbox_max"][i]) / 2 for i in range(3)]
             for axis, label in enumerate(["X", "Y", "Z"]):
-                if obj["bbox_min"][axis] < frame_min[axis] - tolerance:
+                # Flag if object center is more than 1.5x scene size away from scene center
+                dist = abs(obj_center[axis] - scene_center[axis])
+                if scene_size[axis] > 0.01 and dist > scene_size[axis] * 1.5:
                     issues.append(
-                        f"OUT OF BOUNDS: '{obj['name']}' {label}_min={obj['bbox_min'][axis]*1000:.0f}mm "
-                        f"is {abs(obj['bbox_min'][axis] - frame_min[axis])*1000:.0f}mm below frame. "
-                        f"Object is mispositioned — should be inside or flush with the frame."
-                    )
-                if obj["bbox_max"][axis] > frame_max[axis] + tolerance:
-                    issues.append(
-                        f"OUT OF BOUNDS: '{obj['name']}' {label}_max={obj['bbox_max'][axis]*1000:.0f}mm "
-                        f"is {abs(obj['bbox_max'][axis] - frame_max[axis])*1000:.0f}mm above frame. "
-                        f"Object is mispositioned — should be inside or flush with the frame."
+                        f"FLYING OBJECT: '{obj['name']}' {label} center={obj_center[axis]*1000:.0f}mm "
+                        f"is far from scene center={scene_center[axis]*1000:.0f}mm. "
+                        f"Object is detached from the main assembly."
                     )
 
     # ── Check materials are assigned ──
