@@ -393,6 +393,19 @@ def derive_constraints(behavior_data, bodies_data):
         "than their cell opening."
     )
 
+    # Cavity opening rule — if ANY part has rotational or linear motion (doors/drawers),
+    # the body mesh must NOT have faces covering the opening
+    has_openings = any(b.get("motion", "none") in ("linear", "rotational") for b in behaviors)
+    if has_openings:
+        rules.append(
+            "CONSTRAINT (cavity openings): The body/chassis/carcass mesh must NOT have any faces "
+            "covering the door or drawer openings. When a door opens, the cavity behind it must be "
+            "visible and accessible — no front panel faces blocking the opening. The door IS the "
+            "front face when closed. If importing an existing mesh (OBJ/blend), find and DELETE any "
+            "front-facing faces (normal pointing -Y or toward camera) in the door/drawer opening area. "
+            "Verify by hiding the doors in Blender and checking that you can see into the cavity."
+        )
+
     return rules
 
 
