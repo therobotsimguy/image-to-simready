@@ -8,4 +8,5 @@
 - [V3 April 4 Status](v3_session_april4.md) — Full V3 pipeline status: what works, what's broken, next steps
 - [Do Not Implement Without Permission](feedback_no_implement_without_permission.md) — Discuss before coding. Don't create lookup tables or implement options without user approval
 - [Blender Asset Generator](blender_asset_generator.md) — AI debate pipeline, Blender 4.x lessons, geometry per object type, materials, debate fixes
+- [V4 Orchestrator](v4_orchestrator.md) — V4: general-purpose multi-agent pipeline (A+B+MathEngine+C+D), any object type, behavioral constraints, data flywheel
 - [GitHub Credentials](github_credentials.md) — therobotsimguy account, token, repo info
