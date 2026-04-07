@@ -74,6 +74,30 @@ print(f"Loaded {{len([o for o in bpy.data.objects if o.type=='MESH'])}} meshes")
     return result
 
 
+def load_usd_in_blender(usd_path, port=9876):
+    """Load a USD file into Blender. USD is Z-up like Blender — no rotation correction needed."""
+    script = f'''
+import bpy
+
+# Clear scene
+bpy.ops.object.select_all(action="SELECT")
+bpy.ops.object.delete(use_global=False)
+for m in list(bpy.data.meshes): bpy.data.meshes.remove(m)
+for m in list(bpy.data.materials): bpy.data.materials.remove(m)
+
+# Import USD
+bpy.ops.wm.usd_import(filepath="{usd_path}", import_materials=True)
+
+# Apply any residual transforms
+bpy.ops.object.select_all(action="SELECT")
+bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+
+print(f"Loaded {{len([o for o in bpy.data.objects if o.type=='MESH'])}} meshes from USD")
+'''
+    result = send_to_blender(script, port)
+    return result
+
+
 def extract_scene_data(port=9876):
     """Query Blender for complete scene data."""
     script = '''
@@ -186,6 +210,9 @@ def run_layer1(source_file, contract=None, port=9876, skip_load=False):
             print(f"  Loading blend: {source_file}")
             script = f'import bpy; bpy.ops.wm.open_mainfile(filepath="{source_file}")'
             send_to_blender(script, port)
+        elif ext in (".usd", ".usda", ".usdc"):
+            print(f"  Loading USD: {source_file}")
+            load_usd_in_blender(source_file, port)
         else:
             raise ValueError(f"Unsupported file type: {ext}")
 

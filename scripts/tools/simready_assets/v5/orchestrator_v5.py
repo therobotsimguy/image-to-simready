@@ -31,8 +31,6 @@ from v5.behavior_contract import BehaviorContract
 from v5.layer1_mechanical import run_layer1, send_to_blender
 from v5.layer2_plausible import run_layer2
 from v5.layer3_semantic import run_layer3
-# Image path uses V4 pipeline (generate_asset.py) — separate pipeline
-# V5 handles OBJ/Blend files only
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -305,7 +303,7 @@ def run_physx(contract: BehaviorContract, usd_path: str):
 
 def main():
     parser = argparse.ArgumentParser(description="V5 Semantic Behavior Pipeline")
-    parser.add_argument("--input", required=True, help="OBJ/blend file OR image (png/jpg)")
+    parser.add_argument("--input", required=True, help="OBJ/blend file")
     parser.add_argument("--output", default=None, help="Output USD path")
     parser.add_argument("--port", type=int, default=9876, help="Blender MCP port")
     parser.add_argument("--contract-only", action="store_true", help="Generate contract only, skip Blender/PhysX")
@@ -319,38 +317,23 @@ def main():
     output_blend = os.path.join(output_dir, f"{obj_name}.blend")
 
     ext = os.path.splitext(input_path)[1].lower()
-    IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".webp"}
-    MESH_EXTS = {".obj", ".blend", ".fbx", ".stl"}
+    MESH_EXTS = {".obj", ".blend", ".fbx", ".stl", ".usd", ".usda", ".usdc"}
 
     print()
     print("=" * 60)
     print("  V5 SEMANTIC BEHAVIOR PIPELINE")
-    input_type = "IMAGE → V4 geometry + V5 physics" if ext in IMAGE_EXTS else "3D FILE"
-    print(f"  Input:  {input_path} ({input_type})")
+    print(f"  Input:  {input_path}")
     print(f"  Output: {output_usd}")
     print("=" * 60)
 
     t0 = time.time()
 
-    if ext not in IMAGE_EXTS and ext not in MESH_EXTS:
+    if ext not in MESH_EXTS:
         print(f"\n  Unsupported file type: {ext}")
-        print(f"  Supported: {IMAGE_EXTS | MESH_EXTS}")
+        print(f"  Supported: {MESH_EXTS}")
         return
 
-    if ext in IMAGE_EXTS:
-        # Image → V4 pipeline (fully independent: AI agents + vision + Blender + USD)
-        sys.path.insert(0, _ASSETS_DIR)
-        import subprocess
-        result = subprocess.run(
-            [sys.executable, os.path.join(_ASSETS_DIR, "generate_asset.py"),
-             "--image", input_path,
-             "--output", output_usd,
-             "--blender-port", str(args.port)],
-            cwd=_ASSETS_DIR
-        )
-        sys.exit(result.returncode)
-
-    # 3D file → V5 pipeline (fully independent: layers + behavior contract + PhysX)
+    # 3D file → V5 pipeline
     contract = run_layer1(input_path, port=args.port)
 
     # Layer 2: Plausible Behaviors
