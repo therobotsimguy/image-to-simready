@@ -786,116 +786,43 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=98
         output_blend=output_blend,
     )
 
-    # Both generate full scripts in parallel — try Claude first (better quality),
-    # fall back to Gemini, retry with fixes if needed
-    script_results = {}
-    script_ready = {"gemini": threading.Event(), "claude": threading.Event()}
-
-    def _gen_gemini():
-        try:
-            raw = call_gemini(gkey, BEST_GEMINI, full_prompt, image_path=image_path)
-            script_results["gemini"] = extract_script(raw)
-        except Exception as e:
-            script_results["gemini_error"] = str(e)
-        script_ready["gemini"].set()
-
-    def _gen_claude():
-        try:
-            raw = call_claude(ckey, BEST_CLAUDE, full_prompt, image_path=image_path)
-            script_results["claude"] = extract_script(raw)
-        except Exception as e:
-            script_results["claude_error"] = str(e)
-        script_ready["claude"].set()
-
-    print(f"  Generating scripts: Gemini ‖ Claude (parallel, prefer Claude)...")
+    # Claude writes the Blender script
+    print(f"  Generating script: Claude...")
     t_script = time.time()
-    threading.Thread(target=_gen_gemini, daemon=True).start()
-    threading.Thread(target=_gen_claude, daemon=True).start()
-
-    # Try Claude first (higher quality), then Gemini as fallback, then retry
-    candidates = ["claude", "gemini", "claude_retry"]
-    candidates_tried = []
     winner = None
-    fix_history = ""
 
-    for attempt, candidate in enumerate(candidates, 1):
-        if candidate == "claude":
-            script_ready["claude"].wait(timeout=180)
-            if "claude" not in script_results:
-                print(f"  Claude failed: {script_results.get('claude_error', '?')}")
-                continue
-        elif candidate == "gemini":
-            script_ready["gemini"].wait(timeout=180)
-            if "gemini" not in script_results:
-                print(f"  Gemini failed: {script_results.get('gemini_error', '?')}")
-                continue
-        elif candidate == "claude_retry":
-            if not fix_history:
-                break
-            print(f"  Retrying Claude with fix instructions...")
-            fix_prompt = SCRIPT_GEN_PROMPT.format(
-                blender_rules=_BLENDER_RULES,
-                spec_data=spec_with_fixes + fix_history,
-                output_usd=output_usd,
-                output_blend=output_blend,
-            )
-            try:
-                raw = call_claude(ckey, BEST_CLAUDE, fix_prompt, image_path=image_path)
-                script_results["claude_retry"] = extract_script(raw)
-            except Exception as e:
-                print(f"  Retry failed: {e}")
-                break
+    try:
+        raw = call_claude(ckey, BEST_CLAUDE, full_prompt, image_path=image_path)
+        script = extract_script(raw)
+    except Exception as e:
+        print(f"  Claude failed: {e}")
+        return None, results
 
-        candidates_tried.append(candidate)
-        test_script = script_results[candidate]
-        lines = len(test_script.splitlines())
-        elapsed = time.time() - t_script
+    lines = len(script.splitlines())
+    elapsed = time.time() - t_script
+    print(f"  Script: {lines} lines, {elapsed:.0f}s")
 
-        print(f"\n  ── Testing {candidate} ({lines} lines, {elapsed:.0f}s) ──")
+    # Execute in Blender
+    try:
+        result = send_to_blender(script, port=blender_port)
+        if result.get("status") == "error":
+            print(f"  Blender ERROR: {result.get('message', '?')[:150]}")
+            return None, results
+        print(f"  Blender: OK")
+    except Exception as e:
+        print(f"  Blender connection error: {e}")
+        return None, results
 
-        # Execute in Blender
-        try:
-            result = send_to_blender(test_script, port=blender_port)
-            if result.get("status") == "error":
-                print(f"  Blender ERROR: {result.get('message', '?')[:150]}")
-                fix_history = f"\n\n## {candidate} FAILED — Blender error:\n{result.get('message', '?')[:500]}\nFix the error."
-                continue
-            print(f"  Blender: OK")
-        except Exception as e:
-            print(f"  Blender connection error: {e}")
-            continue
+    # Structural audit (report only)
+    scene = query_blender_scene(port=blender_port)
+    if scene and "error" not in scene:
+        passed, issues = audit_structure(scene, behavior, bodies, expected_coords=expected_coords)
+        print(f"  D (structural): {'PASS' if passed else 'FAIL'} — {len(issues)} issues")
+        for iss in issues:
+            print(f"    ✗ {iss}")
 
-        # Structural audit
-        scene = query_blender_scene(port=blender_port)
-        if scene and "error" not in scene:
-            passed, issues = audit_structure(scene, behavior, bodies, expected_coords=expected_coords)
-            print(f"  D (structural): {'PASS' if passed else 'FAIL'} — {len(issues)} issues")
-            for iss in issues:
-                print(f"    ✗ {iss}")
-
-            if passed:
-                script = test_script
-                winner = candidate
-                print(f"\n  ✓ WINNER: {candidate} (attempt {attempt}, {elapsed:.0f}s)")
-                break
-            else:
-                fix_lines = [f"\n\n## {candidate} structural issues:"]
-                for i, iss in enumerate(issues, 1):
-                    fix_lines.append(f"  {i}. {iss}")
-                fix_history = "\n".join(fix_lines)
-        else:
-            print(f"  Could not inspect scene")
-
+    winner = "claude"
     total_script_time = time.time() - t_script
-
-    if not script:
-        # Use best available even if D didn't pass
-        for fallback in ["claude", "gemini", "claude_retry"]:
-            if fallback in script_results:
-                script = script_results[fallback]
-                winner = f"{fallback} (fallback)"
-                print(f"\n  No script passed D — using {fallback} as fallback")
-                break
 
     if not script:
         print(f"  All script generation failed")
@@ -949,7 +876,7 @@ def main():
     print(f"  Path B:   DINO + SAM3 + DepthPro + DepthAnything3")
     print(f"  Path C:   {BEST_CLAUDE} (Blender script generation)")
     print(f"  Path D:   Gemini + Claude (judge) + structural audit")
-    print(f"  Workers:  10 parallel + script gen + judge (max 3 retries)")
+    print(f"  Workers:  10 parallel (A+B) + Claude script gen + judge")
     print("=" * 70)
 
     api_keys = load_api_keys()
