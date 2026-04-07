@@ -132,6 +132,25 @@ For complex objects: describe step by step.
 Return ONLY the JSON.""",
 }
 
+FIX_PROMPT = """You are an expert Blender 4.3 Python scripter.
+
+The 3D scene is already built in Blender. Most of it is correct.
+Only the following objects have issues that need fixing:
+
+{issues}
+
+Write a SHORT script (no more than 50 lines) that fixes ONLY these objects.
+- Delete each broken object by name, then recreate it correctly.
+- Do NOT touch any other objects in the scene.
+- Do NOT clear the scene.
+- All dimensions in METERS.
+- Apply scale after creating each object.
+- Reassign the same material as the original if possible.
+
+{blender_rules}
+
+Write ONLY Python code, no markdown fences, no explanations."""
+
 _BLENDER_RULES = """## Blender 4.3 API rules:
 - NO `use_auto_smooth` (removed in 4.x)
 - NO `Specular` input on Principled BSDF (removed)
@@ -832,12 +851,10 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=98
         elif candidate == "claude_retry":
             if not fix_history:
                 break
-            print(f"  Retrying Claude with fix instructions...")
-            fix_prompt = SCRIPT_GEN_PROMPT.format(
+            print(f"  Retrying Claude — targeted fix (scene stays, only broken objects replaced)...")
+            fix_prompt = FIX_PROMPT.format(
+                issues=fix_history,
                 blender_rules=_BLENDER_RULES,
-                spec_data=spec_with_fixes + fix_history,
-                output_usd=output_usd,
-                output_blend=output_blend,
             )
             try:
                 raw = call_claude(ckey, BEST_CLAUDE, fix_prompt, image_path=image_path)
@@ -857,8 +874,9 @@ def run_pipeline(image_path, api_keys, output_usd, output_blend, blender_port=98
         try:
             result = send_to_blender(test_script, port=blender_port)
             if result.get("status") == "error":
-                print(f"  Blender ERROR: {result.get('message', '?')[:150]}")
-                fix_history = f"\n\n## {candidate} FAILED — Blender error:\n{result.get('message', '?')[:500]}\nFix the error."
+                err = result.get('message', '?')[:500]
+                print(f"  Blender ERROR: {err[:150]}")
+                fix_history = f"Blender execution error in previous script:\n{err}\nFix only the code that caused this error. Do not touch working objects."
                 continue
             print(f"  Blender: OK")
         except Exception as e:
